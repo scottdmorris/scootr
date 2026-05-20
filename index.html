@@ -12,7 +12,7 @@
   :root {
     --off-white: #e8e4dc;
     --dim: rgba(232, 228, 220, 0.45);
-    --dimmer: rgba(232, 228, 220, 0.25);
+    --dimmer: rgba(232, 228, 220, 0.55);
   }
 
   html {
@@ -33,18 +33,6 @@
 
   @media (pointer: coarse) {
     body { cursor: auto; }
-
-    :root {
-      --dimmer: rgba(232, 228, 220, 0.55);
-    }
-
-    #projects .soon {
-      color: rgba(232, 228, 220, 0.4);
-    }
-
-    #projects .soon::after {
-      color: rgba(232, 228, 220, 0.25);
-    }
   }
 
   /* VIDEO LAYER */
@@ -210,7 +198,7 @@
     font-family: 'Courier Prime', monospace;
     font-size: 11px;
     letter-spacing: 0.28em;
-    color: rgba(232,228,220,0.15);
+    color: rgba(232,228,220,0.4);
     text-transform: uppercase;
     cursor: default;
   }
@@ -218,7 +206,7 @@
   #projects .soon::after {
     content: ' ·';
     font-size: 9px;
-    color: rgba(232,228,220,0.1);
+    color: rgba(232,228,220,0.25);
   }
 
   /* FOOTER */
