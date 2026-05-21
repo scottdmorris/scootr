@@ -33,6 +33,7 @@
 
   @media (pointer: coarse) {
     body { cursor: auto; }
+    #cod { display: none; }
   }
 
   /* COD CROSSHAIR */
@@ -402,8 +403,8 @@
     source.buffer = hitBuffer;
     source.connect(gain);
     gain.connect(audioCtx.destination);
-    gain.gain.setValueAtTime(1, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+    gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
     source.start(audioCtx.currentTime, 0);
     source.stop(audioCtx.currentTime + 0.5);
   }
