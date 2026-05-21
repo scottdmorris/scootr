@@ -124,37 +124,6 @@
     line-height: 1;
     opacity: 0;
     animation: fade-up 1.4s ease 0.2s forwards;
-    position: relative;
-  }
-
-  h1::before,
-  h1::after {
-    content: attr(data-text);
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    font-family: inherit;
-    font-weight: inherit;
-    font-size: inherit;
-    letter-spacing: inherit;
-    line-height: inherit;
-    pointer-events: none;
-    white-space: nowrap;
-  }
-  @keyframes ghost-r {
-    0%   { transform: translate(-5px, 0); color: rgba(255, 60, 60, 0.9); }
-    30%  { transform: translate(-7px, 0); color: rgba(255, 0, 120, 0.9); }
-    60%  { transform: translate(-4px, 0); color: rgba(255, 60, 60, 0.9); }
-    80%  { transform: translate(-6px, 0); color: rgba(255, 0, 100, 0.8); }
-    100% { transform: translate(-5px, 0); color: rgba(255, 60, 60, 0.9); }
-  }
-  @keyframes ghost-b {
-    0%   { transform: translate(5px, 0); color: rgba(60, 80, 255, 0.9); }
-    40%  { transform: translate(7px, 0); color: rgba(60, 80, 255, 0.8); }
-    70%  { transform: translate(4px, 0); color: rgba(60, 80, 255, 0.9); }
-    90%  { transform: translate(6px, 0); color: rgba(40, 60, 255, 0.8); }
-    100% { transform: translate(5px, 0); color: rgba(60, 80, 255, 0.9); }
   }
 
   h1 em {
@@ -249,28 +218,6 @@
     text-align: center;
   }
 
-  /* CRT ROLLING BAR */
-  #crt-bar {
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: -30%;
-    height: 30%;
-    z-index: 10;
-    pointer-events: none;
-    background: linear-gradient(
-      to bottom,
-      transparent 0%,
-      rgba(255,255,255,0.15) 50%,
-      transparent 100%
-    );
-    animation: crt-roll 3s linear infinite;
-  }
-  @keyframes crt-roll {
-    from { transform: translateY(0); }
-    to   { transform: translateY(433%); }
-  }
-
   /* FOOTER */
   #footer {
     position: fixed;
@@ -305,18 +252,6 @@
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  /* CRT CURVATURE */
-  #crt-wrap {
-    position: fixed;
-    inset: -2%;
-    z-index: 15;
-    pointer-events: none;
-    border-radius: 50% / 6%;
-    box-shadow:
-      inset 0 0 80px 40px rgba(0,0,0,0.6),
-      inset 0 0 20px 5px rgba(0,0,0,0.8);
-  }
-
   /* subtle scanlines */
   #scanlines {
     position: fixed;
@@ -343,9 +278,7 @@
 <!-- grain canvas -->
 <canvas id="grain"></canvas>
 
-<div id="crt-wrap"></div>
 <div id="scanlines"></div>
-<div id="crt-bar"></div>
 <div id="vignette"></div>
 
 <main id="content">
