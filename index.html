@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
 
   :root {
     --off-white: #e8e4dc;
@@ -28,12 +28,38 @@
     min-height: -webkit-fill-available;
     overflow: hidden;
     background: #000;
-    cursor: crosshair;
+    cursor: none;
   }
 
   @media (pointer: coarse) {
     body { cursor: auto; }
   }
+
+  /* COD CROSSHAIR */
+  #cod {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    width: 0; height: 0;
+  }
+  #cod span {
+    position: absolute;
+    background: #ffffff;
+    transform: translate(-50%, -50%);
+    transition: transform 0.08s ease, opacity 0.08s ease;
+  }
+  #cod .top    { width: 1.5px; height: 8px;  top: -12px; left: 0; }
+  #cod .bottom { width: 1.5px; height: 8px;  top:  12px; left: 0; }
+  #cod .left   { width: 8px;   height: 1.5px; top: 0; left: -12px; }
+  #cod .right  { width: 8px;   height: 1.5px; top: 0; left:  12px; }
+  #cod .dot    { width: 3px;   height: 3px; border-radius: 50%; top: 0; left: 0; }
+
+  /* hitmarker flash */
+  #cod.hit .top    { transform: translate(-50%, -50%) translateY(-4px); background: rgba(255,220,100,0.95); }
+  #cod.hit .bottom { transform: translate(-50%, -50%) translateY(4px);  background: rgba(255,220,100,0.95); }
+  #cod.hit .left   { transform: translate(-50%, -50%) translateX(-4px); background: rgba(255,220,100,0.95); }
+  #cod.hit .right  { transform: translate(-50%, -50%) translateX(4px);  background: rgba(255,220,100,0.95); }
+  #cod.hit .dot    { background: rgba(255,220,100,0.95); transform: translate(-50%,-50%) scale(2); }
 
   /* VIDEO LAYER */
   #bg-video {
@@ -247,12 +273,14 @@
     color: rgba(232,228,220,0.6);
   }
 
+
   @keyframes fade-up {
     from { opacity: 0; transform: translateY(12px); }
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  /* subtle scanlines */
+
+/* subtle scanlines */
   #scanlines {
     position: fixed;
     inset: 0;
@@ -278,6 +306,13 @@
 <!-- grain canvas -->
 <canvas id="grain"></canvas>
 
+<div id="cod">
+  <span class="top"></span>
+  <span class="bottom"></span>
+  <span class="left"></span>
+  <span class="right"></span>
+  <span class="dot"></span>
+</div>
 <div id="scanlines"></div>
 <div id="vignette"></div>
 
@@ -317,10 +352,67 @@
 </footer>
 
 <script>
+  // random flicker — fires every 20-45s, never on a clock
+  function doFlicker() {
+    const frames = [
+      'brightness(2) saturate(3) hue-rotate(20deg)',
+      'brightness(0.3) saturate(0) hue-rotate(-20deg)',
+      'brightness(2.5) saturate(4) hue-rotate(30deg)',
+      'brightness(0.2) saturate(0)',
+      'brightness(1.8) saturate(3) hue-rotate(-15deg)',
+      'none',
+      'brightness(0.3) saturate(0)',
+      'brightness(2) saturate(2) hue-rotate(10deg)',
+      'none',
+    ];
+    let i = 0;
+    const interval = setInterval(() => {
+      document.body.style.filter = frames[i++];
+      if (i >= frames.length) { clearInterval(interval); document.body.style.filter = ''; }
+    }, 80);
+    setTimeout(doFlicker, 10000 + Math.random() * 10000);
+  }
+  setTimeout(doFlicker, 5000 + Math.random() * 10000);
+
+
   // fade in video on load
   const vid = document.getElementById('bg-video');
-  vid.addEventListener('canplay', () => vid.classList.add('loaded'));
+  vid.addEventListener('canplay', () => { vid.classList.add('loaded'); vid.playbackRate = 0.88; });
   setTimeout(() => vid.classList.add('loaded'), 2000);
+
+  // COD crosshair
+  const cod = document.getElementById('cod');
+  window.addEventListener('mousemove', (e) => {
+    cod.style.left = e.clientX + 'px';
+    cod.style.top = e.clientY + 'px';
+  });
+
+  // hitmarker sound
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  let hitBuffer = null;
+  fetch('./Hitmarker sound - Sound Effect.mp3')
+    .then(r => r.arrayBuffer())
+    .then(buf => audioCtx.decodeAudioData(buf))
+    .then(decoded => { hitBuffer = decoded; });
+
+  function playHitmarker() {
+    if (!hitBuffer) return;
+    const source = audioCtx.createBufferSource();
+    const gain = audioCtx.createGain();
+    source.buffer = hitBuffer;
+    source.connect(gain);
+    gain.connect(audioCtx.destination);
+    gain.gain.setValueAtTime(1, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+    source.start(audioCtx.currentTime, 0);
+    source.stop(audioCtx.currentTime + 0.5);
+  }
+
+  window.addEventListener('click', () => {
+    playHitmarker();
+    cod.classList.add('hit');
+    setTimeout(() => cod.classList.remove('hit'), 150);
+  });
 
   // generate grain texture on canvas
   const canvas = document.getElementById('grain');
