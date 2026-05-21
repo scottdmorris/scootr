@@ -22,6 +22,10 @@
     background: #000;
   }
 
+  *, *::before, *::after {
+    cursor: none !important;
+  }
+
   body {
     width: 100%;
     min-height: 100%;
@@ -227,7 +231,7 @@
     letter-spacing: 0.28em;
     color: var(--dimmer);
     text-transform: uppercase;
-    cursor: default;
+    cursor: none;
   }
 
   #projects .soon::after {
