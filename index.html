@@ -12,7 +12,7 @@
   :root {
     --off-white: #e8e4dc;
     --dim: rgba(232, 228, 220, 0.7);
-    --dimmer: rgba(232, 228, 220, 0.45);
+    --dimmer: rgba(232, 228, 220, 0.6);
   }
 
   html {
@@ -305,7 +305,7 @@
 
 <!-- looping video — dark moody castle/architecture footage from Pexels (free) -->
 <video id="bg-video" autoplay muted loop playsinline
-  src="./14227690_1920_1080_30fps.mp4">
+  src="./earth-loop.mp4">
 </video>
 
 <!-- grain canvas -->
@@ -373,9 +373,15 @@
       document.body.style.filter = frames[i++];
       if (i >= frames.length) { clearInterval(interval); document.body.style.filter = ''; }
     }, 80);
-    setTimeout(doFlicker, 10000 + Math.random() * 10000);
+    setTimeout(doFlicker, 5000 + Math.random() * 4000);
   }
-  setTimeout(doFlicker, 5000 + Math.random() * 10000);
+  // first fire: wait until video is on the blue side (~3-4s)
+  function waitForBlue() {
+    const t = document.getElementById('bg-video').currentTime;
+    if (t >= 3 && t <= 4.5) { doFlicker(); }
+    else { requestAnimationFrame(waitForBlue); }
+  }
+  requestAnimationFrame(waitForBlue);
 
 
   // fade in video on load
