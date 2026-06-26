@@ -1,0 +1,142 @@
+{
+  "Black": [
+    {
+      "orig": "black_0_orig.jpg",
+      "heatmap": "black_0_heatmap.jpg",
+      "predicted": "Black",
+      "correct": true
+    },
+    {
+      "orig": "black_1_orig.jpg",
+      "heatmap": "black_1_heatmap.jpg",
+      "predicted": "Black",
+      "correct": true
+    },
+    {
+      "orig": "black_2_orig.jpg",
+      "heatmap": "black_2_heatmap.jpg",
+      "predicted": "Black",
+      "correct": true
+    }
+  ],
+  "East Asian": [
+    {
+      "orig": "east_asian_0_orig.jpg",
+      "heatmap": "east_asian_0_heatmap.jpg",
+      "predicted": "Southeast Asian",
+      "correct": false
+    },
+    {
+      "orig": "east_asian_1_orig.jpg",
+      "heatmap": "east_asian_1_heatmap.jpg",
+      "predicted": "Middle Eastern",
+      "correct": false
+    },
+    {
+      "orig": "east_asian_2_orig.jpg",
+      "heatmap": "east_asian_2_heatmap.jpg",
+      "predicted": "Black",
+      "correct": false
+    }
+  ],
+  "Indian": [
+    {
+      "orig": "indian_0_orig.jpg",
+      "heatmap": "indian_0_heatmap.jpg",
+      "predicted": "Indian",
+      "correct": true
+    },
+    {
+      "orig": "indian_1_orig.jpg",
+      "heatmap": "indian_1_heatmap.jpg",
+      "predicted": "Indian",
+      "correct": true
+    },
+    {
+      "orig": "indian_2_orig.jpg",
+      "heatmap": "indian_2_heatmap.jpg",
+      "predicted": "Indian",
+      "correct": true
+    }
+  ],
+  "Latino_Hispanic": [
+    {
+      "orig": "latino_hispanic_0_orig.jpg",
+      "heatmap": "latino_hispanic_0_heatmap.jpg",
+      "predicted": "Latino_Hispanic",
+      "correct": true
+    },
+    {
+      "orig": "latino_hispanic_1_orig.jpg",
+      "heatmap": "latino_hispanic_1_heatmap.jpg",
+      "predicted": "Black",
+      "correct": false
+    },
+    {
+      "orig": "latino_hispanic_2_orig.jpg",
+      "heatmap": "latino_hispanic_2_heatmap.jpg",
+      "predicted": "Indian",
+      "correct": false
+    }
+  ],
+  "Middle Eastern": [
+    {
+      "orig": "middle_eastern_0_orig.jpg",
+      "heatmap": "middle_eastern_0_heatmap.jpg",
+      "predicted": "White",
+      "correct": false
+    },
+    {
+      "orig": "middle_eastern_1_orig.jpg",
+      "heatmap": "middle_eastern_1_heatmap.jpg",
+      "predicted": "Indian",
+      "correct": false
+    },
+    {
+      "orig": "middle_eastern_2_orig.jpg",
+      "heatmap": "middle_eastern_2_heatmap.jpg",
+      "predicted": "Middle Eastern",
+      "correct": true
+    }
+  ],
+  "Southeast Asian": [
+    {
+      "orig": "southeast_asian_0_orig.jpg",
+      "heatmap": "southeast_asian_0_heatmap.jpg",
+      "predicted": "East Asian",
+      "correct": false
+    },
+    {
+      "orig": "southeast_asian_1_orig.jpg",
+      "heatmap": "southeast_asian_1_heatmap.jpg",
+      "predicted": "Latino_Hispanic",
+      "correct": false
+    },
+    {
+      "orig": "southeast_asian_2_orig.jpg",
+      "heatmap": "southeast_asian_2_heatmap.jpg",
+      "predicted": "East Asian",
+      "correct": false
+    }
+  ],
+  "White": [
+    {
+      "orig": "white_0_orig.jpg",
+      "heatmap": "white_0_heatmap.jpg",
+      "predicted": "White",
+      "correct": true
+    },
+    {
+      "orig": "white_1_orig.jpg",
+      "heatmap": "white_1_heatmap.jpg",
+      "predicted": "White",
+      "correct": true
+    },
+    {
+      "orig": "white_2_orig.jpg",
+      "heatmap": "white_2_heatmap.jpg",
+      "predicted": "White",
+      "correct": true
+    }
+  ]
+}

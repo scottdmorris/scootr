@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Racial Bias in Facial Recognition — scootr's laboratory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --off-white: #e8e4dc;
+    --dim: rgba(232, 228, 220, 0.7);
+    --dimmer: rgba(232, 228, 220, 0.55);
+    --dimmest: rgba(232, 228, 220, 0.3);
+    --accent: #ff8a4c;
+    --bad: #e0654a;
+    --good: #5fb88a;
+    --panel: rgba(255,255,255,0.03);
+    --border: rgba(232,228,220,0.12);
+  }
+
+  html { background: #000; }
+
+  body {
+    background: #050505;
+    color: var(--off-white);
+    font-family: 'Cormorant Garamond', serif;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* subtle vignette + grain to tie back to homepage without the gimmicks */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background: radial-gradient(ellipse at top, rgba(255,255,255,0.04), transparent 60%);
+  }
+
+  a { color: inherit; }
+
+  /* ── Detection HUD background — spans the full page, scrolls with content ── */
+  #hud-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  #hud-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(232,228,220,0.04) 0px, transparent 1px, transparent 64px, rgba(232,228,220,0.04) 65px),
+      repeating-linear-gradient(90deg, rgba(232,228,220,0.04) 0px, transparent 1px, transparent 64px, rgba(232,228,220,0.04) 65px);
+    opacity: 0.5;
+  }
+  #hud-scanlines {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px);
+    mix-blend-mode: overlay;
+  }
+  #hud-vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 40% at center, transparent 40%, rgba(0,0,0,0.35) 100%);
+  }
+  .hud-box {
+    position: absolute;
+    opacity: 0;
+    animation: hudFade linear infinite;
+  }
+  .hud-box .corner { position: absolute; width: 12px; height: 12px; }
+  .hud-box .corner.tl { top: 0; left: 0; border-top: 1.5px solid var(--accent); border-left: 1.5px solid var(--accent); }
+  .hud-box .corner.tr { top: 0; right: 0; border-top: 1.5px solid var(--accent); border-right: 1.5px solid var(--accent); }
+  .hud-box .corner.bl { bottom: 0; left: 0; border-bottom: 1.5px solid var(--accent); border-left: 1.5px solid var(--accent); }
+  .hud-box .corner.br { bottom: 0; right: 0; border-bottom: 1.5px solid var(--accent); border-right: 1.5px solid var(--accent); }
+  .hud-box .hud-label {
+    position: absolute;
+    top: -16px;
+    left: 0;
+    font-family: 'Courier Prime', monospace;
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+  .hud-box .silhouette {
+    position: absolute;
+    inset: 18%;
+    opacity: 0.4;
+  }
+  .hud-box .silhouette svg { width: 100%; height: 100%; display: block; }
+  .hud-box .sweep {
+    position: absolute;
+    left: 4%;
+    right: 4%;
+    height: 1.5px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    box-shadow: 0 0 6px var(--accent);
+    animation: sweepMove linear infinite;
+  }
+  @keyframes hudFade {
+    0%   { opacity: 0; transform: translateY(8px) scale(0.97); }
+    12%  { opacity: 0.28; transform: translateY(0) scale(1); }
+    82%  { opacity: 0.28; }
+    100% { opacity: 0; transform: translateY(-8px) scale(1.02); }
+  }
+  @keyframes sweepMove {
+    0%   { top: 6%; opacity: 0; }
+    8%   { opacity: 0.9; }
+    50%  { top: 94%; opacity: 0.9; }
+    58%  { opacity: 0; }
+    100% { top: 6%; opacity: 0; }
+  }
+  @media (max-width: 700px) {
+    #hud-grid { background-size: 40px 40px; opacity: 0.3; }
+    .hud-box .hud-label { font-size: 7px; }
+  }
+
+  .label {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+  }
+
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.4rem 2rem;
+    backdrop-filter: blur(10px);
+    background: rgba(5,5,5,0.7);
+    border-bottom: 1px solid var(--border);
+  }
+
+  nav a.back {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--dim);
+    transition: color 0.25s, letter-spacing 0.25s;
+  }
+  nav a.back:hover { color: var(--off-white); letter-spacing: 0.32em; }
+
+  nav .site-name {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--dimmest);
+  }
+
+  main { position: relative; z-index: 1; max-width: 980px; margin: 0 auto; padding: 0 2rem 6rem; }
+
+  header.hero { padding: 5rem 0 3rem; text-align: center; }
+
+  header.hero .label { display: block; margin-bottom: 1.4rem; }
+
+  h1 {
+    font-weight: 300;
+    font-size: clamp(2.2rem, 5.5vw, 3.6rem);
+    letter-spacing: 0.01em;
+    line-height: 1.15;
+  }
+  h1 em { font-style: italic; color: var(--accent); }
+
+  .tagline {
+    font-style: italic;
+    color: var(--dim);
+    font-size: 1.1rem;
+    margin-top: 1.2rem;
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  section { margin-top: 4.5rem; }
+
+  h2 {
+    font-weight: 400;
+    font-size: 1.6rem;
+    letter-spacing: 0.01em;
+    margin-bottom: 0.4rem;
+  }
+
+  .section-intro {
+    color: var(--dim);
+    max-width: 720px;
+    margin-bottom: 1.8rem;
+    font-size: 1.02rem;
+  }
+
+  /* stat row */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 3rem;
+  }
+  .stat {
+    background: #070707;
+    padding: 1.6rem 1.2rem;
+    text-align: center;
+  }
+  .stat .num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.1rem;
+    font-weight: 300;
+    color: var(--off-white);
+  }
+  .stat .lbl {
+    font-family: 'Courier Prime', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+    margin-top: 0.5rem;
+  }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 1.6rem;
+  }
+
+  /* chart */
+  #metricsChart { max-height: 360px; }
+
+  /* confusion matrix image */
+  .cm-img {
+    width: 100%;
+    border: 1px solid var(--border);
+    filter: invert(1) hue-rotate(180deg);
+    opacity: 0.92;
+  }
+  figcaption {
+    font-family: 'Courier Prime', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--dimmest);
+    margin-top: 0.8rem;
+    text-align: center;
+  }
+
+  /* class pills */
+  .pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 1.6rem;
+  }
+  .pill {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--dim);
+    background: transparent;
+    border: 1px solid var(--border);
+    padding: 0.55rem 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .pill:hover { border-color: var(--dimmer); color: var(--off-white); }
+  .pill.active {
+    background: var(--off-white);
+    color: #050505;
+    border-color: var(--off-white);
+  }
+
+  .gradcam-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  .gradcam-pair {
+    border: 1px solid var(--border);
+    overflow: hidden;
+    background: #070707;
+  }
+  .gradcam-pair .imgs { display: grid; grid-template-columns: 1fr 1fr; }
+  .gradcam-pair img { width: 100%; display: block; aspect-ratio: 1; object-fit: cover; }
+  .gradcam-pair .meta {
+    padding: 0.6rem 0.8rem;
+    font-family: 'Courier Prime', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.08em;
+    display: flex;
+    justify-content: space-between;
+  }
+  .gradcam-pair .meta .correct { color: var(--good); }
+  .gradcam-pair .meta .incorrect { color: var(--bad); }
+
+  @media (max-width: 640px) {
+    .gradcam-grid { grid-template-columns: 1fr; }
+  }
+
+  .findings {
+    display: grid;
+    gap: 1.4rem;
+  }
+  .finding {
+    border-left: 2px solid var(--accent);
+    padding-left: 1.2rem;
+  }
+  .finding .ftitle {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.3rem;
+  }
+  .finding p { color: var(--dim); }
+
+  footer {
+    border-top: 1px solid var(--border);
+    margin-top: 5rem;
+    padding: 2rem;
+    text-align: center;
+  }
+  footer .label { display: inline; }
+  footer a.link { text-decoration: none; color: var(--dim); transition: color 0.2s; }
+  footer a.link:hover { color: var(--off-white); }
+
+  /* term tooltips */
+  .term {
+    border-bottom: 1px dotted var(--dimmer);
+    cursor: help;
+    position: relative;
+    color: var(--off-white);
+  }
+  .term:hover, .term:focus { border-bottom-color: var(--accent); outline: none; }
+  .term::after {
+    content: attr(data-def);
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 8px);
+    transform: translateX(-50%) translateY(4px);
+    width: 240px;
+    max-width: 70vw;
+    background: #111;
+    border: 1px solid var(--border);
+    color: var(--dim);
+    font-family: 'Courier Prime', monospace;
+    font-size: 10.5px;
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+    text-transform: none;
+    padding: 0.7rem 0.8rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s, transform 0.15s;
+    z-index: 20;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  }
+  .term:hover::after, .term:focus::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  @media (max-width: 600px) {
+    .term::after { width: 200px; left: 0; transform: translateX(0) translateY(4px); }
+    .term:hover::after, .term:focus::after { transform: translateX(0) translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<div id="hud-bg" aria-hidden="true">
+  <div id="hud-grid"></div>
+  <div id="hud-boxes"></div>
+  <div id="hud-scanlines"></div>
+  <div id="hud-vignette"></div>
+</div>
+
+<nav>
+  <a class="back" href="../index.html">&larr; projects</a>
+  <span class="site-name">scootr's laboratory</span>
+</nav>
+
+<main>
+
+  <header class="hero">
+    <span class="label">Computer Vision &middot; Fairness &middot; FairFace</span>
+    <h1>Analyzing Racial Bias in <em>Facial Recognition</em></h1>
+    <p class="tagline">
+      An EfficientNetB0 transfer-learning model trained on the balanced FairFace dataset —
+      probing whether equal training data produces equal accuracy across racial groups.
+    </p>
+  </header>
+
+  <section id="overview">
+    <h2>Overview</h2>
+    <p class="section-intro">
+      Facial recognition systems are widely deployed but historically perform unevenly across
+      racial groups. This project trains a from-scratch model on a dataset deliberately balanced
+      across 7 racial groups, then measures whether that balance alone is enough to produce
+      equal outcomes. <strong>The goal is not to classify race</strong> — it's to expose where and
+      how accuracy diverges by group, mirroring the disparities documented in commercial systems
+      reviewed by NIST (2019) and the Gender Shades study (2018).
+    </p>
+    <div class="stats">
+      <div class="stat"><div class="num" id="statAcc">—</div><div class="lbl">Overall Accuracy</div></div>
+      <div class="stat"><div class="num">86,744</div><div class="lbl">Training Images</div></div>
+      <div class="stat"><div class="num">10,954</div><div class="lbl">Validation Images</div></div>
+      <div class="stat"><div class="num">7</div><div class="lbl">Racial Groups</div></div>
+      <div class="stat"><div class="num">EffNetB0</div><div class="lbl">Architecture</div></div>
+    </div>
+  </section>
+
+  <section id="metrics">
+    <h2>Per-Class Performance</h2>
+    <p class="section-intro">
+      A single accuracy number hides everything that matters here. Hover any bar for the exact
+      <span class="term" tabindex="0" data-def="Of everything the model GUESSED was this group, what fraction actually was. Low precision = lots of false alarms.">precision</span> /
+      <span class="term" tabindex="0" data-def="Of everyone who ACTUALLY is this group, what fraction the model correctly caught. Low recall = lots of misses.">recall</span> /
+      <span class="term" tabindex="0" data-def="A single score balancing precision and recall. Punishes a model that's great at one but bad at the other — can't fake a high score by only optimizing for one.">F1</span>
+      for that group — notice the spread between the best and worst
+      performing classes despite a perfectly balanced training set.
+    </p>
+    <div class="panel">
+      <canvas id="metricsChart"></canvas>
+    </div>
+  </section>
+
+  <section id="gender">
+    <h2>Intersectional Breakdown — Race &times; Gender</h2>
+    <p class="section-intro">
+      Race alone isn't the whole story. Splitting each group by gender surfaces gaps the
+      per-class chart above hides entirely — most strikingly for Middle Eastern faces, where
+      recall nearly doubles between genders.
+    </p>
+    <div class="panel">
+      <canvas id="genderChart"></canvas>
+    </div>
+  </section>
+
+  <section id="confusion">
+    <h2>Confusion Matrix</h2>
+    <p class="section-intro">
+      Each row is the true class, each column the model's prediction. Off-diagonal cells are
+      errors — and the <em>pattern</em> of those errors is the interesting part. Look for
+      asymmetry: does the model confuse group A for B as often as B for A?
+    </p>
+    <figure>
+      <img class="cm-img" src="img/confusion_matrix.png" alt="Confusion matrix">
+      <figcaption>Raw counts (left) and row-normalized (right) — EfficientNetB0 on FairFace validation set</figcaption>
+    </figure>
+  </section>
+
+  <section id="gradcam">
+    <h2>Grad-CAM — Where the Model Looks</h2>
+    <p class="section-intro">
+      Accuracy tells us <em>how much</em> the model errs. Grad-CAM tells us <em>where it looks</em>
+      when deciding. Click a group to see real validation examples — original on the left, attention
+      heatmap on the right. Warm colors mark pixels that most increased the model's confidence.
+    </p>
+    <div class="pills" id="pills"></div>
+    <div class="gradcam-grid" id="gradcamGrid"></div>
+  </section>
+
+  <section id="findings">
+    <h2>Key Findings</h2>
+    <div class="findings">
+      <div class="finding">
+        <div class="ftitle">Balance ≠ Fairness</div>
+        <p>Even with an exactly balanced training set, per-class F1 ranged from ~0.74 (Black) down to
+        ~0.41 (Latino_Hispanic) and ~0.42 (Middle Eastern) — a ~33-point spread the headline accuracy
+        number never reveals.</p>
+      </div>
+      <div class="finding">
+        <div class="ftitle">Asymmetric confusion</div>
+        <p>Middle Eastern faces were misclassified as White 27% of the time and as Latino_Hispanic
+        19% of the time — but the reverse confusions were far smaller. Southeast Asian leaked into
+        East Asian 24% of the time. These one-directional error patterns are a form of bias the
+        confusion matrix makes visible that overall accuracy cannot.</p>
+      </div>
+      <div class="finding">
+        <div class="ftitle">A dominant class</div>
+        <p>White had the highest self-recall (68%) and acted as something of an attractor for
+        ambiguous faces from other groups — consistent with NIST's 2019 finding that commercial
+        face recognition systems tend to perform best on the demographic most represented in
+        typical training pipelines (even when, as here, the data itself was rebalanced).</p>
+      </div>
+      <div class="finding">
+        <div class="ftitle">Attention looks structurally reasonable</div>
+        <p>Grad-CAM heatmaps mostly center on facial structure (eyes, nose, mouth) rather than
+        background or edges — a good sign that the model isn't relying on an obvious shortcut like
+        scene context. Some misclassified Middle Eastern and Latino_Hispanic examples show more
+        diffuse, less confident attention, which tracks with their lower recall.</p>
+      </div>
+      <div class="finding">
+        <div class="ftitle">Bias compounds across dimensions</div>
+        <p>The race-only breakdown already understates the problem. Middle Eastern recall splits
+        to 41% for men and just <strong>23% for women</strong> — nearly double the gap. Race and
+        gender bias aren't independent; they stack.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="training">
+    <h2>Training Dynamics</h2>
+    <p class="section-intro">
+      Validation accuracy and loss across both training phases. Phase 1 (frozen backbone) plateaus
+      around epoch 9 — the dense head alone can only learn so much. Unfreezing the top 20
+      EfficientNet layers at epoch 31 produces an immediate, sustained jump that hadn't leveled
+      off by the time training stopped.
+    </p>
+    <div class="panel">
+      <canvas id="trainingChart"></canvas>
+    </div>
+  </section>
+
+  <section id="about">
+    <h2>Methodology</h2>
+    <p class="section-intro">
+      Two-phase transfer learning on EfficientNetB0 (ImageNet pretrained): Phase 1 trains a dense
+      classification head with the backbone frozen; Phase 2 unfreezes the top 20 layers and
+      fine-tunes at a 100&times; smaller learning rate. Trained locally on an RTX 4070&nbsp;Ti via
+      WSL2 with mixed-precision (fp16) compute. Originally built as a 2021 capstone using a 2-layer
+      CNN from scratch on ~7,000 images — this version scales to the full ~108K-image FairFace
+      dataset and adds per-class metrics and Grad-CAM analysis on top of raw accuracy.
+    </p>
+  </section>
+
+  <section id="limitations">
+    <h2>Limitations &amp; Caveats</h2>
+    <div class="findings">
+      <div class="finding">
+        <div class="ftitle">Classifier, not verification system</div>
+        <p>This is a 7-way race classifier used as a bias-probing tool — not a face verification
+        or identification system like the commercial products NIST and Gender Shades actually
+        audited. The findings here are suggestive of the same underlying phenomenon, not a direct
+        audit of a deployed recognition pipeline.</p>
+      </div>
+      <div class="finding">
+        <div class="ftitle">Labels aren't ground truth</div>
+        <p>FairFace's own paper reports annotator agreement is lowest for Latino_Hispanic and
+        Middle Eastern — exactly the two groups that score worst here. Some of what looks like
+        "model bias" may partly be label ambiguity in categories that are inherently fuzzy social
+        constructs, not biological ones.</p>
+      </div>
+      <div class="finding">
+        <div class="ftitle">No significance testing</div>
+        <p>Per-class validation counts range from ~700&ndash;1,700 images. The metrics above are
+        point estimates from a single training run with no confidence intervals or repeated seeds
+        — real, but their precision shouldn't be over-read.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p class="label">
+    <a class="link" href="https://github.com/scootrmorris/CNN-RACIAL-BIAS-PROJECT" target="_blank">Source &amp; Notebook</a>
+    &nbsp;&middot;&nbsp;
+    <a class="link" href="../../index.html">Back to laboratory</a>
+  </p>
+</footer>
+
+<script>
+const FALLBACK_DATA = {"classes": ["Black", "East Asian", "Indian", "Latino_Hispanic", "Middle Eastern", "Southeast Asian", "White"], "slugs": ["black", "east_asian", "indian", "latino_hispanic", "middle_eastern", "southeast_asian", "white"], "overall_accuracy": 0.5685594303450794, "metrics": {"Black": {"precision": 0.695, "recall": 0.7879, "f1": 0.7386}, "East Asian": {"precision": 0.59, "recall": 0.6406, "f1": 0.6143}, "Indian": {"precision": 0.6071, "recall": 0.5891, "f1": 0.5979}, "Latino_Hispanic": {"precision": 0.4136, "recall": 0.4042, "f1": 0.4089}, "Middle Eastern": {"precision": 0.5114, "recall": 0.3532, "f1": 0.4178}, "Southeast Asian": {"precision": 0.5121, "recall": 0.4346, "f1": 0.4702}, "White": {"precision": 0.5874, "recall": 0.6801, "f1": 0.6304}}, "confusion_matrix_normalized": [[0.7879, 0.0135, 0.0585, 0.0578, 0.0116, 0.0418, 0.0289], [0.0206, 0.6406, 0.0194, 0.0503, 0.0148, 0.1497, 0.1045], [0.126, 0.0211, 0.5891, 0.1141, 0.0508, 0.0528, 0.0462], [0.0678, 0.0628, 0.1121, 0.4042, 0.0807, 0.0875, 0.1848], [0.0438, 0.0389, 0.0827, 0.1911, 0.3532, 0.0199, 0.2705], [0.0714, 0.2389, 0.0799, 0.0933, 0.017, 0.4346, 0.065], [0.0245, 0.0719, 0.0297, 0.1084, 0.0647, 0.0206, 0.6801]], "confusion_matrix_raw": [[1226, 21, 91, 90, 18, 65, 45], [32, 993, 30, 78, 23, 232, 162], [191, 32, 893, 173, 77, 80, 70], [110, 102, 182, 656, 131, 142, 300], [53, 47, 100, 231, 427, 24, 327], [101, 338, 113, 132, 24, 615, 92], [51, 150, 62, 226, 135, 43, 1418]]};
+const FALLBACK_GRADCAM = {"Black": [{"orig": "black_0_orig.jpg", "heatmap": "black_0_heatmap.jpg", "predicted": "Black", "correct": true}, {"orig": "black_1_orig.jpg", "heatmap": "black_1_heatmap.jpg", "predicted": "Black", "correct": true}, {"orig": "black_2_orig.jpg", "heatmap": "black_2_heatmap.jpg", "predicted": "Black", "correct": true}], "East Asian": [{"orig": "east_asian_0_orig.jpg", "heatmap": "east_asian_0_heatmap.jpg", "predicted": "Southeast Asian", "correct": false}, {"orig": "east_asian_1_orig.jpg", "heatmap": "east_asian_1_heatmap.jpg", "predicted": "Middle Eastern", "correct": false}, {"orig": "east_asian_2_orig.jpg", "heatmap": "east_asian_2_heatmap.jpg", "predicted": "Black", "correct": false}], "Indian": [{"orig": "indian_0_orig.jpg", "heatmap": "indian_0_heatmap.jpg", "predicted": "Indian", "correct": true}, {"orig": "indian_1_orig.jpg", "heatmap": "indian_1_heatmap.jpg", "predicted": "Indian", "correct": true}, {"orig": "indian_2_orig.jpg", "heatmap": "indian_2_heatmap.jpg", "predicted": "Indian", "correct": true}], "Latino_Hispanic": [{"orig": "latino_hispanic_0_orig.jpg", "heatmap": "latino_hispanic_0_heatmap.jpg", "predicted": "Latino_Hispanic", "correct": true}, {"orig": "latino_hispanic_1_orig.jpg", "heatmap": "latino_hispanic_1_heatmap.jpg", "predicted": "Black", "correct": false}, {"orig": "latino_hispanic_2_orig.jpg", "heatmap": "latino_hispanic_2_heatmap.jpg", "predicted": "Indian", "correct": false}], "Middle Eastern": [{"orig": "middle_eastern_0_orig.jpg", "heatmap": "middle_eastern_0_heatmap.jpg", "predicted": "White", "correct": false}, {"orig": "middle_eastern_1_orig.jpg", "heatmap": "middle_eastern_1_heatmap.jpg", "predicted": "Indian", "correct": false}, {"orig": "middle_eastern_2_orig.jpg", "heatmap": "middle_eastern_2_heatmap.jpg", "predicted": "Middle Eastern", "correct": true}], "Southeast Asian": [{"orig": "southeast_asian_0_orig.jpg", "heatmap": "southeast_asian_0_heatmap.jpg", "predicted": "East Asian", "correct": false}, {"orig": "southeast_asian_1_orig.jpg", "heatmap": "southeast_asian_1_heatmap.jpg", "predicted": "Latino_Hispanic", "correct": false}, {"orig": "southeast_asian_2_orig.jpg", "heatmap": "southeast_asian_2_heatmap.jpg", "predicted": "East Asian", "correct": false}], "White": [{"orig": "white_0_orig.jpg", "heatmap": "white_0_heatmap.jpg", "predicted": "White", "correct": true}, {"orig": "white_1_orig.jpg", "heatmap": "white_1_heatmap.jpg", "predicted": "White", "correct": true}, {"orig": "white_2_orig.jpg", "heatmap": "white_2_heatmap.jpg", "predicted": "White", "correct": true}]};
+const FALLBACK_GENDER = {"Black": {"Male": {"precision": 0.6458, "recall": 0.801, "f1": 0.7151, "n": 799}, "Female": {"precision": 0.7581, "recall": 0.7741, "f1": 0.766, "n": 757}}, "East Asian": {"Male": {"precision": 0.6029, "recall": 0.5959, "f1": 0.5994, "n": 777}, "Female": {"precision": 0.5792, "recall": 0.6856, "f1": 0.628, "n": 773}}, "Indian": {"Male": {"precision": 0.5482, "recall": 0.5591, "f1": 0.5536, "n": 753}, "Female": {"precision": 0.6714, "recall": 0.6186, "f1": 0.6439, "n": 763}}, "Latino_Hispanic": {"Male": {"precision": 0.374, "recall": 0.3443, "f1": 0.3585, "n": 793}, "Female": {"precision": 0.4474, "recall": 0.4614, "f1": 0.4543, "n": 830}}, "Middle Eastern": {"Male": {"precision": 0.5419, "recall": 0.4133, "f1": 0.4689, "n": 813}, "Female": {"precision": 0.4233, "recall": 0.2298, "f1": 0.2979, "n": 396}}, "Southeast Asian": {"Male": {"precision": 0.5008, "recall": 0.4082, "f1": 0.4498, "n": 735}, "Female": {"precision": 0.5233, "recall": 0.4632, "f1": 0.4914, "n": 680}}, "White": {"Male": {"precision": 0.5843, "recall": 0.6854, "f1": 0.6308, "n": 1122}, "Female": {"precision": 0.5911, "recall": 0.6739, "f1": 0.6298, "n": 963}}};
+const FALLBACK_TRAINING = {"phase1_val_accuracy": [0.4369, 0.4533, 0.4597, 0.4603, 0.4652, 0.4651, 0.4662, 0.4704, 0.4624, 0.4643, 0.4703, 0.4708, 0.4697, 0.4699, 0.4716, 0.4728, 0.4746, 0.4728, 0.4761, 0.4738, 0.4736, 0.4744, 0.4739, 0.4754, 0.4744, 0.4740, 0.4750, 0.4731, 0.4755, 0.4737], "phase1_val_loss": [1.5019, 1.4610, 1.4490, 1.4406, 1.4342, 1.4267, 1.4244, 1.4238, 1.4272, 1.4296, 1.4196, 1.4162, 1.4169, 1.4169, 1.4148, 1.4154, 1.4139, 1.4160, 1.4129, 1.4140, 1.4134, 1.4123, 1.4116, 1.4121, 1.4114, 1.4117, 1.4119, 1.4114, 1.4108, 1.4111], "phase2_val_accuracy": [0.4392, 0.4720, 0.4933, 0.5077, 0.5145, 0.5266, 0.5341, 0.5400, 0.5454, 0.5501, 0.5530, 0.5568, 0.5623, 0.5645, 0.5685], "phase2_val_loss": [1.4900, 1.4016, 1.3466, 1.3084, 1.2790, 1.2545, 1.2342, 1.2171, 1.2020, 1.1880, 1.1760, 1.1654, 1.1553, 1.1463, 1.1380]};
+
+async function loadJSON(path, fallback) {
+  try {
+    const res = await fetch(path);
+    if (!res.ok) throw new Error('fetch failed');
+    return await res.json();
+  } catch (e) {
+    return fallback;
+  }
+}
+
+(async function init() {
+  const data = await loadJSON('data.json', FALLBACK_DATA);
+  const gradcamMeta = await loadJSON('gradcam_meta.json', FALLBACK_GRADCAM);
+  const genderData = await loadJSON('gender_breakdown.json', FALLBACK_GENDER);
+  const trainingData = await loadJSON('training_history.json', FALLBACK_TRAINING);
+
+  document.getElementById('statAcc').textContent = (data.overall_accuracy * 100).toFixed(1) + '%';
+
+  const ctx = document.getElementById('metricsChart').getContext('2d');
+  const off = '#e8e4dc';
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: data.classes,
+      datasets: [
+        { label: 'Precision', data: data.classes.map(c => data.metrics[c].precision), backgroundColor: 'rgba(95,184,138,0.75)' },
+        { label: 'Recall',    data: data.classes.map(c => data.metrics[c].recall),    backgroundColor: 'rgba(255,138,76,0.75)' },
+        { label: 'F1',        data: data.classes.map(c => data.metrics[c].f1),        backgroundColor: 'rgba(224,101,74,0.75)' },
+      ]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        x: { ticks: { color: off, font: { family: 'Courier Prime', size: 10 } }, grid: { color: 'rgba(232,228,220,0.08)' } },
+        y: { min: 0, max: 1, ticks: { color: off, font: { family: 'Courier Prime', size: 10 } }, grid: { color: 'rgba(232,228,220,0.08)' } }
+      },
+      plugins: {
+        legend: { labels: { color: off, font: { family: 'Courier Prime', size: 10 } } },
+        tooltip: { titleFont: { family: 'Courier Prime' }, bodyFont: { family: 'Courier Prime' } }
+      }
+    }
+  });
+
+  const pillsEl = document.getElementById('pills');
+  const gridEl = document.getElementById('gradcamGrid');
+
+  function renderClass(cls) {
+    gridEl.innerHTML = '';
+    const examples = gradcamMeta[cls] || [];
+    examples.forEach(ex => {
+      const div = document.createElement('div');
+      div.className = 'gradcam-pair';
+      div.innerHTML = `
+        <div class="imgs">
+          <img src="img/${ex.orig}" alt="original ${cls} face" loading="lazy">
+          <img src="img/${ex.heatmap}" alt="Grad-CAM heatmap" loading="lazy">
+        </div>
+        <div class="meta">
+          <span>predicted: ${ex.predicted}</span>
+          <span class="${ex.correct ? 'correct' : 'incorrect'}">${ex.correct ? '✓ correct' : '✗ wrong'}</span>
+        </div>`;
+      gridEl.appendChild(div);
+    });
+  }
+
+  data.classes.forEach((cls, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'pill' + (i === 0 ? ' active' : '');
+    btn.textContent = cls.replace('_', ' / ');
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      renderClass(cls);
+    });
+    pillsEl.appendChild(btn);
+  });
+
+  renderClass(data.classes[0]);
+
+  // --- Gender x Race chart ---
+  const genderCtx = document.getElementById('genderChart').getContext('2d');
+  new Chart(genderCtx, {
+    type: 'bar',
+    data: {
+      labels: data.classes,
+      datasets: [
+        { label: 'Male F1',   data: data.classes.map(c => genderData[c]?.Male?.f1 ?? null),   backgroundColor: 'rgba(255,138,76,0.75)' },
+        { label: 'Female F1', data: data.classes.map(c => genderData[c]?.Female?.f1 ?? null), backgroundColor: 'rgba(95,184,138,0.75)' },
+      ]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        x: { ticks: { color: off, font: { family: 'Courier Prime', size: 10 } }, grid: { color: 'rgba(232,228,220,0.08)' } },
+        y: { min: 0, max: 1, ticks: { color: off, font: { family: 'Courier Prime', size: 10 } }, grid: { color: 'rgba(232,228,220,0.08)' } }
+      },
+      plugins: {
+        legend: { labels: { color: off, font: { family: 'Courier Prime', size: 10 } } },
+        tooltip: {
+          titleFont: { family: 'Courier Prime' }, bodyFont: { family: 'Courier Prime' },
+          callbacks: {
+            afterLabel: (item) => {
+              const cls = data.classes[item.dataIndex];
+              const g = item.dataset.label.startsWith('Male') ? 'Male' : 'Female';
+              const n = genderData[cls]?.[g]?.n;
+              return n ? `n = ${n}` : '';
+            }
+          }
+        }
+      }
+    }
+  });
+
+  // --- Training dynamics chart ---
+  const p1acc = trainingData.phase1_val_accuracy, p1loss = trainingData.phase1_val_loss;
+  const p2acc = trainingData.phase2_val_accuracy, p2loss = trainingData.phase2_val_loss;
+  const totalEpochs = p1acc.length + p2acc.length;
+  const epochLabels = Array.from({ length: totalEpochs }, (_, i) => i + 1);
+  const accSeries = [...p1acc, ...p2acc];
+  const lossSeries = [...p1loss, ...p2loss];
+  const phaseBoundary = p1acc.length;
+
+  const trainingCtx = document.getElementById('trainingChart').getContext('2d');
+  new Chart(trainingCtx, {
+    type: 'line',
+    data: {
+      labels: epochLabels,
+      datasets: [
+        { label: 'Val Accuracy', data: accSeries, borderColor: 'rgba(255,138,76,0.9)', backgroundColor: 'transparent', yAxisID: 'y', tension: 0.2, pointRadius: 0 },
+        { label: 'Val Loss', data: lossSeries, borderColor: 'rgba(95,184,138,0.9)', backgroundColor: 'transparent', yAxisID: 'y1', tension: 0.2, pointRadius: 0 },
+      ]
+    },
+    options: {
+      responsive: true,
+      interaction: { mode: 'index', intersect: false },
+      scales: {
+        x: { ticks: { color: off, font: { family: 'Courier Prime', size: 9 } }, grid: { color: 'rgba(232,228,220,0.05)' }, title: { display: true, text: 'Epoch', color: off, font: { family: 'Courier Prime', size: 9 } } },
+        y: { position: 'left', min: 0, max: 1, ticks: { color: off, font: { family: 'Courier Prime', size: 10 } }, grid: { color: 'rgba(232,228,220,0.08)' }, title: { display: true, text: 'Accuracy', color: off, font: { family: 'Courier Prime', size: 9 } } },
+        y1: { position: 'right', ticks: { color: off, font: { family: 'Courier Prime', size: 10 } }, grid: { display: false }, title: { display: true, text: 'Loss', color: off, font: { family: 'Courier Prime', size: 9 } } }
+      },
+      plugins: {
+        legend: { labels: { color: off, font: { family: 'Courier Prime', size: 10 } } },
+        tooltip: { titleFont: { family: 'Courier Prime' }, bodyFont: { family: 'Courier Prime' } },
+        annotation: undefined
+      }
+    },
+    plugins: [{
+      id: 'phaseLine',
+      afterDraw(chart) {
+        const xScale = chart.scales.x;
+        const idx = phaseBoundary - 1;
+        if (idx < 0 || idx >= epochLabels.length) return;
+        const x = xScale.getPixelForValue(idx);
+        const { ctx, chartArea: { top, bottom } } = chart;
+        ctx.save();
+        ctx.strokeStyle = 'rgba(232,228,220,0.35)';
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(x, top);
+        ctx.lineTo(x, bottom);
+        ctx.stroke();
+        ctx.fillStyle = 'rgba(232,228,220,0.5)';
+        ctx.font = "9px 'Courier Prime', monospace";
+        ctx.fillText('fine-tuning begins', x + 6, top + 12);
+        ctx.restore();
+      }
+    }]
+  });
+})();
+
+// --- Detection HUD: drifting bounding boxes with fake tracking labels ---
+(function initHUD() {
+  const CLASSES = ['Black', 'East Asian', 'Indian', 'Latino_Hispanic', 'Middle Eastern', 'Southeast Asian', 'White'];
+  // lower-confidence-prone classes get wider, lower random ranges — a quiet nod to the
+  // actual per-class recall gaps measured on this page, not just decoration.
+  const LOW_CONF_CLASSES = new Set(['Latino_Hispanic', 'Middle Eastern']);
+  const hudBg = document.getElementById('hud-bg');
+  const container = document.getElementById('hud-boxes');
+  if (!container || !hudBg) return;
+
+  const SILHOUETTE_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1">
+    <circle cx="12" cy="8.2" r="4.2"/>
+    <path d="M3.5 21c0-4.7 3.8-7.4 8.5-7.4s8.5 2.7 8.5 7.4"/>
+  </svg>`;
+
+  // Resize the HUD layer to the full scrollable page height, not just one viewport —
+  // re-measured a few times since fonts/images/charts can change layout after first paint.
+  function pageHeight() {
+    return Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+  }
+  function syncHeight() {
+    hudBg.style.height = pageHeight() + 'px';
+  }
+  syncHeight();
+  window.addEventListener('resize', syncHeight);
+  window.addEventListener('load', syncHeight);
+  [300, 1000, 2500].forEach(t => setTimeout(syncHeight, t));
+
+  // density scales with how many viewport-heights tall the page actually is —
+  // otherwise spreading boxes over the full page (vs. just the first screen) makes it feel sparse
+  const viewports = Math.max(1, pageHeight() / window.innerHeight);
+  const perViewport = window.innerWidth < 700 ? 5 : 7;
+  const N = Math.min(32, Math.round(perViewport * viewports));
+
+  // keep a healthy minority of boxes out of the readable ~980px-wide center column,
+  // but don't starve the middle of the page either
+  const contentWidth = 1044;
+  const sideMargin = (window.innerWidth - contentWidth) / 2;
+  const hasMargins = sideMargin > 90;
+
+  function randomLabel() {
+    if (Math.random() < 0.25) {
+      return `ID_0x${Math.floor(Math.random() * 0xffff).toString(16).toUpperCase().padStart(4, '0')}`;
+    }
+    const cls = CLASSES[Math.floor(Math.random() * CLASSES.length)];
+    const low = LOW_CONF_CLASSES.has(cls);
+    const conf = low ? (35 + Math.random() * 30) : (55 + Math.random() * 44);
+    return `${cls.replace('_', '/')} ${conf.toFixed(1)}%`;
+  }
+
+  function pickLeftPercent(boxWidthPx) {
+    const vw = window.innerWidth;
+    if (hasMargins && Math.random() < 0.45) {
+      const onLeft = Math.random() < 0.5;
+      const marginPx = Math.max(sideMargin - boxWidthPx - 12, 8);
+      const px = onLeft ? Math.random() * marginPx : (vw - sideMargin + 12) + Math.random() * marginPx;
+      return (px / vw) * 100;
+    }
+    return Math.random() * 90;
+  }
+
+  for (let i = 0; i < N; i++) {
+    const box = document.createElement('div');
+    box.className = 'hud-box';
+    const w = 60 + Math.random() * 90;
+    const h = w * (0.95 + Math.random() * 0.4);
+    const left = pickLeftPercent(w);
+    const top = Math.random() * 97;
+    const duration = 8 + Math.random() * 7;
+    const delay = -Math.random() * duration;
+    box.style.width = w + 'px';
+    box.style.height = h + 'px';
+    box.style.left = left + '%';
+    box.style.top = top + '%';
+    box.style.animationDuration = duration + 's';
+    box.style.animationDelay = delay + 's';
+
+    const silhouette = document.createElement('div');
+    silhouette.className = 'silhouette';
+    silhouette.innerHTML = SILHOUETTE_SVG;
+    box.appendChild(silhouette);
+
+    const sweep = document.createElement('span');
+    sweep.className = 'sweep';
+    sweep.style.animationDuration = (duration * 0.55) + 's';
+    box.appendChild(sweep);
+
+    const label = document.createElement('span');
+    label.className = 'hud-label';
+    label.textContent = randomLabel();
+    box.appendChild(label);
+
+    ['tl', 'tr', 'bl', 'br'].forEach(pos => {
+      const c = document.createElement('span');
+      c.className = 'corner ' + pos;
+      box.appendChild(c);
+    });
+
+    container.appendChild(box);
+
+    // relabel roughly once per animation loop
+    setInterval(() => { label.textContent = randomLabel(); }, duration * 1000);
+  }
+})();
+</script>
+
+</body>
+</html>
