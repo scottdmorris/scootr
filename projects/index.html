@@ -5,221 +5,239 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Projects — scootr's laboratory</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
   :root {
     --off-white: #e8e4dc;
     --dim: rgba(232, 228, 220, 0.7);
-    --dimmer: rgba(232, 228, 220, 0.55);
-    --dimmest: rgba(232, 228, 220, 0.3);
-    --accent: #ff8a4c;
-    --panel: rgba(255,255,255,0.03);
+    --dimmer: rgba(232, 228, 220, 0.45);
     --border: rgba(232,228,220,0.12);
   }
 
-  html { background: #000; }
+  html, body { background: #000; min-height: 100%; }
 
   body {
-    background: #050505;
+    position: relative;
     color: var(--off-white);
     font-family: 'Cormorant Garamond', serif;
     line-height: 1.6;
     min-height: 100vh;
+    overflow-x: hidden;
   }
 
-  body::before {
-    content: '';
+  #grain {
+    position: fixed;
+    inset: -50%;
+    width: 200%;
+    height: 200%;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.05;
+    mix-blend-mode: overlay;
+  }
+
+  #vignette {
     position: fixed;
     inset: 0;
-    pointer-events: none;
     z-index: 0;
-    background: radial-gradient(ellipse at top, rgba(255,255,255,0.04), transparent 60%);
+    pointer-events: none;
+    background: radial-gradient(ellipse at center,
+      transparent 35%,
+      rgba(0,0,0,0.5) 75%,
+      rgba(0,0,0,0.88) 100%
+    );
   }
 
   a { color: inherit; }
 
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 7rem 1.5rem 5rem;
+  }
+
+  header.hero {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
   .label {
+    display: block;
     font-family: 'Courier Prime', monospace;
     font-size: 10px;
-    letter-spacing: 0.3em;
+    letter-spacing: 0.4em;
     text-transform: uppercase;
     color: var(--dimmer);
+    margin-bottom: 1.6rem;
+    opacity: 0;
+    animation: fade-up 1.2s ease 0.1s forwards;
   }
-
-  nav {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.4rem 2rem;
-    backdrop-filter: blur(10px);
-    background: rgba(5,5,5,0.7);
-    border-bottom: 1px solid var(--border);
-  }
-
-  nav a.back {
-    font-family: 'Courier Prime', monospace;
-    font-size: 10px;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    text-decoration: none;
-    color: var(--dim);
-    transition: color 0.25s, letter-spacing 0.25s;
-  }
-  nav a.back:hover { color: var(--off-white); letter-spacing: 0.32em; }
-
-  nav .site-name {
-    font-family: 'Courier Prime', monospace;
-    font-size: 10px;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--dimmest);
-  }
-
-  main { position: relative; z-index: 1; max-width: 980px; margin: 0 auto; padding: 0 2rem 6rem; }
-
-  header.hero { padding: 5rem 0 3.5rem; text-align: center; }
-  header.hero .label { display: block; margin-bottom: 1.4rem; }
 
   h1 {
     font-weight: 300;
-    font-size: clamp(2.2rem, 5.5vw, 3.6rem);
-    letter-spacing: 0.01em;
-    line-height: 1.15;
+    font-style: italic;
+    font-size: clamp(2.6rem, 6.5vw, 4rem);
+    letter-spacing: 0.04em;
+    line-height: 1.1;
+    opacity: 0;
+    animation: fade-up 1.4s ease 0.3s forwards;
   }
-  h1 em { font-style: italic; color: var(--accent); }
 
   .tagline {
     font-style: italic;
     color: var(--dim);
-    font-size: 1.1rem;
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
     margin-top: 1.2rem;
-    max-width: 560px;
-    margin-left: auto;
-    margin-right: auto;
+    opacity: 0;
+    animation: fade-up 1.4s ease 0.6s forwards;
   }
 
   .project-list {
-    display: grid;
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
   }
 
-  .project-card {
+  .project-row {
     display: grid;
-    grid-template-columns: 200px 1fr;
+    grid-template-columns: 140px 1fr;
     gap: 1.6rem;
-    background: #070707;
-    padding: 1.8rem;
-    text-decoration: none;
-    color: inherit;
-    transition: background 0.25s;
+    align-items: center;
+    padding: 2rem 0;
+    border-top: 1px solid var(--border);
+    opacity: 0;
+    animation: fade-up 1.2s ease forwards;
   }
-  .project-card:hover { background: #0c0c0c; }
-  .project-card:hover .pname { color: var(--accent); }
-  .project-card:hover .arrow { transform: translateX(4px); opacity: 1; }
+  .project-row:first-child { border-top: 1px solid var(--border); }
+  .project-list { border-bottom: 1px solid var(--border); }
 
-  .project-thumb {
-    width: 200px;
-    height: 130px;
+  .project-row:nth-child(1) { animation-delay: 1s; }
+  .project-row:nth-child(2) { animation-delay: 1.25s; }
+
+  .pthumb {
+    width: 140px;
+    height: 90px;
     object-fit: cover;
     border: 1px solid var(--border);
-    filter: saturate(0.7) brightness(0.85);
+    transition: filter 0.4s ease;
   }
 
-  .project-meta { display: flex; flex-direction: column; justify-content: center; }
-
-  .ptag {
-    font-family: 'Courier Prime', monospace;
-    font-size: 9px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--dimmer);
-    margin-bottom: 0.5rem;
+  .project-row:hover .pthumb {
+    filter: brightness(0.7);
   }
 
   .pname {
-    font-size: 1.5rem;
-    font-weight: 400;
-    letter-spacing: 0.01em;
-    transition: color 0.25s;
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.6rem;
+    font-size: clamp(1.2rem, 3vw, 1.5rem);
+    font-style: italic;
+    letter-spacing: 0.01em;
+    color: var(--off-white);
   }
-  .arrow { opacity: 0.5; transition: transform 0.25s, opacity 0.25s; font-size: 1rem; }
+  .pname .arrow { font-size: 1rem; opacity: 0.4; }
+
+  .project-row.no-thumb { grid-template-columns: 1fr; }
+
+  @media (max-width: 540px) {
+    .project-row { grid-template-columns: 1fr; }
+    .pthumb { width: 100%; height: 140px; }
+  }
+
+  .ptag {
+    display: block;
+    font-family: 'Courier Prime', monospace;
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+    margin-bottom: 0.6rem;
+  }
 
   .pdesc {
     color: var(--dim);
-    font-size: 0.98rem;
-    margin-top: 0.5rem;
+    font-size: 0.95rem;
+    margin-top: 0.7rem;
     max-width: 520px;
   }
 
-  .project-card.soon {
-    grid-template-columns: 1fr;
-    cursor: default;
-  }
-  .project-card.soon:hover { background: #070707; }
-  .project-card.soon .pname { color: var(--dimmest); }
-  .project-card.soon:hover .pname { color: var(--dimmest); }
-
-  @media (max-width: 600px) {
-    .project-card { grid-template-columns: 1fr; }
-    .project-thumb { width: 100%; height: 160px; }
-  }
-
-  footer {
-    border-top: 1px solid var(--border);
-    margin-top: 5rem;
-    padding: 2rem;
+  #back {
+    display: block;
     text-align: center;
+    margin-top: 4.5rem;
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+    text-decoration: none;
+    opacity: 0;
+    animation: fade-up 1.2s ease 1.6s forwards;
+    transition: color 0.3s;
   }
-  footer a.link { text-decoration: none; color: var(--dim); transition: color 0.2s; font-family: 'Courier Prime', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; }
-  footer a.link:hover { color: var(--off-white); }
+  #back:hover { color: var(--off-white); }
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
 </style>
 </head>
 <body>
 
-<nav>
-  <a class="back" href="../index.html">&larr; laboratory</a>
-  <span class="site-name">scootr's laboratory</span>
-</nav>
+<canvas id="grain"></canvas>
+<div id="vignette"></div>
 
 <main>
   <header class="hero">
     <span class="label">Selected Work</span>
-    <h1>Pro<em>jects</em></h1>
+    <h1>Projects</h1>
     <p class="tagline">A running collection of things I've built, broken, and analyzed.</p>
   </header>
 
   <div class="project-list">
-    <a class="project-card" href="./racial-bias/index.html">
-      <img class="project-thumb" src="./racial-bias/img/gradcam.png" alt="Grad-CAM heatmap thumbnail" onerror="this.src='./racial-bias/img/confusion_matrix.png'">
-      <div class="project-meta">
-        <span class="ptag">Computer Vision &middot; Fairness</span>
-        <div class="pname">Racial Bias in Facial Recognition <span class="arrow">&rarr;</span></div>
-        <p class="pdesc">An EfficientNetB0 model trained on the balanced FairFace dataset, probing whether equal
-        training data produces equal accuracy across racial groups. Interactive metrics, confusion matrix, and Grad-CAM explorer.</p>
+    <a class="project-row" href="./racial-bias/index.html" style="text-decoration:none;">
+      <img class="pthumb" src="./racial-bias/img/gradcam.png" alt="Grad-CAM heatmap thumbnail" onerror="this.src='./racial-bias/img/confusion_matrix.png'">
+      <div>
+        <span class="ptag">Computer Vision &middot; Passion Project</span>
+        <span class="pname">Racial Bias in Facial Recognition <span class="arrow">&rarr;</span></span>
+        <p class="pdesc">An EfficientNetB0 model trained on the balanced FairFace dataset, probing whether equal training data produces equal accuracy across racial groups. Interactive metrics, confusion matrix, and Grad-CAM explorer.</p>
       </div>
     </a>
-    <div class="project-card soon">
-      <div class="project-meta">
-        <span class="ptag">&nbsp;</span>
-        <div class="pname">More incoming</div>
+    <a class="project-row" href="./retail-dashboard/index.html" style="text-decoration:none;">
+      <img class="pthumb" src="./retail-dashboard/thumb.png" alt="Dashboard thumbnail">
+      <div>
+        <span class="ptag">Full-Stack &middot; Internal Tooling</span>
+        <span class="pname">Multi-Brand Ops Dashboard <span class="arrow">&rarr;</span></span>
+        <p class="pdesc">An internal analytics tool unifying e-commerce sales and field-service metrics across multiple brands — revenue, orders, retention, and visit tracking in one place. Demo rebuilt with fictional brands and sample data.</p>
       </div>
-    </div>
+    </a>
   </div>
+
+  <a id="back" href="../index.html">&larr; scootr's laboratory</a>
 </main>
 
-<footer>
-  <a class="link" href="../index.html">Back to laboratory</a>
-</footer>
+<script>
+  const grainCanvas = document.getElementById('grain');
+  const gctx = grainCanvas.getContext('2d');
+
+  function drawGrain() {
+    const w = grainCanvas.width = window.innerWidth * 1.5;
+    const h = grainCanvas.height = window.innerHeight * 1.5;
+    const imageData = gctx.createImageData(w, h);
+    const data = imageData.data;
+    for (let i = 0; i < data.length; i += 4) {
+      const v = Math.random() > 0.5 ? 255 : 0;
+      data[i] = v; data[i+1] = v; data[i+2] = v; data[i+3] = 255;
+    }
+    gctx.putImageData(imageData, 0, 0);
+  }
+  drawGrain();
+  window.addEventListener('resize', drawGrain);
+</script>
 
 </body>
 </html>

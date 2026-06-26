@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elysium</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --off-white: #e8e4dc;
+    --dim: rgba(232, 228, 220, 0.75);
+    --dimmer: rgba(232, 228, 220, 0.45);
+  }
+
+  html, body {
+    background: #000;
+    min-height: 100%;
+  }
+
+  body {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6rem 1.5rem;
+    overflow: hidden;
+  }
+
+  #glow {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  #dust {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.6;
+  }
+
+  #grain {
+    position: fixed;
+    inset: -50%;
+    width: 200%;
+    height: 200%;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.05;
+    mix-blend-mode: overlay;
+  }
+
+
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 640px;
+    width: 100%;
+  }
+
+  #logo {
+    display: block;
+    text-align: center;
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+    margin-bottom: 3.5rem;
+    opacity: 0;
+    animation: fade-up 1.2s ease 0.1s forwards;
+  }
+
+  #soon {
+    display: block;
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: clamp(1.05rem, 2.2vw, 1.3rem);
+    color: var(--dim);
+    margin-top: 3.5rem;
+    opacity: 0;
+    animation: fade-up 1.4s ease 12.4s forwards;
+  }
+
+  .line {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: clamp(1.15rem, 2.6vw, 1.5rem);
+    line-height: 1.65;
+    color: var(--off-white);
+    text-align: center;
+    margin-bottom: 2.2rem;
+    opacity: 0;
+    animation: fade-up 1.4s ease forwards;
+  }
+
+  .line:last-of-type {
+    margin-bottom: 0;
+    color: var(--dim);
+  }
+
+  .line:nth-of-type(1) { animation-delay: 1.4s; }
+  .line:nth-of-type(2) { animation-delay: 3.2s; }
+  .line:nth-of-type(3) { animation-delay: 5.4s; }
+  .line:nth-of-type(4) { animation-delay: 8.0s; }
+  .line:nth-of-type(5) { animation-delay: 9.4s; }
+
+  #back {
+    display: block;
+    text-align: center;
+    margin-top: 4.5rem;
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+    text-decoration: none;
+    opacity: 0;
+    animation: fade-up 1.2s ease 13.6s forwards;
+    transition: color 0.3s;
+  }
+  #back:hover { color: var(--off-white); }
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="glow"></canvas>
+<canvas id="dust"></canvas>
+<canvas id="grain"></canvas>
+
+<main>
+  <span id="logo">Elysium</span>
+
+  <p class="line">Elysium is not a trend. It is not an algorithm. It is not a platform built to extract.</p>
+
+  <p class="line">It is a magazine. Something you move through, page by page. For the artists, musicians, writers, and communities doing work that the world hasn't named yet.</p>
+
+  <p class="line">We believe the most important creative work happens before recognition. In the in-between. In the hours nobody sees. Elysium exists for that work, and for the people making it.</p>
+
+  <p class="line">This is not about going viral. This is about going deep.</p>
+
+  <p class="line">For the ones creating in the dark before the world catches up.</p>
+
+  <span id="soon">Coming soon</span>
+
+  <a id="back" href="../index.html">&larr; scootr's laboratory</a>
+</main>
+
+<script>
+  // soft cool glow
+  const glowCanvas = document.getElementById('glow');
+  const glctx = glowCanvas.getContext('2d');
+
+  function drawGlow() {
+    const w = glowCanvas.width = window.innerWidth;
+    const h = glowCanvas.height = window.innerHeight;
+    const grad = glctx.createRadialGradient(w/2, h/2, 0, w/2, h/2, Math.max(w, h) * 0.55);
+    grad.addColorStop(0, 'rgba(80,100,140,0.12)');
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    glctx.clearRect(0, 0, w, h);
+    glctx.fillStyle = grad;
+    glctx.fillRect(0, 0, w, h);
+  }
+  drawGlow();
+  window.addEventListener('resize', drawGlow);
+
+  // film grain texture
+  const grainCanvas = document.getElementById('grain');
+  const gctx = grainCanvas.getContext('2d');
+
+  function drawGrain() {
+    const w = grainCanvas.width = window.innerWidth * 1.5;
+    const h = grainCanvas.height = window.innerHeight * 1.5;
+    const imageData = gctx.createImageData(w, h);
+    const data = imageData.data;
+    for (let i = 0; i < data.length; i += 4) {
+      const v = Math.random() > 0.5 ? 255 : 0;
+      data[i] = v; data[i+1] = v; data[i+2] = v; data[i+3] = 255;
+    }
+    gctx.putImageData(imageData, 0, 0);
+  }
+  drawGrain();
+  window.addEventListener('resize', drawGrain);
+
+  // soft drifting dust particles
+  const dustCanvas = document.getElementById('dust');
+  const dctx = dustCanvas.getContext('2d');
+  let particles = [];
+
+  function initDust() {
+    dustCanvas.width = window.innerWidth;
+    dustCanvas.height = window.innerHeight;
+    const count = Math.round((window.innerWidth * window.innerHeight) / 14000);
+    particles = Array.from({ length: count }, () => ({
+      x: Math.random() * dustCanvas.width,
+      y: Math.random() * dustCanvas.height,
+      r: Math.random() * 1.4 + 0.3,
+      a: Math.random() * 0.25 + 0.05,
+      vx: (Math.random() - 0.5) * 0.06,
+      vy: -Math.random() * 0.08 - 0.02,
+    }));
+  }
+
+  function tickDust() {
+    dctx.clearRect(0, 0, dustCanvas.width, dustCanvas.height);
+    for (const p of particles) {
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.y < -10) { p.y = dustCanvas.height + 10; p.x = Math.random() * dustCanvas.width; }
+      if (p.x < -10) p.x = dustCanvas.width + 10;
+      if (p.x > dustCanvas.width + 10) p.x = -10;
+      dctx.beginPath();
+      dctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      dctx.fillStyle = `rgba(200,210,225,${p.a})`;
+      dctx.fill();
+    }
+    requestAnimationFrame(tickDust);
+  }
+
+  initDust();
+  tickDust();
+  window.addEventListener('resize', initDust);
+</script>
+
+</body>
+</html>

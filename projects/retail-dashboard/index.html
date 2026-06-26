@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multi-Brand Ops Dashboard — demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --accent: #8b80f9;
+    --bg: #07080c;
+    --panel: #12131b;
+    --panel-2: #181a25;
+    --border: rgba(255,255,255,0.06);
+    --text: #eceef5;
+    --dim: #8b8d9e;
+    --dimmer: #565869;
+    --green: #3ddc97;
+    --red: #f06464;
+    --amber: #e6b85c;
+  }
+
+  html, body { background: var(--bg); min-height: 100%; }
+
+  body {
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    padding: 2.5rem 1.5rem 6rem;
+  }
+
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  .wrap { max-width: 1100px; margin: 0 auto; }
+
+  .demo-banner {
+    text-align: center;
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+    margin-bottom: 1.6rem;
+  }
+  .demo-banner span { color: var(--accent); }
+
+  /* top bar */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    background: #0b0c12;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.1rem 1.4rem;
+    margin-bottom: 1.2rem;
+    flex-wrap: wrap;
+  }
+
+  .topbar-left { display: flex; align-items: center; gap: 1rem; }
+
+  .brand-badge {
+    width: 78px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    background: #fff;
+    color: #111;
+    font-weight: 700;
+    font-size: 12.5px;
+    letter-spacing: 0.03em;
+    flex-shrink: 0;
+  }
+
+  .topbar-title { font-weight: 700; font-size: 15px; }
+  .topbar-sub { color: var(--dim); font-size: 11.5px; margin-top: 3px; }
+  .topbar-sync { color: var(--green); font-size: 11px; margin-top: 5px; display: flex; align-items: center; gap: 0.4rem; }
+  .topbar-sync::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--green); display: inline-block; }
+
+  .topbar-right { display: flex; align-items: center; gap: 0.6rem; }
+
+  .icon-btn {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: var(--amber);
+    border: none;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+
+  .period-toggle {
+    display: flex;
+    background: #1a1c27;
+    border-radius: 7px;
+    padding: 2px;
+  }
+  .period-toggle button {
+    background: none;
+    border: none;
+    color: var(--dim);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 0.45rem 0.85rem;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .period-toggle button.active { background: #fff; color: #111; }
+
+  .date-pill {
+    background: #1a1c27;
+    border-radius: 7px;
+    color: var(--dim);
+    font-size: 12px;
+    padding: 0.5rem 0.9rem;
+    display: flex; align-items: center; gap: 0.4rem;
+  }
+  .date-pill::after { content: '\25BE'; font-size: 9px; color: var(--dimmer); }
+
+  /* brand tabs */
+  .brandtabs { display: flex; gap: 0.6rem; margin-bottom: 1.6rem; }
+  .brandtabs button {
+    background: #14151e;
+    border: 1.5px solid transparent;
+    color: var(--dim);
+    font-family: inherit;
+    font-size: 12.5px;
+    font-weight: 500;
+    padding: 0.55rem 1.1rem;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .brandtabs button.active { color: var(--text); border-color: var(--accent); }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin: 1.6rem 0 0.7rem;
+  }
+
+  /* metric cards */
+  .metrics {
+    display: grid;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 0.4rem;
+  }
+  .metrics.cols-5 { grid-template-columns: repeat(5, 1fr); }
+  .metrics.cols-4 { grid-template-columns: repeat(4, 1fr); }
+  .metric { background: var(--panel); padding: 1.1rem 1.2rem; }
+  .metric .mlabel { font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--dim); margin-bottom: 0.6rem; }
+  .metric .mval { font-size: 1.45rem; font-weight: 700; }
+  .metric .mdelta { font-size: 11.5px; margin-top: 0.5rem; }
+  .metric .mdelta.up { color: var(--green); }
+  .metric .mdelta.down { color: var(--red); }
+  .metric .spark { margin-top: 0.5rem; display: block; }
+
+  /* grid panels */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 1px; }
+  .panel { background: var(--panel); padding: 1.3rem 1.4rem; }
+  .panel h3 { font-size: 13px; font-weight: 700; margin-bottom: 1rem; }
+  .panel h3 small { color: var(--dim); font-weight: 400; font-size: 11px; margin-left: 0.3rem; }
+
+  svg.chart { width: 100%; height: auto; overflow: visible; }
+  .axis-label { fill: var(--dimmer); font-size: 9px; font-family: 'JetBrains Mono', monospace; }
+  .gridline { stroke: var(--border); stroke-width: 1; }
+
+  .legend { display: flex; gap: 1rem; font-size: 11px; color: var(--dim); margin-bottom: 0.8rem; }
+  .legend span { display: inline-flex; align-items: center; gap: 0.35rem; }
+  .legend i { width: 8px; height: 8px; border-radius: 2px; display: inline-block; }
+
+  .prod-row { display: grid; grid-template-columns: 16px 1fr 60px 70px; align-items: center; gap: 0.7rem; padding: 0.5rem 0; font-size: 12.5px; }
+  .prod-row .pi { color: var(--dimmer); }
+  .prod-row .pn { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .prod-row .pbar-track { height: 4px; background: #20222e; border-radius: 2px; overflow: hidden; }
+  .prod-row .pbar-fill { height: 100%; background: var(--accent); }
+  .prod-row .pv { font-family: 'JetBrains Mono', monospace; color: var(--text); font-weight: 500; text-align: right; }
+
+  .trend-row { display: flex; align-items: center; justify-content: space-between; padding: 0.55rem 0; font-size: 12.5px; border-top: 1px solid var(--border); }
+  .trend-row:first-of-type { border-top: none; }
+  .trend-pill { font-family: 'JetBrains Mono', monospace; font-size: 11px; padding: 0.15rem 0.5rem; border-radius: 4px; margin-right: 0.5rem; }
+  .trend-pill.up { background: rgba(61,220,151,0.12); color: var(--green); }
+  .trend-pill.down { background: rgba(240,100,100,0.12); color: var(--red); }
+
+  .status-bar { display: flex; height: 7px; border-radius: 4px; overflow: hidden; margin-bottom: 0.8rem; }
+  .status-line { display: flex; gap: 1rem; font-size: 11.5px; color: var(--dim); flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 0.9rem; }
+  .status-line .dots { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .status-line span { display: inline-flex; align-items: center; gap: 0.35rem; }
+  .status-line i { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+
+  .stat-row { display: flex; justify-content: space-between; align-items: baseline; font-size: 12px; padding: 0.4rem 0; color: var(--dim); }
+  .stat-row b { color: var(--text); font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+  .stat-row .sub { color: var(--dimmer); font-size: 11px; margin-left: 0.4rem; }
+  .refund-head { font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); margin: 0.9rem 0 0.3rem; }
+
+  table.datatable { width: 100%; border-collapse: collapse; font-size: 12px; }
+  table.datatable th {
+    text-align: left;
+    font-size: 10.5px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--dim);
+    padding: 0.5rem 0.6rem;
+    border-bottom: 1px solid var(--border);
+  }
+  table.datatable td {
+    padding: 0.55rem 0.6rem;
+    border-bottom: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text);
+  }
+  table.datatable tbody tr:hover { background: rgba(255,255,255,0.02); }
+  .stat-paid { color: var(--green); }
+  .stat-refunded { color: var(--red); }
+
+  .table-panel { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 1.3rem 1.4rem; margin-top: 1.2rem; }
+  .table-panel-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+  .table-panel-head h3 { font-size: 13px; font-weight: 700; }
+  .export-btn { background: var(--panel-2); border: 1px solid var(--border); color: var(--dim); font-family: inherit; font-size: 11.5px; padding: 0.45rem 0.8rem; border-radius: 6px; cursor: pointer; }
+
+  .search-input {
+    width: 100%;
+    background: #fff;
+    color: #111;
+    border: none;
+    border-radius: 6px;
+    padding: 0.6rem 0.9rem;
+    font-family: inherit;
+    font-size: 12.5px;
+    margin-bottom: 1rem;
+  }
+  .search-input::placeholder { color: #888; }
+
+  .empty-state { color: var(--dim); font-size: 12.5px; padding: 0.5rem 0 0.2rem; }
+
+  .filter-tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .filter-tabs button {
+    background: var(--panel-2);
+    border: 1.5px solid transparent;
+    color: var(--dim);
+    font-family: inherit;
+    font-size: 11.5px;
+    padding: 0.45rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .filter-tabs button.active { color: var(--accent); border-color: var(--accent); }
+
+  .glance-panel { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 1.3rem 1.4rem; margin-bottom: 1.2rem; }
+  .glance-row { display: flex; justify-content: space-between; padding: 0.4rem 0; font-size: 12.5px; color: var(--dim); }
+  .glance-row b { color: var(--text); font-weight: 600; }
+  .glance-note { font-size: 11.5px; color: var(--dim); margin-top: 0.6rem; }
+
+  .tech-row { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.8rem; }
+  .tech-name { width: 90px; flex-shrink: 0; font-size: 12px; color: var(--dim); }
+  .tech-bar-track { flex: 1; height: 16px; background: #14151e; border-radius: 4px; overflow: hidden; }
+  .tech-bar-fill { height: 100%; }
+  .tech-axis { display: flex; justify-content: space-between; margin-top: 0.4rem; margin-left: 98px; }
+  .tech-axis span { font-size: 9.5px; font-family: 'JetBrains Mono', monospace; color: var(--dimmer); }
+
+  footer.dash-footer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--dimmer);
+    margin-top: 2rem;
+  }
+
+  #back {
+    display: block;
+    text-align: center;
+    margin: 2.5rem auto 0;
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+    text-decoration: none;
+    transition: color 0.3s;
+    max-width: 1100px;
+  }
+  #back:hover { color: var(--text); }
+
+  @media (max-width: 900px) {
+    .metrics.cols-5, .metrics.cols-4 { grid-template-columns: repeat(2, 1fr); }
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <p class="demo-banner">Portfolio demo <span>&middot;</span> fictional brands &amp; sample data</p>
+
+  <div class="brandtabs">
+    <button class="active" data-brand="a" onclick="setBrand('a')">Northbound</button>
+    <button data-brand="b" onclick="setBrand('b')">Fernhall</button>
+    <button data-brand="c" onclick="setBrand('c')">Driftcare</button>
+  </div>
+
+  <div id="topbar-slot"></div>
+  <div id="panel-slot"></div>
+
+  <a id="back" href="../index.html">&larr; scootr's laboratory</a>
+</div>
+
+<script>
+  // ---------- chart helpers ----------
+  function sparkSVG(values, color) {
+    const w = 90, h = 22;
+    const min = Math.min(...values), max = Math.max(...values);
+    const pts = values.map((v, i) => [
+      (i / (values.length - 1)) * w,
+      h - ((v - min) / (max - min || 1)) * h,
+    ]);
+    const path = pts.map((p, i) => (i === 0 ? 'M' : 'L') + p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
+    return `<svg class="spark" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><path d="${path}" fill="none" stroke="${color}" stroke-width="1.5" /></svg>`;
+  }
+
+  function lineChartSVG(values, opts) {
+    opts = opts || {};
+    const w = 460, h = 160, padL = 42, padR = 8, padT = 10, padB = 18;
+    const min = Math.min(...values) * 0.96, max = Math.max(...values) * 1.04;
+    const x = i => padL + (i / (values.length - 1)) * (w - padL - padR);
+    const y = v => padT + (1 - (v - min) / (max - min || 1)) * (h - padT - padB);
+    const pts = values.map((v, i) => [x(i), y(v)]);
+    const path = pts.map((p, i) => (i === 0 ? 'M' : 'L') + p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
+    const color = opts.color || 'var(--accent)';
+    const ticks = 4;
+    let svg = `<svg class="chart" viewBox="0 0 ${w} ${h}">`;
+    for (let t = 0; t <= ticks; t++) {
+      const gy = padT + (t / ticks) * (h - padT - padB);
+      const val = max - (t / ticks) * (max - min);
+      svg += `<line class="gridline" x1="${padL}" x2="${w-padR}" y1="${gy.toFixed(1)}" y2="${gy.toFixed(1)}" />`;
+      svg += `<text class="axis-label" x="${padL-6}" y="${(gy+3).toFixed(1)}" text-anchor="end">$${(val/1000).toFixed(1)}k</text>`;
+    }
+    svg += `<path d="${path}" fill="none" stroke="${color}" stroke-width="2" />`;
+    pts.forEach((p, i) => svg += `<circle cx="${p[0]}" cy="${p[1]}" r="${i === pts.length-1 ? 4 : 3}" fill="${color}" />`);
+    if (opts.labels) {
+      svg += `<text class="axis-label" x="${padL}" y="${h-2}">${opts.labels[0]}</text>`;
+      svg += `<text class="axis-label" x="${w-padR}" y="${h-2}" text-anchor="end">${opts.labels[opts.labels.length-1]}</text>`;
+    }
+    svg += `</svg>`;
+    return svg;
+  }
+
+  function comboChartSVG(bars, line, opts) {
+    opts = opts || {};
+    const w = 460, h = 170, padL = 32, padR = 36, padT = 10, padB = 18;
+    const bw = (w - padL - padR) / bars.length;
+    const bMax = Math.max(...bars) * 1.2;
+    const lMin = Math.min(...line) * 0.92, lMax = Math.max(...line) * 1.08;
+    const xCenter = i => padL + bw * (i + 0.5);
+    const yBar = v => padT + (1 - v / bMax) * (h - padT - padB);
+    const yLine = v => padT + (1 - (v - lMin) / (lMax - lMin || 1)) * (h - padT - padB);
+    const barColor = opts.barColor || 'var(--accent)';
+    const lineColor = opts.lineColor || '#fff';
+    let svg = `<svg class="chart" viewBox="0 0 ${w} ${h}">`;
+    [0, 0.5, 1].forEach(t => {
+      const gy = padT + t * (h - padT - padB);
+      svg += `<line class="gridline" x1="${padL}" x2="${w-padR}" y1="${gy.toFixed(1)}" y2="${gy.toFixed(1)}" />`;
+    });
+    svg += `<text class="axis-label" x="2" y="${padT+4}">${Math.round(bMax)}</text>`;
+    svg += `<text class="axis-label" x="2" y="${h-padB}">0</text>`;
+    svg += `<text class="axis-label" x="${w-2}" y="${padT+4}" text-anchor="end">$${lMax.toFixed(0)}</text>`;
+    svg += `<text class="axis-label" x="${w-2}" y="${h-padB}" text-anchor="end">$${lMin.toFixed(0)}</text>`;
+    bars.forEach((v, i) => {
+      const bh = h - padB - yBar(v);
+      svg += `<rect x="${(xCenter(i) - bw*0.32).toFixed(1)}" y="${yBar(v).toFixed(1)}" width="${(bw*0.64).toFixed(1)}" height="${bh.toFixed(1)}" fill="${barColor}" fill-opacity="0.35" rx="2" />`;
+    });
+    const pts = line.map((v, i) => [xCenter(i), yLine(v)]);
+    const path = pts.map((p, i) => (i === 0 ? 'M' : 'L') + p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
+    svg += `<path d="${path}" fill="none" stroke="${lineColor}" stroke-width="2" />`;
+    pts.forEach(p => svg += `<circle cx="${p[0]}" cy="${p[1]}" r="3" fill="${lineColor}" />`);
+    if (opts.labels) {
+      svg += `<text class="axis-label" x="${padL}" y="${h-2}">${opts.labels[0]}</text>`;
+      svg += `<text class="axis-label" x="${w-padR}" y="${h-2}" text-anchor="end">${opts.labels[opts.labels.length-1]}</text>`;
+    }
+    svg += `</svg>`;
+    return svg;
+  }
+
+  function stackedSingleBarSVG(segments, opts) {
+    opts = opts || {};
+    const w = 460, h = 170, padL = 32, padR = 8, padT = 10, padB = 18;
+    const total = segments.reduce((a, s) => a + s.value, 0);
+    const max = total * 1.25;
+    const barW = 70;
+    const bx = padL + 30;
+    let svg = `<svg class="chart" viewBox="0 0 ${w} ${h}">`;
+    [0, 0.5, 1].forEach(t => {
+      const gy = padT + t * (h - padT - padB);
+      const val = max - t * max;
+      svg += `<line class="gridline" x1="${padL}" x2="${w-padR}" y1="${gy.toFixed(1)}" y2="${gy.toFixed(1)}" />`;
+      svg += `<text class="axis-label" x="${padL-6}" y="${(gy+3).toFixed(1)}" text-anchor="end">$${(val/1000).toFixed(1)}k</text>`;
+    });
+    let yCursor = h - padB;
+    segments.forEach(s => {
+      const segH = (s.value / max) * (h - padT - padB);
+      yCursor -= segH;
+      svg += `<rect x="${bx}" y="${yCursor.toFixed(1)}" width="${barW}" height="${segH.toFixed(1)}" fill="${s.color}" rx="2" />`;
+    });
+    svg += `<text class="axis-label" x="${bx + barW/2}" y="${h-2}" text-anchor="middle">${opts.label || ''}</text>`;
+    svg += `</svg>`;
+    return svg;
+  }
+
+  function groupedBarSVG(groups, opts) {
+    opts = opts || {};
+    const w = 420, h = 180, padL = 32, padR = 10, padT = 10, padB = 18;
+    const max = Math.max(...groups.flatMap(g => g.values)) * 1.15 || 1;
+    const gw = (w - padL - padR) / groups.length;
+    let svg = `<svg class="chart" viewBox="0 0 ${w} ${h}">`;
+    const ticks = 4;
+    for (let t = 0; t <= ticks; t++) {
+      const gy = padT + (t / ticks) * (h - padT - padB);
+      const val = Math.round((max - (t / ticks) * max) / 10) * 10;
+      svg += `<line class="gridline" x1="${padL}" x2="${w-padR}" y1="${gy.toFixed(1)}" y2="${gy.toFixed(1)}" />`;
+      svg += `<text class="axis-label" x="${padL-6}" y="${(gy+3).toFixed(1)}" text-anchor="end">${val}</text>`;
+    }
+    groups.forEach((g, gi) => {
+      const n = g.values.length;
+      const slot = gw * 0.6;
+      g.values.forEach((v, vi) => {
+        const bw = slot / n;
+        const bx = padL + gw * gi + (gw - slot) / 2 + bw * vi;
+        const bh = (v / max) * (h - padT - padB);
+        const by = h - padB - bh;
+        svg += `<rect x="${bx.toFixed(1)}" y="${by.toFixed(1)}" width="${(bw*0.82).toFixed(1)}" height="${bh.toFixed(1)}" fill="${opts.colors[vi]}" rx="2" />`;
+      });
+      svg += `<text class="axis-label" x="${(padL + gw*gi + gw/2).toFixed(1)}" y="${h-2}" text-anchor="middle">${g.label}</text>`;
+    });
+    svg += `</svg>`;
+    return svg;
+  }
+
+  // ---------- brand data ----------
+  const BRANDS = {
+    a: {
+      accent: '#8b80f9', type: 'retail',
+      logo: 'NORTHB', title: 'Northbound — Weekly Sales', sub: 'Week of Jun 21 – Jun 25, 2026',
+      sync: 'Synced 1h ago', period: 'weekly', source: 'Synced from e-commerce platform · Updated weekly',
+      metrics: [
+        { label: 'Net Revenue', val: '$9,643.43', delta: '+7.9%', up: true, spark: [8200,8800,8400,9100,9643] },
+        { label: 'Unique Orders', val: '141', delta: '-1.7%', up: false, spark: [150,145,148,144,141] },
+        { label: 'Customer Rate', val: '95.9%', delta: '-2.9%', up: false, spark: [98,97.5,97,96.4,95.9] },
+        { label: 'AOV', val: '$68.39', delta: '-1.7%', up: false, spark: [62,63,65,66,68.4] },
+        { label: 'Returning Rate', val: '4.1%', delta: '-1.7%', up: false, spark: [5,4.8,4.5,4.3,4.1] },
+      ],
+      revWeekly: [8200, 9100, 7600, 10300, 9643],
+      ordersWeekly: [132, 150, 118, 161, 141],
+      aovWeekly: [62.1, 60.7, 64.4, 64.0, 68.39],
+      weekLabels: ['May 24', 'Jun 21'],
+      products: [
+        ['Reed Diffuser — Driftwood', '$2,790.33', 100],
+        ['Candle — Vanilla Smoke', '$2,336.18', 84],
+        ['Travel Tin — Citrus', '$999.00', 36],
+        ['Room Spray — Cedar', '$583.65', 21],
+        ['Starter Set', '$487.99', 18],
+        ['Refill Pack — Driftwood', '$320.40', 12],
+      ],
+      orderStatus: { paid: 138, fulfilled: 121, refunded: 3, total: 141, fullRefund: '$0.00', fullN: 0, partialRefund: '$162.40', partialN: 3, refundRate: '2.1%' },
+      newReturning: { newPct: 66.7, retPct: 33.3, newN: 94, retN: 47, repeat: '6.4%' },
+      revByType: { segments: [
+        { label: 'Returning', value: 3480, color: '#3a3d4d' },
+        { label: 'New', value: 6163, color: '#8b80f9' },
+      ], axisLabel: 'Jun 19 – Jun 25' },
+      trendUp: [['Travel Tin — Citrus', '+106%', '+$214.00'], ['Starter Set', '+54%', '+$190.00'], ['Candle — Vanilla Smoke', '+18%', '+$96.00']],
+      trendDown: [['Reed Diffuser — Driftwood', '-19%', '-$210.00'], ['Room Spray — Cedar', '-12%', '-$80.00'], ['Gift Bundle', '-100%', '-$129.00']],
+      history: [
+        ['May 24 – May 30', '$8,200.00', '$7,944.20', '132', '$62.12'],
+        ['May 31 – Jun 6', '$9,100.00', '$8,811.70', '150', '$60.67'],
+        ['Jun 7 – Jun 13', '$7,600.00', '$7,372.00', '118', '$64.41'],
+        ['Jun 14 – Jun 20', '$10,300.00', '$9,991.00', '161', '$64.00'],
+        ['Jun 21 – Jun 25', '$9,643.43', '$9,353.32', '141', '$68.39'],
+      ],
+      orderRows: genOrders(34),
+    },
+    b: {
+      accent: '#2dd4bf', type: 'retail',
+      logo: 'FERNHALL', title: 'Fernhall — Monthly Sales', sub: 'Month of June 2026',
+      sync: 'Synced 1d ago', period: 'monthly', source: 'Synced from e-commerce platform · Updated weekly',
+      metrics: [
+        { label: 'Net Revenue', val: '$2,547.89', delta: '+6.9%', up: true, spark: [2200,2300,2384,2480,2548] },
+        { label: 'Paid Orders', val: '48', delta: '+14.3%', up: true, spark: [38,40,42,45,48] },
+        { label: 'Fulfillment Rate', val: '98.1%', delta: '+7.4%', up: true, spark: [88,90,91,95,98] },
+        { label: 'AOV', val: '$53.08', delta: '-14.2%', up: false, spark: [64,62,60,57,53] },
+        { label: 'Refund Rate', val: '7.7%', delta: '+17.9%', up: false, spark: [3,4,5,6.5,7.7] },
+      ],
+      revMonthly: [2384.14, 2547.89],
+      ordersMonthly: [42, 48],
+      aovMonthly: [61.84, 53.08],
+      monthLabels: ['May 2026', 'June 2026'],
+      products: [
+        ['Discovery Set — Original', '$2,200.00', 100],
+        ['Discovery Set — Almond', '$550.00', 25],
+        ['HVAC Diffuser — Max', '$350.00', 16],
+        ['Sachet — Bliss', '$300.00', 14],
+        ['Slim Wall Diffuser', '$300.00', 14],
+        ['Discovery Set — Lux', '$270.00', 12],
+        ['Fragrance Oil — Santal', '$240.00', 11],
+        ['Tower Diffuser — Sandstone', '$170.00', 8],
+        ['Diffuser — Standard', '$154.72', 7],
+        ['Diffuser — Lux', '$150.00', 7],
+      ],
+      orderStatus: { paid: 48, fulfilled: 1, refunded: 4, total: 52, fullRefund: '$0.00', fullN: 0, partialRefund: '$0.00', partialN: 4, refundRate: '7.7%' },
+      revByType: { segments: [
+        { label: 'Returning', value: 850, color: '#3a3d4d' },
+        { label: 'New', value: 1698, color: '#2dd4bf' },
+      ], axisLabel: 'June 2026' },
+      trendUp: [['Discovery Set — Original', '+100%', '$2,200.00'], ['HVAC Diffuser — Max', '+100%', '$350.00'], ['Sachet — Bliss', '+100%', '$300.00'], ['Slim Wall Diffuser', '+100%', '$300.00'], ['Discovery Set — Lux', '+100%', '$270.00']],
+      trendDown: [['HVAC Diffuser — Black', '-100%', '$0.00'], ['Fragrance Oil — Santal 400ml', '-100%', '$0.00'], ['Discovery Set — Bliss', '-100%', '$0.00'], ['Discovery Set — My Way', '-100%', '$0.00'], ['Tower Diffuser — Almond', '-100%', '$0.00']],
+      history: [
+        ['May 2026', '$2,597.29', '$2,384.14', '42', '91.3%', '$61.84'],
+        ['June 2026', '$2,547.89', '$2,547.89', '48', '98.1%', '$53.08'],
+      ],
+      emptyOrders: true,
+    },
+    c: {
+      accent: '#fb7244', type: 'service',
+      logo: 'DRIFT', title: 'Driftcare — Monthly Service', sub: 'June 2026',
+      sync: 'Synced 9h ago', period: 'monthly', source: 'Synced from field-service platform · Updated weekdays',
+      revenue: [
+        { label: 'Total Invoiced', val: '$152,468.06' },
+        { label: 'Total Collected', val: '$295,308.29' },
+        { label: 'Outstanding AR', val: '$103,190.26' },
+        { label: 'Avg Invoice Value', val: '$472.04' },
+      ],
+      health: [
+        { label: 'Missed-Visit Rate (local)', val: '0.0%' },
+        { label: 'New Clients', val: '28' },
+        { label: 'Completed Visits (local)', val: '422' },
+        { label: 'Visits Remaining (local)', val: '21' },
+      ],
+      glanceDate: 'Jun 26, 2026',
+      glance: [['Completed today', '0'], ['Remaining today', '4']],
+      glanceClients: 'Birchwood Care Center, Halden Manor LLC, Marrow Hill Chapel, Ridgeline at Wayne Hills',
+      glanceNote: 'Only reflects the last weekday fetch — may look stale if checked on a weekend.',
+      visitGroups: [
+        { label: 'Completed', values: [400, 22] },
+        { label: 'Missed', values: [12, 4] },
+        { label: 'Upcoming', values: [16, 5] },
+      ],
+      visitColors: ['#fb7244', '#3a3d4d'],
+      technicians: [
+        ['Mara T.', 168],
+        ['Lazar D.', 132],
+        ['Jorge C.', 95],
+        ['Devon R.', 24],
+      ],
+      filters: ['Missed (0)', 'Completed (434)', 'Upcoming (21)', 'On hold (34)', 'New jobs (23)', 'Visited 2+ times (23)', 'Out of state (42)'],
+      emptySearch: 'None — all visits on track.',
+    },
+  };
+
+  function genOrders(n) {
+    let seed = 42;
+    const rand = () => { seed = (seed * 1103515245 + 12345) % 2147483648; return seed / 2147483648; };
+    const statuses = ['paid', 'paid', 'paid', 'paid', 'paid', 'refunded'];
+    const sources = ['Online', 'Wholesale'];
+    const rows = [];
+    for (let i = 0; i < n; i++) {
+      const day = 21 + Math.floor(rand() * 5);
+      rows.push({
+        order: '#' + (41500 + Math.floor(rand() * 400)),
+        date: `6/${day}/2026`,
+        total: '$' + (8 + rand() * 290).toFixed(2),
+        status: statuses[Math.floor(rand() * statuses.length)],
+        source: sources[Math.floor(rand() * sources.length)],
+        customer: rand() > 0.65 ? 'returning' : 'new',
+      });
+    }
+    return rows;
+  }
+
+  // ---------- render ----------
+  function renderTopbar(b) {
+    const periodControl = b.type === 'retail'
+      ? (b.period === 'weekly'
+        ? `<div class="period-toggle"><button class="active">Weekly</button><button>Monthly</button></div>`
+        : `<div class="period-toggle"><button>Weekly</button><button class="active">Monthly</button></div>`)
+      : '';
+    const datePill = `<div class="date-pill">${b.period === 'weekly' ? 'Jun 14 - Jun 20, 2026' : 'June 2026'}</div>`;
+    return `
+      <div class="topbar">
+        <div class="topbar-left">
+          <div class="brand-badge" style="color:${b.accent};">${b.logo}</div>
+          <div>
+            <div class="topbar-title">${b.title}</div>
+            <div class="topbar-sub">${b.sub}</div>
+            <div class="topbar-sync">${b.sync}</div>
+          </div>
+        </div>
+        <div class="topbar-right"><button class="icon-btn">&#9728;</button>${periodControl}${datePill}</div>
+      </div>`;
+  }
+
+  function renderRetail(b) {
+    const metrics = b.metrics.map(m => `
+      <div class="metric">
+        <div class="mlabel">${m.label}</div>
+        <div class="mval">${m.val}</div>
+        <div class="mdelta ${m.up ? 'up' : 'down'}">${m.up ? '&uarr;' : '&darr;'} ${m.delta}</div>
+        ${sparkSVG(m.spark, m.up ? 'var(--green)' : 'var(--red)')}
+      </div>`).join('');
+
+    const revChart = b.period === 'weekly'
+      ? lineChartSVG(b.revWeekly, { color: b.accent, labels: b.weekLabels })
+      : lineChartSVG(b.revMonthly, { color: b.accent, labels: b.monthLabels });
+
+    const comboChart = b.period === 'weekly'
+      ? comboChartSVG(b.ordersWeekly, b.aovWeekly, { barColor: b.accent, lineColor: '#fff', labels: b.weekLabels })
+      : comboChartSVG(b.ordersMonthly, b.aovMonthly, { barColor: b.accent, lineColor: '#fff', labels: b.monthLabels });
+
+    const products = b.products.map((p, i) => `
+      <div class="prod-row">
+        <span class="pi">${i + 1}</span>
+        <span class="pn">${p[0]}</span>
+        <span class="pbar-track"><span class="pbar-fill" style="width:${p[2]}%;background:${b.accent};"></span></span>
+        <span class="pv">${p[1]}</span>
+      </div>`).join('');
+
+    const trendUp = b.trendUp.map(t => `
+      <div class="trend-row"><span>${t[0]}</span><span><span class="trend-pill up">${t[1]}</span>${t[2]}</span></div>`).join('');
+    const trendDown = b.trendDown.map(t => `
+      <div class="trend-row"><span>${t[0]}</span><span><span class="trend-pill down">${t[1]}</span>${t[2]}</span></div>`).join('');
+
+    const s = b.orderStatus;
+    const paidPct = (s.paid / s.total) * 100;
+    const refundPct = (s.refunded / s.total) * 100;
+    const fulfilledPct = 100 - paidPct - refundPct;
+
+    const nrBlock = b.newReturning ? `
+      <div class="panel">
+        <h3>New vs. returning customers</h3>
+        <div class="status-bar">
+          <div style="width:${b.newReturning.newPct}%;background:${b.accent};"></div>
+          <div style="width:${b.newReturning.retPct}%;background:#3a3d4d;"></div>
+        </div>
+        <div class="status-line">
+          <span class="dots">
+            <span><i style="background:${b.accent}"></i>New ${b.newReturning.newN} (${b.newReturning.newPct}%)</span>
+            <span><i style="background:#3a3d4d"></i>Returning ${b.newReturning.retN} (${b.newReturning.retPct}%)</span>
+          </span>
+          <span>Repeat purchase rate <b style="color:var(--text);font-family:'JetBrains Mono',monospace;">${b.newReturning.repeat}</b></span>
+        </div>
+      </div>` : `
+      <div class="panel">
+        <h3>New vs. returning customers</h3>
+        <p class="empty-state">Customer-type breakdown is available once monthly history accumulates.</p>
+      </div>`;
+
+    const historyHead = b.period === 'weekly'
+      ? `<tr><th>Week</th><th>Revenue</th><th>Net Revenue</th><th>Orders</th><th>AOV</th></tr>`
+      : `<tr><th>Month</th><th>Revenue</th><th>Net Revenue</th><th>Orders</th><th>Fulfillment</th><th>AOV</th></tr>`;
+    const historyRows = b.history.map(row => `<tr>${row.map(c => `<td>${c}</td>`).join('')}</tr>`).join('');
+
+    const ordersBlock = b.emptyOrders
+      ? `<p class="empty-state">No order detail available for this period yet — will populate after the next data refresh.</p>`
+      : `<table class="datatable" id="orders-table">
+          <thead><tr><th>Order</th><th>Date</th><th>Total</th><th>Status</th><th>Source</th><th>Customer</th></tr></thead>
+          <tbody>${b.orderRows.map(r => `
+            <tr data-search="${r.order} ${r.customer}">
+              <td>${r.order}</td><td>${r.date}</td><td>${r.total}</td>
+              <td class="stat-${r.status}">${r.status}</td>
+              <td>${r.source}</td><td>${r.customer}</td>
+            </tr>`).join('')}</tbody>
+        </table>`;
+
+    return `
+      <div class="metrics cols-5">${metrics}</div>
+
+      <div class="grid-2">
+        <div class="panel">
+          <h3>Net revenue <small>&mdash; all ${b.period === 'weekly' ? 'weeks' : 'months'}</small></h3>
+          ${revChart}
+        </div>
+        <div class="panel">
+          <h3>Top products this ${b.period === 'weekly' ? 'week' : 'month'}</h3>
+          ${products}
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel">
+          <h3>Orders &amp; AOV <small>&mdash; all ${b.period === 'weekly' ? 'weeks' : 'months'}</small></h3>
+          <div class="legend"><span><i style="background:${b.accent}"></i>${b.period === 'weekly' ? 'Orders' : 'Paid orders'}</span><span><i style="background:#fff"></i>AOV</span></div>
+          ${comboChart}
+        </div>
+        <div class="panel">
+          <h3>Order status</h3>
+          <div class="status-bar">
+            <div style="width:${paidPct}%;background:${b.accent};"></div>
+            <div style="width:${fulfilledPct}%;background:var(--amber);"></div>
+            <div style="width:${refundPct}%;background:var(--red);"></div>
+          </div>
+          <div class="status-line">
+            <span class="dots">
+              <span><i style="background:${b.accent}"></i>Paid ${s.paid}</span>
+              <span><i style="background:var(--amber)"></i>Fulfilled ${s.fulfilled}</span>
+              <span><i style="background:var(--red)"></i>Refunded ${s.refunded}</span>
+            </span>
+          </div>
+          <div class="stat-row"><span>Total orders</span><b>${s.total}</b></div>
+          <div class="refund-head">Refunds</div>
+          <div class="stat-row"><span>Full refunds</span><b>${s.fullRefund}<span class="sub">${s.fullN} orders &middot; ${(s.fullN/s.total*100).toFixed(1)}%</span></b></div>
+          <div class="stat-row"><span>Partial refunds</span><b>${s.partialRefund}<span class="sub">${s.partialN} orders &middot; ${(s.partialN/s.total*100).toFixed(1)}%</span></b></div>
+          <div class="stat-row"><span>Total refund rate</span><b>${s.refundRate}</b></div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        ${nrBlock}
+        <div class="panel">
+          <h3>Revenue by customer type <small>&mdash; current period</small></h3>
+          <div class="legend"><span><i style="background:${b.accent}"></i>New</span><span><i style="background:#3a3d4d"></i>Returning</span></div>
+          ${b.revByType ? stackedSingleBarSVG(b.revByType.segments, { label: b.revByType.axisLabel }) : '<p class="empty-state">Not enough data for this period yet.</p>'}
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel">
+          <h3>&#128200; Trending up <small>(vs last ${b.period === 'weekly' ? 'week' : 'month'})</small></h3>
+          ${trendUp}
+        </div>
+        <div class="panel">
+          <h3>&#128201; Trending down <small>(vs last ${b.period === 'weekly' ? 'week' : 'month'})</small></h3>
+          ${trendDown}
+        </div>
+      </div>
+
+      <div class="table-panel">
+        <div class="table-panel-head">
+          <h3>${b.period === 'weekly' ? 'Weekly' : 'Monthly'} history</h3>
+          <button class="export-btn" onclick="alert('Demo only — export disabled.')">Export CSV</button>
+        </div>
+        <table class="datatable">
+          <thead>${historyHead}</thead>
+          <tbody>${historyRows}</tbody>
+        </table>
+      </div>
+
+      <div class="table-panel">
+        <div class="table-panel-head"><h3>Orders this ${b.period === 'weekly' ? 'week' : 'month'}${b.orderRows ? ` (${b.orderRows.length})` : ''}</h3></div>
+        <input class="search-input" id="order-search" placeholder="Search by order # ..." oninput="filterOrders(this.value)">
+        ${ordersBlock}
+      </div>
+
+      <footer class="dash-footer">${b.source} &middot; Built by Scott Morris</footer>
+    `;
+  }
+
+  function renderService(b) {
+    const revenue = b.revenue.map(m => `<div class="metric"><div class="mlabel">${m.label}</div><div class="mval">${m.val}</div></div>`).join('');
+    const health = b.health.map(m => `<div class="metric"><div class="mlabel">${m.label}</div><div class="mval">${m.val}</div></div>`).join('');
+    const glanceRows = b.glance.map(g => `<div class="glance-row"><span>${g[0]}</span><b>${g[1]}</b></div>`).join('');
+    const maxTech = Math.max(...b.technicians.map(x => x[1]));
+    const techRows = b.technicians.map(t => `
+      <div class="tech-row">
+        <div class="tech-name">${t[0]}</div>
+        <div class="tech-bar-track"><div class="tech-bar-fill" style="width:${(t[1]/maxTech*100).toFixed(0)}%;background:${b.accent}"></div></div>
+        <div class="mono" style="width:32px;text-align:right;color:var(--dim);font-size:11px;">${t[1]}</div>
+      </div>`).join('');
+    const filters = b.filters.map((f, i) => `<button class="${i === 0 ? 'active' : ''}">${f}</button>`).join('');
+
+    return `
+      <div class="section-label">Revenue</div>
+      <div class="metrics cols-4">${revenue}</div>
+
+      <div class="section-label">Service health</div>
+      <div class="metrics cols-4">${health}</div>
+
+      <div class="glance-panel">
+        <h3 style="font-size:13px;font-weight:700;margin-bottom:0.8rem;">Today at a glance &mdash; ${b.glanceDate}</h3>
+        ${glanceRows}
+        <div class="glance-note">${b.glanceClients}</div>
+        <div class="glance-note">${b.glanceNote}</div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel">
+          <h3>Visits <small>&mdash; ${b.sub}</small></h3>
+          <div class="legend"><span><i style="background:${b.visitColors[0]}"></i>Local (NY/NJ/PA)</span><span><i style="background:${b.visitColors[1]}"></i>Shipped</span></div>
+          ${groupedBarSVG(b.visitGroups, { colors: b.visitColors })}
+        </div>
+        <div class="panel">
+          <h3>Visits completed by technician</h3>
+          ${techRows}
+          <div class="tech-axis"><span>0</span><span>${Math.round(maxTech*0.5)}</span><span>${maxTech}</span></div>
+        </div>
+      </div>
+
+      <div class="table-panel">
+        <div class="filter-tabs">${filters}</div>
+        <input class="search-input" placeholder="Search by client name...">
+        <p class="empty-state">${b.emptySearch}</p>
+      </div>
+
+      <footer class="dash-footer">${b.source} &middot; Built by Scott Morris</footer>
+    `;
+  }
+
+  function setBrand(key) {
+    const b = BRANDS[key];
+    document.documentElement.style.setProperty('--accent', b.accent);
+    document.querySelectorAll('.brandtabs button').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.brand === key);
+    });
+    document.getElementById('topbar-slot').innerHTML = renderTopbar(b);
+    document.getElementById('panel-slot').innerHTML = b.type === 'retail' ? renderRetail(b) : renderService(b);
+  }
+
+  function filterOrders(q) {
+    q = q.trim().toLowerCase();
+    document.querySelectorAll('#orders-table tbody tr').forEach(row => {
+      row.style.display = row.dataset.search.toLowerCase().includes(q) ? '' : 'none';
+    });
+  }
+
+  setBrand('a');
+</script>
+
+</body>
+</html>
