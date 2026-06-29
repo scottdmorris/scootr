@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — scootr's laboratory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --off-white: #e8e4dc;
+    --dim: rgba(232, 228, 220, 0.7);
+    --dimmer: rgba(232, 228, 220, 0.45);
+    --border: rgba(232,228,220,0.12);
+  }
+
+  html, body { background: #000; min-height: 100%; }
+
+  body {
+    position: relative;
+    color: var(--off-white);
+    font-family: 'Cormorant Garamond', serif;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  #grain {
+    position: fixed;
+    inset: -50%;
+    width: 200%;
+    height: 200%;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.05;
+    mix-blend-mode: overlay;
+  }
+
+  #vignette {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center,
+      transparent 35%,
+      rgba(0,0,0,0.5) 75%,
+      rgba(0,0,0,0.88) 100%
+    );
+  }
+
+  #scanlines {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    );
+  }
+
+  a { color: inherit; }
+
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 6rem 1.5rem 5rem;
+  }
+
+  header.hero {
+    text-align: center;
+    margin-bottom: 3.5rem;
+  }
+
+  .label {
+    display: block;
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+    margin-bottom: 1.6rem;
+    opacity: 0;
+    animation: fade-up 1.2s ease 0.1s forwards;
+  }
+
+  h1 {
+    font-weight: 300;
+    font-style: italic;
+    font-size: clamp(2.6rem, 6.5vw, 4rem);
+    letter-spacing: 0.04em;
+    line-height: 1.1;
+    opacity: 0;
+    animation: fade-up 1.4s ease 0.3s forwards;
+  }
+
+  .tagline {
+    font-style: italic;
+    color: var(--dim);
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
+    margin-top: 1.2rem;
+    opacity: 0;
+    animation: fade-up 1.4s ease 0.6s forwards;
+  }
+
+  .dossier {
+    display: grid;
+    grid-template-columns: 1fr 260px;
+    gap: 3rem;
+    align-items: start;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 3rem 0;
+    opacity: 0;
+    animation: fade-up 1.2s ease 0.9s forwards;
+  }
+
+  @media (max-width: 640px) {
+    .dossier { grid-template-columns: 1fr; }
+    #scan-wrap { margin: 0 auto; }
+  }
+
+  .field {
+    margin-bottom: 1.8rem;
+  }
+
+  .field:last-child { margin-bottom: 0; }
+
+  .field-label {
+    display: block;
+    font-family: 'Courier Prime', monospace;
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+    margin-bottom: 0.6rem;
+  }
+
+  .field-body {
+    color: var(--dim);
+    font-size: 0.98rem;
+    max-width: 540px;
+  }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem 2rem;
+  }
+
+  @media (max-width: 520px) {
+    .skills-grid { grid-template-columns: 1fr; }
+  }
+
+  .skill-group .field-label { margin-bottom: 0.4rem; }
+  .skill-group .field-body { font-size: 0.9rem; line-height: 1.5; }
+
+  #scan-wrap {
+    width: 260px;
+    text-align: center;
+  }
+
+  #scan-canvas {
+    width: 100%;
+    height: 209px;
+    display: block;
+    border: 1px solid var(--border);
+  }
+
+  #sphere-canvas {
+    width: 100%;
+    height: 260px;
+    display: block;
+    margin-top: 1.5rem;
+  }
+
+  #sphere-caption {
+    font-family: 'Courier Prime', monospace;
+    font-size: 8px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+    margin-top: 0.8rem;
+  }
+
+  .timeline-entry {
+    border-top: 1px solid var(--border);
+    padding: 1rem 0;
+  }
+  .timeline-entry:first-child { border-top: none; padding-top: 0; }
+
+  .timeline-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-family: 'Courier Prime', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+  }
+
+  .timeline-org { color: var(--dim); }
+
+  .timeline-role {
+    font-style: italic;
+    color: var(--off-white);
+    margin-top: 0.3rem;
+    font-size: 1rem;
+  }
+
+  .contact-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.6rem;
+    margin-top: 3rem;
+    justify-content: center;
+    opacity: 0;
+    animation: fade-up 1.2s ease 1.2s forwards;
+  }
+
+  .contact-row a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--dim);
+    text-decoration: none;
+    transition: color 0.3s ease, letter-spacing 0.3s ease;
+  }
+
+  .contact-row a:hover {
+    color: var(--off-white);
+    letter-spacing: 0.3em;
+  }
+
+  .contact-row svg { opacity: 0.7; flex-shrink: 0; }
+  .contact-row a:hover svg { opacity: 1; }
+
+  #back {
+    display: block;
+    text-align: center;
+    margin-top: 4.5rem;
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+    text-decoration: none;
+    opacity: 0;
+    animation: fade-up 1.2s ease 1.6s forwards;
+    transition: color 0.3s;
+  }
+  #back:hover { color: var(--off-white); }
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="grain"></canvas>
+<div id="vignette"></div>
+<div id="scanlines"></div>
+
+<main>
+  <header class="hero">
+    <span class="label">Operator File · 00</span>
+    <h1>Scott Morris</h1>
+    <p class="tagline">AI-integrated engineer. Builds the systems that watch, learn, and report back.</p>
+  </header>
+
+  <div class="dossier">
+    <div>
+      <div class="field">
+        <span class="field-label">Brief</span>
+        <p class="field-body">Software engineer and data professional based in Brooklyn, NY. Builds Python automation, ETL pipelines, CRM architecture, and analytics platforms — fluent in wiring LLM APIs (OpenAI, Claude) into real production workflows rather than demos. Currently embedded at a multi-brand commerce operation, architecting the data layer from the ground up. Prior work spans backend engineering, geospatial research, and computer vision.</p>
+      </div>
+      <div class="field">
+        <span class="field-label">Service Record</span>
+        <div class="timeline-entry">
+          <div class="timeline-row">
+            <span class="timeline-org">[REDACTED] — Brooklyn, NY</span>
+            <span>Nov 2025 – Present</span>
+          </div>
+          <p class="timeline-role">Data &amp; AI Analyst</p>
+        </div>
+        <div class="timeline-entry">
+          <div class="timeline-row">
+            <span class="timeline-org">Research Foundation of CUNY — New York, NY</span>
+            <span>Mar 2024 – May 2025</span>
+          </div>
+          <p class="timeline-role">Data Program Administrator</p>
+        </div>
+        <div class="timeline-entry">
+          <div class="timeline-row">
+            <span class="timeline-org">Magna Technology Group — New York, NY</span>
+            <span>Jun 2023 – Aug 2023</span>
+          </div>
+          <p class="timeline-role">Backend Developer</p>
+        </div>
+      </div>
+      <div class="field">
+        <span class="field-label">Education</span>
+        <p class="field-body">B.A. Computer Science — Occidental College. Minors in Cognitive Science and Media Arts &amp; Culture.</p>
+      </div>
+      <div class="field">
+        <span class="field-label">Capabilities</span>
+        <div class="skills-grid">
+          <div class="skill-group">
+            <span class="field-label">Languages</span>
+            <p class="field-body">Python, SQL, JavaScript, Java, HTML/CSS</p>
+          </div>
+          <div class="skill-group">
+            <span class="field-label">AI &amp; ML</span>
+            <p class="field-body">OpenAI API, Claude API, Claude Code, Prompt Engineering, TensorFlow, Keras</p>
+          </div>
+          <div class="skill-group">
+            <span class="field-label">Data &amp; Analytics</span>
+            <p class="field-body">Pandas, NumPy, GeoPandas, ETL Pipelines, Tableau, Looker Studio, QGIS</p>
+          </div>
+          <div class="skill-group">
+            <span class="field-label">Tools &amp; Platforms</span>
+            <p class="field-body">HubSpot, Salesforce, Jobber, Figma, Git, Jupyter, React</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="scan-wrap">
+      <canvas id="scan-canvas"></canvas>
+      <canvas id="sphere-canvas"></canvas>
+      <p id="sphere-caption">structure scan</p>
+    </div>
+  </div>
+
+  <div class="contact-row">
+    <a href="mailto:smorri933@gmail.com" aria-label="Email">
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#e8e4dc" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+      Email
+    </a>
+    <a href="https://github.com/scottdmorris" target="_blank" aria-label="GitHub">
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="#e8e4dc"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+      GitHub
+    </a>
+    <a href="https://linkedin.com/in/scottdmorris" target="_blank" aria-label="LinkedIn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="#e8e4dc"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
+      LinkedIn
+    </a>
+  </div>
+
+  <a id="back" href="../index.html">&larr; scootr's laboratory</a>
+</main>
+
+<script>
+  // grain texture
+  const grainCanvas = document.getElementById('grain');
+  const gctx = grainCanvas.getContext('2d');
+  function drawGrain() {
+    const w = grainCanvas.width = window.innerWidth * 1.5;
+    const h = grainCanvas.height = window.innerHeight * 1.5;
+    const imageData = gctx.createImageData(w, h);
+    const data = imageData.data;
+    for (let i = 0; i < data.length; i += 4) {
+      const v = Math.random() > 0.5 ? 255 : 0;
+      data[i] = v; data[i+1] = v; data[i+2] = v; data[i+3] = 255;
+    }
+    gctx.putImageData(imageData, 0, 0);
+  }
+  drawGrain();
+  window.addEventListener('resize', drawGrain);
+
+  // screen-capture CRT portrait — sharp image, cool blue-cyan grade, fine
+  // subpixel grid (mimics a monitor photographed up close), bloom on
+  // highlights, scanline banding, vignette.
+  const CROP = { sx: 200, sy: 0, sw: 1974, sh: 1582 };
+  const canvas = document.getElementById('scan-canvas');
+  const ctx = canvas.getContext('2d');
+
+  const photo = new Image();
+  photo.src = './img/source-photo.jpeg';
+  photo.onload = () => {
+    const W = 520, H = Math.round(520 * CROP.sh / CROP.sw);
+    canvas.width = W; canvas.height = H;
+
+    // base image only gets composited once — flicker/drift redraw on top each frame
+    const base = document.createElement('canvas');
+    base.width = W; base.height = H;
+    const bctxBase = base.getContext('2d');
+
+    bctxBase.filter = 'grayscale(0.4) contrast(1.25) brightness(1.05) saturate(1.4)';
+    bctxBase.drawImage(photo, CROP.sx, CROP.sy, CROP.sw, CROP.sh, 0, 0, W, H);
+    bctxBase.filter = 'none';
+
+    bctxBase.globalCompositeOperation = 'multiply';
+    bctxBase.fillStyle = 'rgba(150,190,230,0.9)';
+    bctxBase.fillRect(0, 0, W, H);
+    bctxBase.globalCompositeOperation = 'source-over';
+
+    const bloom = document.createElement('canvas');
+    bloom.width = W; bloom.height = H;
+    const bctx = bloom.getContext('2d');
+    bctx.filter = 'blur(6px) brightness(1.3) saturate(1.6)';
+    bctx.drawImage(base, 0, 0);
+    bctxBase.globalCompositeOperation = 'screen';
+    bctxBase.globalAlpha = 0.55;
+    bctxBase.drawImage(bloom, 0, 0);
+    bctxBase.globalAlpha = 1;
+    bctxBase.globalCompositeOperation = 'source-over';
+
+    // live render loop: subtle brightness flicker + slowly drifting scanlines
+    let driftOffset = 0;
+    let flickerAlpha = 1;
+    let nextFlickerAt = 0;
+    let t = 0;
+
+    function frame() {
+      t += 1;
+      ctx.clearRect(0, 0, W, H);
+
+      // occasional brief flicker (brightness dip), like the homepage's video flicker
+      if (t >= nextFlickerAt) {
+        flickerAlpha = 0.85 + Math.random() * 0.15;
+        nextFlickerAt = t + 90 + Math.random() * 180;
+      } else {
+        flickerAlpha += (1 - flickerAlpha) * 0.15;
+      }
+      ctx.globalAlpha = flickerAlpha;
+      ctx.drawImage(base, 0, 0);
+      ctx.globalAlpha = 1;
+
+      // fine subpixel grid (static)
+      ctx.fillStyle = 'rgba(0,0,0,0.4)';
+      for (let y = 0; y < H; y += 4) ctx.fillRect(0, y, W, 1);
+      for (let x = 0; x < W; x += 4) ctx.fillRect(x, 0, 1, H);
+
+      // slowly drifting scanline bands
+      driftOffset = (driftOffset + 0.15) % 4;
+      ctx.fillStyle = 'rgba(0,0,0,0.22)';
+      for (let y = -4; y < H + 4; y += 4) ctx.fillRect(0, y + driftOffset, W, 2);
+
+      const grad = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, W * 0.62);
+      grad.addColorStop(0, 'rgba(0,0,0,0)');
+      grad.addColorStop(1, 'rgba(0,10,20,0.55)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, H);
+
+      requestAnimationFrame(frame);
+    }
+    frame();
+  };
+
+  // rotating wireframe sphere — blue-tinted, with holographic glow, a Saturn-style
+  // tilted ring, slow precession wobble, and drifting background dust
+  const sphereCanvas = document.getElementById('sphere-canvas');
+  const sctx = sphereCanvas.getContext('2d');
+  const DPR = Math.min(window.devicePixelRatio || 1, 2);
+
+  function sizeSphereCanvas() {
+    const rect = sphereCanvas.getBoundingClientRect();
+    sphereCanvas.width = rect.width * DPR;
+    sphereCanvas.height = rect.height * DPR;
+  }
+  sizeSphereCanvas();
+  window.addEventListener('resize', sizeSphereCanvas);
+
+  const LAT_STEPS = 10;
+  const LON_STEPS = 14;
+  const spherePoints = [];
+  for (let i = 0; i <= LAT_STEPS; i++) {
+    const lat = (i / LAT_STEPS) * Math.PI - Math.PI / 2;
+    const ring = [];
+    for (let j = 0; j <= LON_STEPS; j++) {
+      const lon = (j / LON_STEPS) * Math.PI * 2;
+      ring.push({
+        x: Math.cos(lat) * Math.cos(lon),
+        y: Math.sin(lat),
+        z: Math.cos(lat) * Math.sin(lon)
+      });
+    }
+    spherePoints.push(ring);
+  }
+
+  const dust = Array.from({ length: 40 }, () => ({
+    x: Math.random() * sphereCanvas.width, y: Math.random() * sphereCanvas.height,
+    vx: (Math.random() - 0.5) * 0.15 * DPR, vy: (Math.random() - 0.5) * 0.15 * DPR,
+    a: Math.random() * 0.25 + 0.05
+  }));
+
+  let sphereAngle = 0;
+  let wobbleT = 0;
+  let ringRot = 0;
+  function drawSphere() {
+    const w = sphereCanvas.width, h = sphereCanvas.height;
+    sctx.clearRect(0, 0, w, h);
+
+    for (const d of dust) {
+      d.x += d.vx; d.y += d.vy;
+      if (d.x < 0) d.x = w; if (d.x > w) d.x = 0;
+      if (d.y < 0) d.y = h; if (d.y > h) d.y = 0;
+      sctx.beginPath();
+      sctx.arc(d.x, d.y, 1 * DPR, 0, Math.PI * 2);
+      sctx.fillStyle = `rgba(170,210,240,${d.a})`;
+      sctx.fill();
+    }
+
+    const cx = w / 2, cy = h / 2;
+    const radius = Math.min(w, h) * 0.3;
+    sphereAngle += 0.006;
+    wobbleT += 0.004;
+    ringRot += 0.004;
+
+    const tiltAngle = 0.35 + Math.sin(wobbleT) * 0.3;
+    const cosA = Math.cos(sphereAngle), sinA = Math.sin(sphereAngle);
+    const cosT = Math.cos(tiltAngle), sinT = Math.sin(tiltAngle);
+
+    function project(p) {
+      let x = p.x * cosA - p.z * sinA;
+      let z = p.x * sinA + p.z * cosA;
+      let y = p.y;
+      const y2 = y * cosT - z * sinT;
+      const z2 = y * sinT + z * cosT;
+      const scale = 1.4 / (1.4 - z2 * 0.5);
+      return {
+        sx: cx + x * radius * scale,
+        sy: cy + y2 * radius * scale,
+        z: z2
+      };
+    }
+
+    // Saturn-style ring, fixed squash + slow rotation in its own plane, with glow
+    sctx.shadowColor = 'rgba(170,210,240,0.9)';
+    sctx.shadowBlur = 6 * DPR;
+    sctx.strokeStyle = 'rgba(170,210,240,0.4)';
+    sctx.lineWidth = 1 * DPR;
+    sctx.beginPath();
+    sctx.ellipse(cx, cy, radius * 1.5, radius * 0.45, ringRot, 0, Math.PI * 2);
+    sctx.stroke();
+    sctx.beginPath();
+    sctx.ellipse(cx, cy, radius * 1.65, radius * 0.5, ringRot, 0, Math.PI * 2);
+    sctx.strokeStyle = 'rgba(170,210,240,0.15)';
+    sctx.stroke();
+
+    for (let i = 0; i < spherePoints.length; i++) {
+      const ring = spherePoints[i];
+      for (let j = 0; j < ring.length - 1; j++) {
+        const a = project(ring[j]);
+        const b = project(ring[j + 1]);
+        const depth = (a.z + b.z) / 2;
+        const alpha = 0.08 + Math.max(0, (depth + 1) / 2) * 0.45;
+        sctx.strokeStyle = `rgba(170,210,240,${alpha})`;
+        sctx.beginPath();
+        sctx.moveTo(a.sx, a.sy);
+        sctx.lineTo(b.sx, b.sy);
+        sctx.stroke();
+      }
+    }
+
+    for (let j = 0; j < LON_STEPS; j++) {
+      for (let i = 0; i < spherePoints.length - 1; i++) {
+        const a = project(spherePoints[i][j]);
+        const b = project(spherePoints[i + 1][j]);
+        const depth = (a.z + b.z) / 2;
+        const alpha = 0.08 + Math.max(0, (depth + 1) / 2) * 0.45;
+        sctx.strokeStyle = `rgba(170,210,240,${alpha})`;
+        sctx.beginPath();
+        sctx.moveTo(a.sx, a.sy);
+        sctx.lineTo(b.sx, b.sy);
+        sctx.stroke();
+      }
+    }
+
+    sctx.shadowBlur = 0;
+    requestAnimationFrame(drawSphere);
+  }
+  drawSphere();
+</script>
+
+</body>
+</html>

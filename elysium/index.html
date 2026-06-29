@@ -168,7 +168,7 @@
   function drawGlow() {
     const w = glowCanvas.width = window.innerWidth;
     const h = glowCanvas.height = window.innerHeight;
-    const grad = glctx.createRadialGradient(w/2, h/2, 0, w/2, h/2, Math.max(w, h) * 0.55);
+    const grad = glctx.createRadialGradient(w/2, h/2, 0, w/2, h/2, Math.min(w, h) * 0.75);
     grad.addColorStop(0, 'rgba(80,100,140,0.12)');
     grad.addColorStop(1, 'rgba(0,0,0,0)');
     glctx.clearRect(0, 0, w, h);
