@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signal — scootr's laboratory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --off-white: #e8e4dc;
+    --dim: rgba(232, 228, 220, 0.7);
+    --dimmer: rgba(232, 228, 220, 0.45);
+    --border: rgba(232,228,220,0.12);
+    --signal: rgba(170,210,240,1);
+  }
+
+  html, body { background: #000; min-height: 100%; overflow-x: hidden; }
+
+  body {
+    position: relative;
+    color: var(--off-white);
+    font-family: 'Cormorant Garamond', serif;
+    min-height: 100vh;
+  }
+
+  #graph-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    touch-action: none;
+  }
+
+  #grain {
+    position: fixed;
+    inset: -50%;
+    width: 200%;
+    height: 200%;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.045;
+    mix-blend-mode: overlay;
+  }
+
+  #vignette {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center,
+      transparent 40%,
+      rgba(0,0,0,0.5) 80%,
+      rgba(0,0,0,0.9) 100%
+    );
+  }
+
+  main {
+    position: relative;
+    z-index: 2;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 6rem 1.5rem 4rem;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .label {
+    display: block;
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+    margin-bottom: 1.6rem;
+  }
+
+  h1 {
+    font-weight: 300;
+    font-style: italic;
+    font-size: clamp(1.5rem, 3vw, 1.9rem);
+    letter-spacing: 0.04em;
+  }
+
+  .tagline {
+    font-style: italic;
+    color: var(--dim);
+    font-size: clamp(0.8rem, 1.6vw, 0.9rem);
+    margin-top: 0.6rem;
+  }
+
+  /* ---------- HUD readout, top-left ---------- */
+  #hud {
+    position: fixed;
+    top: 1.8rem; left: 1.8rem;
+    z-index: 3;
+    font-family: 'Courier Prime', monospace;
+    font-size: 8px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+    width: 130px;
+  }
+  .hud-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.45rem;
+  }
+  .hud-row span:first-child { width: 30px; flex-shrink: 0; }
+  .hud-bar {
+    flex: 1;
+    height: 3px;
+    background: rgba(232,228,220,0.1);
+    position: relative;
+    overflow: hidden;
+  }
+  .hud-bar i {
+    position: absolute; inset: 0;
+    width: 0%;
+    background: var(--signal);
+    transition: width 0.05s linear;
+  }
+
+  /* ---------- transport ---------- */
+  #controls {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.6rem 1.5rem calc(1.6rem + env(safe-area-inset-bottom));
+    background: linear-gradient(to top, rgba(0,0,0,0.75), transparent);
+  }
+
+  #status {
+    font-family: 'Courier Prime', monospace;
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+    pointer-events: none;
+  }
+
+  #transport {
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+
+  .icon-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--dim);
+    width: 34px; height: 34px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: color 0.3s, border-color 0.3s;
+  }
+  .icon-btn:hover { color: var(--off-white); border-color: rgba(232,228,220,0.4); }
+  .icon-btn:disabled { opacity: 0.3; cursor: default; }
+  .icon-btn:disabled:hover { color: var(--dim); border-color: var(--border); }
+  .icon-btn svg { width: 12px; height: 12px; }
+
+  #seek {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 1px;
+    background: var(--border);
+    cursor: pointer;
+  }
+  #seek::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--off-white);
+    cursor: pointer;
+  }
+  #seek::-moz-range-thumb {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--off-white);
+    border: none;
+    cursor: pointer;
+  }
+  #seek:disabled { opacity: 0.3; cursor: default; }
+
+  #time-display {
+    font-family: 'Courier Prime', monospace;
+    font-size: 9px;
+    letter-spacing: 0.05em;
+    color: var(--dimmer);
+    white-space: nowrap;
+    min-width: 78px;
+    text-align: center;
+  }
+
+  #volume {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 60px;
+    height: 1px;
+    background: var(--border);
+    cursor: pointer;
+  }
+  #volume::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--dim);
+    cursor: pointer;
+  }
+  #volume::-moz-range-thumb {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--dim);
+    border: none;
+    cursor: pointer;
+  }
+
+  #track-name {
+    font-family: 'Courier Prime', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    color: var(--dimmer);
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  #file-input { display: none; }
+
+  #back {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  #back:hover { color: var(--off-white); }
+
+  #drop-hint {
+    position: fixed;
+    inset: 0;
+    z-index: 4;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.6);
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--off-white);
+    pointer-events: none;
+  }
+  #drop-hint.active { display: flex; }
+</style>
+</head>
+<body>
+
+<canvas id="graph-canvas"></canvas>
+<canvas id="grain"></canvas>
+<div id="vignette"></div>
+<div id="drop-hint">drop to load signal</div>
+
+<div id="hud">
+  <div class="hud-row"><span>BASS</span><div class="hud-bar"><i id="hud-bass"></i></div></div>
+  <div class="hud-row"><span>MID</span><div class="hud-bar"><i id="hud-mid"></i></div></div>
+  <div class="hud-row"><span>TREB</span><div class="hud-bar"><i id="hud-treb"></i></div></div>
+</div>
+
+<main>
+  <span class="label">Signal Graph</span>
+  <h1>Network <em>resonance</em></h1>
+  <p class="tagline">Load a track. Watch the network listen.</p>
+</main>
+
+<div id="controls">
+  <span id="status">no signal · idle drift</span>
+  <div id="transport">
+    <button class="icon-btn" id="play-btn" disabled aria-label="Play">
+      <svg id="play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="6,4 20,12 6,20"/></svg>
+      <svg id="pause-icon" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="5" y="4" width="5" height="16"/><rect x="14" y="4" width="5" height="16"/></svg>
+    </button>
+    <input type="range" id="seek" min="0" max="100" value="0" step="0.1" disabled>
+    <span id="time-display">0:00 / 0:00</span>
+    <input type="range" id="volume" min="0" max="1" value="1" step="0.01" aria-label="Volume">
+    <button class="icon-btn" id="load-btn" aria-label="Select track">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 19h14"/></svg>
+    </button>
+  </div>
+  <span id="track-name"></span>
+  <input type="file" id="file-input" accept="audio/*">
+  <a id="back" href="../index.html">&larr; scootr's laboratory</a>
+</div>
+
+<audio id="audio-el" crossorigin="anonymous"></audio>
+
+<script>
+  // grain texture
+  const grainCanvas = document.getElementById('grain');
+  const gctx = grainCanvas.getContext('2d');
+  function drawGrain() {
+    const w = grainCanvas.width = window.innerWidth * 1.5;
+    const h = grainCanvas.height = window.innerHeight * 1.5;
+    const imageData = gctx.createImageData(w, h);
+    const data = imageData.data;
+    for (let i = 0; i < data.length; i += 4) {
+      const v = Math.random() > 0.5 ? 255 : 0;
+      data[i] = v; data[i+1] = v; data[i+2] = v; data[i+3] = 255;
+    }
+    gctx.putImageData(imageData, 0, 0);
+  }
+  drawGrain();
+  window.addEventListener('resize', drawGrain);
+
+  // ---------- node-link graph ----------
+  const canvas = document.getElementById('graph-canvas');
+  const ctx = canvas.getContext('2d');
+  const DPR = Math.min(window.devicePixelRatio || 1, 2);
+
+  function resize() {
+    canvas.width = window.innerWidth * DPR;
+    canvas.height = window.innerHeight * DPR;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const NODE_COUNT = 220;
+  const FAR = 6, NEAR = 0.2, SPREAD = 1.5;
+
+  // spectrum color mapping — bass reads warm (red/orange), mids green/yellow,
+  // treble blue/violet, like a classic frequency analyzer
+  function hueForBand(band, total) {
+    const f = band / total;
+    return 10 + f * 280; // 10deg (red) through orange/yellow/green/cyan to ~290deg (violet)
+  }
+
+  function spawnNode(band) {
+    return {
+      x: (Math.random() - 0.5) * 2 * SPREAD,
+      y: (Math.random() - 0.5) * 2 * SPREAD,
+      z: NEAR + Math.random() * (FAR - NEAR),
+      band,
+      hue: hueForBand(band, 64),
+      r: 1.4 + Math.random() * 1.6
+    };
+  }
+
+  // a deep field of node-stars scattered through a navigable tunnel — flight
+  // moves them toward the camera; on passing it they respawn far away
+  const nodes = [];
+  for (let i = 0; i < NODE_COUNT; i++) {
+    const band = Math.floor(Math.random() * 64);
+    const n = spawnNode(band);
+    n.z = NEAR + Math.random() * (FAR - NEAR); // stagger initial depth
+    nodes.push(n);
+  }
+
+  let globalHue = 0;
+  let steerX = 0, steerY = 0; // manual steering offset, set by dragging
+  let speedMultiplier = 1;
+
+  let mouseX = -9999, mouseY = -9999;
+  window.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX * DPR;
+    mouseY = e.clientY * DPR;
+  });
+  window.addEventListener('mouseleave', () => { mouseX = -9999; mouseY = -9999; });
+
+  // drag to steer through the tunnel manually
+  let dragging = false, lastDragX = 0, lastDragY = 0;
+  function dragStart(x, y) { dragging = true; lastDragX = x; lastDragY = y; canvas.style.cursor = 'grabbing'; }
+  function dragMove(x, y) {
+    if (!dragging) return;
+    steerX = Math.max(-1.8, Math.min(1.8, steerX - (x - lastDragX) * 0.004));
+    steerY = Math.max(-1.8, Math.min(1.8, steerY - (y - lastDragY) * 0.004));
+    lastDragX = x; lastDragY = y;
+  }
+  function dragEnd() { dragging = false; canvas.style.cursor = 'grab'; }
+  canvas.style.cursor = 'grab';
+  canvas.addEventListener('mousedown', (e) => dragStart(e.clientX, e.clientY));
+  window.addEventListener('mousemove', (e) => dragMove(e.clientX, e.clientY));
+  window.addEventListener('mouseup', dragEnd);
+
+  // flight speed — scroll wheel on desktop, pinch on touch
+  function applySpeed(delta) {
+    speedMultiplier = Math.max(0.2, Math.min(4, speedMultiplier + delta));
+  }
+  canvas.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    applySpeed(-e.deltaY * 0.0015);
+  }, { passive: false });
+
+  let pinchDist = null;
+  function touchDist(touches) {
+    const dx = touches[0].clientX - touches[1].clientX;
+    const dy = touches[0].clientY - touches[1].clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+  canvas.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 2) { pinchDist = touchDist(e.touches); }
+    else { const t = e.touches[0]; dragStart(t.clientX, t.clientY); }
+  }, { passive: true });
+  window.addEventListener('touchmove', (e) => {
+    if (e.touches.length === 2) {
+      const d = touchDist(e.touches);
+      if (pinchDist) applySpeed((d - pinchDist) * 0.006);
+      pinchDist = d;
+    } else {
+      const t = e.touches[0];
+      dragMove(t.clientX, t.clientY);
+      mouseX = t.clientX * DPR; mouseY = t.clientY * DPR;
+    }
+  }, { passive: true });
+  window.addEventListener('touchend', (e) => { pinchDist = null; dragEnd(); });
+
+  // starfield — three depth layers for parallax (far/mid/near)
+  function makeStarLayer(count, sizeRange, speedFactor) {
+    return Array.from({ length: count }, () => ({
+      x: Math.random(), y: Math.random(),
+      r: sizeRange[0] + Math.random() * (sizeRange[1] - sizeRange[0]),
+      twinklePhase: Math.random() * Math.PI * 2,
+      twinkleSpeed: 0.015 + Math.random() * 0.025,
+      speedFactor
+    }));
+  }
+  const starLayers = [
+    makeStarLayer(500, [0.25, 0.7], 0.25),  // far — dense, small, barely moves
+    makeStarLayer(260, [0.5, 1.2], 0.55),   // mid
+    makeStarLayer(110, [0.9, 1.9], 1.0)     // near — bigger, more parallax
+  ];
+
+  // ---------- audio ----------
+  let audioCtx = null, analyser = null, freqData = null, sourceNode = null;
+  const audioEl = document.getElementById('audio-el');
+  const fileInput = document.getElementById('file-input');
+  const loadBtn = document.getElementById('load-btn');
+  const playBtn = document.getElementById('play-btn');
+  const playIcon = document.getElementById('play-icon');
+  const pauseIcon = document.getElementById('pause-icon');
+  const seekEl = document.getElementById('seek');
+  const volumeEl = document.getElementById('volume');
+  const timeDisplay = document.getElementById('time-display');
+  const trackNameEl = document.getElementById('track-name');
+  const statusEl = document.getElementById('status');
+  const dropHint = document.getElementById('drop-hint');
+
+  function fmtTime(s) {
+    if (!isFinite(s)) return '0:00';
+    const m = Math.floor(s / 60), sec = Math.floor(s % 60);
+    return `${m}:${String(sec).padStart(2, '0')}`;
+  }
+
+  function loadFile(file) {
+    if (!file || !file.type.startsWith('audio')) return;
+    audioEl.src = URL.createObjectURL(file);
+    playBtn.disabled = false;
+    seekEl.disabled = false;
+    trackNameEl.textContent = file.name;
+    statusEl.textContent = 'loaded · ready';
+
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 256;
+      freqData = new Uint8Array(analyser.frequencyBinCount);
+      sourceNode = audioCtx.createMediaElementSource(audioEl);
+      sourceNode.connect(analyser);
+      analyser.connect(audioCtx.destination);
+    }
+  }
+
+  loadBtn.addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', () => loadFile(fileInput.files[0]));
+
+  // drag-and-drop a track anywhere on the page
+  window.addEventListener('dragover', (e) => { e.preventDefault(); dropHint.classList.add('active'); });
+  window.addEventListener('dragleave', () => dropHint.classList.remove('active'));
+  window.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropHint.classList.remove('active');
+    loadFile(e.dataTransfer.files[0]);
+  });
+
+  function setPlayingUI(playing) {
+    playIcon.style.display = playing ? 'none' : '';
+    pauseIcon.style.display = playing ? '' : 'none';
+    playBtn.setAttribute('aria-label', playing ? 'Pause' : 'Play');
+    statusEl.textContent = playing ? 'signal live' : 'signal paused';
+  }
+
+  playBtn.addEventListener('click', () => {
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    if (audioEl.paused) { audioEl.play(); setPlayingUI(true); }
+    else { audioEl.pause(); setPlayingUI(false); }
+  });
+  audioEl.addEventListener('ended', () => { setPlayingUI(false); statusEl.textContent = 'signal ended'; });
+
+  audioEl.addEventListener('loadedmetadata', () => {
+    timeDisplay.textContent = `0:00 / ${fmtTime(audioEl.duration)}`;
+  });
+  audioEl.addEventListener('timeupdate', () => {
+    if (!seekDragging) seekEl.value = (audioEl.currentTime / audioEl.duration) * 100 || 0;
+    timeDisplay.textContent = `${fmtTime(audioEl.currentTime)} / ${fmtTime(audioEl.duration)}`;
+  });
+
+  let seekDragging = false;
+  seekEl.addEventListener('mousedown', () => seekDragging = true);
+  seekEl.addEventListener('touchstart', () => seekDragging = true);
+  seekEl.addEventListener('input', () => {
+    timeDisplay.textContent = `${fmtTime((seekEl.value / 100) * audioEl.duration)} / ${fmtTime(audioEl.duration)}`;
+  });
+  seekEl.addEventListener('change', () => {
+    audioEl.currentTime = (seekEl.value / 100) * audioEl.duration;
+    seekDragging = false;
+  });
+
+  volumeEl.addEventListener('input', () => { audioEl.volume = volumeEl.value; });
+
+  // HUD bars
+  const hudBass = document.getElementById('hud-bass');
+  const hudMid = document.getElementById('hud-mid');
+  const hudTreb = document.getElementById('hud-treb');
+
+  // ---------- render loop ----------
+  let idlePulse = 0;
+  function frame() {
+    const w = canvas.width, h = canvas.height;
+
+    // motion trail instead of a hard clear — gives the psychedelic smear/trail look
+    ctx.fillStyle = 'rgba(2,2,6,0.16)';
+    ctx.fillRect(0, 0, w, h);
+
+    // nebula color wash — large soft gradients tied to the same hue drift as the nodes
+    const neb1Hue = globalHue, neb2Hue = (globalHue + 140) % 360;
+    let nebGrad = ctx.createRadialGradient(w * 0.25, h * 0.3, 0, w * 0.25, h * 0.3, Math.max(w, h) * 0.55);
+    nebGrad.addColorStop(0, `hsla(${neb1Hue}, 80%, 40%, 0.05)`);
+    nebGrad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = nebGrad;
+    ctx.fillRect(0, 0, w, h);
+    nebGrad = ctx.createRadialGradient(w * 0.78, h * 0.72, 0, w * 0.78, h * 0.72, Math.max(w, h) * 0.5);
+    nebGrad.addColorStop(0, `hsla(${neb2Hue}, 80%, 40%, 0.045)`);
+    nebGrad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = nebGrad;
+    ctx.fillRect(0, 0, w, h);
+
+    // starfield — layered depth, each layer parallaxing at a different rate
+    for (const layer of starLayers) {
+      const parallaxX = steerX * 40 * DPR * layer[0].speedFactor;
+      const parallaxY = steerY * 40 * DPR * layer[0].speedFactor;
+      for (const s of layer) {
+        s.twinklePhase += s.twinkleSpeed;
+        const tw = (Math.sin(s.twinklePhase) + 1) / 2;
+        const sx = ((s.x * w + parallaxX) % w + w) % w;
+        const sy = ((s.y * h + parallaxY) % h + h) % h;
+        ctx.beginPath();
+        ctx.arc(sx, sy, s.r * DPR, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(210,220,235,${(0.12 + tw * 0.3) * s.speedFactor})`;
+        ctx.fill();
+      }
+    }
+
+    // boost curve so quieter parts of a track still read as visually alive
+    const boost = (v) => Math.min(1, Math.pow(v, 0.55) * 1.25);
+
+    let bass = 0, mid = 0, treb = 0;
+    if (analyser && !audioEl.paused) {
+      analyser.getByteFrequencyData(freqData);
+      let bSum = 0, mSum = 0, tSum = 0;
+      for (let i = 0; i < 8; i++) bSum += freqData[i];
+      for (let i = 8; i < 32; i++) mSum += freqData[i];
+      for (let i = 32; i < 64; i++) tSum += freqData[i];
+      bass = boost(bSum / (8 * 255));
+      mid = boost(mSum / (24 * 255));
+      treb = boost(tSum / (32 * 255));
+    } else {
+      idlePulse += 0.015;
+      bass = (Math.sin(idlePulse) + 1) / 2 * 0.25; // gentle ambient breathing when idle
+      mid = (Math.sin(idlePulse * 0.7 + 1) + 1) / 2 * 0.15;
+      treb = (Math.sin(idlePulse * 1.3 + 2) + 1) / 2 * 0.1;
+    }
+    hudBass.style.width = `${bass * 100}%`;
+    hudMid.style.width = `${mid * 100}%`;
+    hudTreb.style.width = `${treb * 100}%`;
+
+    // slow psychedelic hue drift across the whole field, speeding up with treble
+    globalHue = (globalHue + 0.15 + treb * 1.8) % 360;
+
+    const cx = w / 2, cy = h / 2;
+    const projScale = Math.min(w, h) * 0.85;
+    const flightSpeed = (0.012 + bass * 0.05 + mid * 0.015) * speedMultiplier;
+
+    function project(n) {
+      // fly forward — node approaches the camera; respawn far away once passed
+      n.z -= flightSpeed;
+      if (n.z <= NEAR) {
+        const respawned = spawnNode(n.band);
+        n.x = respawned.x; n.y = respawned.y; n.z = FAR;
+      }
+
+      const persp = 1 / (0.6 + n.z);
+      const ex = n.x - steerX, ey = n.y - steerY;
+      let sx = cx + ex * persp * projScale;
+      let sy = cy + ey * persp * projScale;
+
+      // cursor repulsion in screen space
+      const dx = sx - mouseX, dy = sy - mouseY;
+      const distSq = dx * dx + dy * dy;
+      const influenceR = 110 * DPR;
+      if (distSq < influenceR * influenceR) {
+        const dist = Math.sqrt(distSq) || 1;
+        const force = (1 - dist / influenceR) * 8 * DPR;
+        sx += (dx / dist) * force;
+        sy += (dy / dist) * force;
+      }
+
+      return { sx, sy, persp };
+    }
+
+    const projected = nodes.map((n) => ({ n, p: project(n) }));
+
+    // edges — connect nodes close in 3D space, colored by blended hue + global drift
+    ctx.lineWidth = 1 * DPR;
+    for (let i = 0; i < projected.length; i++) {
+      for (let j = i + 1; j < projected.length; j++) {
+        const a = projected[i], b = projected[j];
+        const dx = a.n.x - b.n.x, dy = a.n.y - b.n.y, dz = a.n.z - b.n.z;
+        const distSq = dx * dx + dy * dy + dz * dz;
+        if (distSq > 0.5) continue;
+        const proximity = 1 - Math.sqrt(distSq) / 0.71;
+        const alpha = proximity * (0.16 + bass * 0.5) * Math.min(1, (a.p.persp + b.p.persp) / 2);
+        const hue = (a.n.hue + b.n.hue) / 2 + globalHue;
+        ctx.strokeStyle = `hsla(${hue % 360}, 90%, 68%, ${alpha})`;
+        ctx.beginPath();
+        ctx.moveTo(a.p.sx, a.p.sy);
+        ctx.lineTo(b.p.sx, b.p.sy);
+        ctx.stroke();
+      }
+    }
+
+    // nodes — brightness + color driven by their assigned frequency band, depth-scaled
+    projected.sort((a, b) => a.p.persp - b.p.persp);
+    for (const { n, p } of projected) {
+      let energy = bass * 0.5;
+      if (analyser && !audioEl.paused && freqData) {
+        energy = boost(freqData[n.band] / 255);
+      }
+      const size = (n.r + energy * 4) * DPR * p.persp * 1.4;
+      const alpha = Math.min(1, (0.4 + energy * 0.6) * p.persp * 1.3);
+      const hue = (n.hue + globalHue) % 360;
+      ctx.beginPath();
+      ctx.arc(p.sx, p.sy, size, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${hue}, 90%, 70%, ${alpha})`;
+      ctx.fill();
+      if (energy > 0.45) {
+        ctx.beginPath();
+        ctx.arc(p.sx, p.sy, size * 1.5, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${hue}, 90%, 70%, ${(energy - 0.45) * 0.3})`;
+        ctx.fill();
+      }
+    }
+
+    requestAnimationFrame(frame);
+  }
+  frame();
+</script>
+
+</body>
+</html>
