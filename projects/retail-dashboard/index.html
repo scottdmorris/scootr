@@ -23,6 +23,16 @@
     --amber: #e6b85c;
   }
 
+  [data-theme="light"] {
+    --bg: #f4f5f8;
+    --panel: #ffffff;
+    --panel-2: #eef0f5;
+    --border: rgba(0,0,0,0.08);
+    --text: #1a1b2e;
+    --dim: #5a5c6e;
+    --dimmer: #9a9cb0;
+  }
+
   html, body { background: var(--bg); min-height: 100%; }
 
   body {
@@ -94,6 +104,7 @@
     display: flex; align-items: center; justify-content: center;
     font-size: 13px;
     flex-shrink: 0;
+    cursor: pointer;
   }
 
   .period-toggle {
@@ -605,7 +616,7 @@
             <div class="topbar-sync">${b.sync}</div>
           </div>
         </div>
-        <div class="topbar-right"><button class="icon-btn">&#9728;</button>${periodControl}${datePill}</div>
+        <div class="topbar-right"><button class="icon-btn" onclick="toggleTheme()">&#9728;</button>${periodControl}${datePill}</div>
       </div>`;
   }
 
@@ -812,6 +823,14 @@
 
       <footer class="dash-footer">${b.source} &middot; Built by Scott Morris</footer>
     `;
+  }
+
+  function toggleTheme() {
+    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+    document.documentElement.setAttribute('data-theme', isLight ? 'dark' : 'light');
+    document.querySelectorAll('.icon-btn').forEach(btn => {
+      btn.innerHTML = isLight ? '&#9728;' : '&#9790;';
+    });
   }
 
   function setBrand(key) {
