@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lead Intelligence System — scootr's laboratory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --off-white: #e8e4dc;
+    --dim: rgba(232, 228, 220, 0.7);
+    --dimmer: rgba(232, 228, 220, 0.45);
+    --border: rgba(232,228,220,0.12);
+    --accent: #e6b85c;
+  }
+
+  html, body { background: #000; min-height: 100%; }
+
+  body {
+    position: relative;
+    color: var(--off-white);
+    font-family: 'Cormorant Garamond', serif;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  #grain {
+    position: fixed;
+    inset: -50%;
+    width: 200%;
+    height: 200%;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.04;
+    mix-blend-mode: overlay;
+  }
+
+  #vignette {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center,
+      transparent 35%,
+      rgba(0,0,0,0.5) 75%,
+      rgba(0,0,0,0.88) 100%
+    );
+  }
+
+  a { color: inherit; }
+
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 7rem 1.5rem 5rem;
+  }
+
+  .label {
+    display: block;
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+    margin-bottom: 1.6rem;
+    opacity: 0;
+    animation: fade-up 1.2s ease 0.1s forwards;
+  }
+
+  h1 {
+    font-weight: 300;
+    font-style: italic;
+    font-size: clamp(2.4rem, 6vw, 3.4rem);
+    letter-spacing: 0.03em;
+    line-height: 1.1;
+    opacity: 0;
+    animation: fade-up 1.4s ease 0.25s forwards;
+  }
+
+  .tagline {
+    font-style: italic;
+    color: var(--dim);
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
+    margin-top: 1.2rem;
+    opacity: 0;
+    animation: fade-up 1.4s ease 0.5s forwards;
+  }
+
+  .screenshot {
+    width: 100%;
+    border: 1px solid var(--border);
+    display: block;
+    margin: 3.5rem 0;
+    opacity: 0;
+    animation: fade-up 1.2s ease 0.75s forwards;
+  }
+
+  .section {
+    border-top: 1px solid var(--border);
+    padding: 2.5rem 0;
+    opacity: 0;
+    animation: fade-up 1.2s ease forwards;
+  }
+
+  .section:nth-of-type(1) { animation-delay: 0.9s; }
+  .section:nth-of-type(2) { animation-delay: 1.05s; }
+  .section:nth-of-type(3) { animation-delay: 1.2s; }
+  .section:nth-of-type(4) { animation-delay: 1.35s; }
+
+  .section-label {
+    display: block;
+    font-family: 'Courier Prime', monospace;
+    font-size: 9px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+    margin-bottom: 1.2rem;
+  }
+
+  .section p {
+    color: var(--dim);
+    font-size: 1rem;
+    max-width: 620px;
+    line-height: 1.75;
+  }
+
+  .section p + p { margin-top: 0.9rem; }
+
+  .stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .tag {
+    font-family: 'Courier Prime', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid rgba(230,184,92,0.25);
+    padding: 0.3rem 0.7rem;
+  }
+
+  .features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  .features li {
+    display: flex;
+    gap: 1rem;
+    color: var(--dim);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .features li::before {
+    content: '—';
+    color: var(--dimmer);
+    flex-shrink: 0;
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.85rem;
+  }
+
+  #back {
+    display: block;
+    text-align: center;
+    margin-top: 4.5rem;
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+    text-decoration: none;
+    opacity: 0;
+    animation: fade-up 1.2s ease 1.5s forwards;
+    transition: color 0.3s;
+  }
+  #back:hover { color: var(--off-white); }
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="grain"></canvas>
+<div id="vignette"></div>
+
+<main>
+  <span class="label">Work Project &middot; AI Automation &middot; Internal Tooling</span>
+  <h1>Lead Intelligence <em>System</em></h1>
+  <p class="tagline">A dual-source prospecting engine combining structured public data with AI-sourced intelligence — built for a commercial services operation.</p>
+
+  <img class="screenshot" src="./thumb.png" alt="Lead Intelligence System dashboard">
+
+  <div class="section">
+    <span class="section-label">Overview</span>
+    <p>Built to solve a specific problem: identifying and prioritizing high-value commercial leads at scale, faster than a sales team could source them manually. The system pulls from two fundamentally different signal types and merges them into a single ranked, filterable interface.</p>
+    <p>Facilities appearing in both datasets are surfaced as highest-priority targets — the overlap between structured regulatory data and AI-sourced complaint signals is a stronger buying indicator than either source alone.</p>
+  </div>
+
+  <div class="section">
+    <span class="section-label">Data Sources</span>
+    <ul class="features">
+      <li><strong>CMS public dataset pipeline</strong> — queries federal healthcare facility inspection records to identify nursing homes with F584/F690 citations (environmental hygiene deficiencies), ranked by violation severity, frequency, and correction status across all 50 states.</li>
+      <li><strong>Origami AI agent</strong> — an AI search agent that surfaces leads from reviews, news, and complaints that structured databases don't capture. Extracts contact names, emails, and phone numbers from public records for both nursing homes and luxury residential properties.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <span class="section-label">Features</span>
+    <ul class="features">
+      <li>Interactive dashboard with search, multi-filter (state, severity, citation code, correction status, contact history)</li>
+      <li>Deduplication and ranking logic — facilities are scored by recency and severity of violations, not just raw count</li>
+      <li>Persistent "contacted" status via Google Sheets sync through Apps Script — team-wide shared state without a backend</li>
+      <li>Per-region accumulation — results merge across search runs rather than overwrite, building a growing lead database</li>
+      <li>3,356 facilities indexed across the US at last pull</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <span class="section-label">Stack</span>
+    <div class="stack">
+      <span class="tag">Python</span>
+      <span class="tag">CMS API</span>
+      <span class="tag">Origami AI Agent</span>
+      <span class="tag">HTML / JS</span>
+      <span class="tag">Google Apps Script</span>
+      <span class="tag">GitHub Pages</span>
+    </div>
+  </div>
+
+  <a id="back" href="../index.html">&larr; projects</a>
+</main>
+
+<script>
+  const grainCanvas = document.getElementById('grain');
+  const gctx = grainCanvas.getContext('2d');
+  function drawGrain() {
+    const w = grainCanvas.width = window.innerWidth * 1.5;
+    const h = grainCanvas.height = window.innerHeight * 1.5;
+    const imageData = gctx.createImageData(w, h);
+    const data = imageData.data;
+    for (let i = 0; i < data.length; i += 4) {
+      const v = Math.random() > 0.5 ? 255 : 0;
+      data[i] = v; data[i+1] = v; data[i+2] = v; data[i+3] = 255;
+    }
+    gctx.putImageData(imageData, 0, 0);
+  }
+  drawGrain();
+  window.addEventListener('resize', drawGrain);
+</script>
+
+</body>
+</html>
