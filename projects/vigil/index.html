@@ -387,7 +387,7 @@
   <div class="statstrip">
     <span id="evcount">&mdash;</span> active events &middot; <span id="regcount">&mdash;</span> ongoing crises<br>
     hover anything &middot; click an ember for the story<br>
-    snapshot <span id="snap"></span>
+    <span id="snap">listening for signals&hellip;</span>
   </div>
   <div id="featured" role="button" tabindex="0" aria-label="Featured underreported event"></div>
 </header>
@@ -463,7 +463,7 @@
 </div>
 
 <script>
-window.SNAPSHOT = '2026-07-16 05:18 utc';
+window.SNAPSHOT = '2026-07-16 05:24 utc';
 window.__vigilReady = (async () => {
   const load = u => fetch(u).then(r => {
     if (!r.ok) throw new Error('failed: ' + u);
@@ -809,13 +809,15 @@ window.__vigilReady.then(() => {
       ctx.beginPath(); ctx.arc(x, y, rad * (1.3 + 0.18 * Math.sin(t * 0.9 + rg.lng)), 0, 6.283); ctx.stroke();
       targets.push({ x, y, r: Math.max(12, rad * 2.2), reg: rg });
 
-      // label
-      ctx.globalCompositeOperation = 'source-over';
-      ctx.font = '9px "Courier Prime", monospace';
-      ctx.fillStyle = 'rgba(232,228,220,0.55)';
-      ctx.textAlign = 'left';
-      ctx.fillText(rg.name.toUpperCase(), x + rad * 1.9, y + 3);
-      ctx.globalCompositeOperation = 'lighter';
+      // label — only once zoomed in, so the world view stays uncluttered
+      if (zoom >= 1.5) {
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.font = '9px "Courier Prime", monospace';
+        ctx.fillStyle = 'rgba(232,228,220,0.55)';
+        ctx.textAlign = 'left';
+        ctx.fillText(rg.name.toUpperCase(), x + rad * 1.9, y + 3);
+        ctx.globalCompositeOperation = 'lighter';
+      }
     }
     ctx.globalCompositeOperation = 'source-over';
   }
@@ -1045,7 +1047,7 @@ window.__vigilReady.then(() => {
   });
   document.getElementById('evcount').textContent =
     window.EVENTS.filter(e => e.ageh <= recencyH).length;
-  document.getElementById('snap').textContent = window.LIVE_FEEDS ? 'live \u00b7 fetched just now' : window.SNAPSHOT + ' \u00b7 offline snapshot';
+  document.getElementById('snap').textContent = window.LIVE_FEEDS ? 'live \u00b7 fetched just now' : 'snapshot ' + window.SNAPSHOT + ' \u00b7 feeds unreachable';
 
   // ---- featured: highest-severity slow disaster people likely haven't heard of ----
   {
@@ -1097,6 +1099,9 @@ window.__vigilReady.then(() => {
   }
   drawGrain();
   window.addEventListener('resize', drawGrain);
+
+  // keep watch: pull fresh feeds every 15 minutes while the tab is backgrounded
+  setInterval(() => { if (document.hidden) location.reload(); }, 15 * 60 * 1000);
 }).catch(err => {
   console.error(err);
   const el = document.querySelector('.statstrip');
