@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Grievance Atlas &mdash; scootr's laboratory</title>
+<meta name="description" content="Twelve months of NYC 311 complaints — 3.3 million records — mapped as light. Interactive density, signature, and rhythm views with borough response-time analysis.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --off-white: #e8e4dc;
+    --dim: rgba(232, 228, 220, 0.7);
+    --dimmer: rgba(232, 228, 220, 0.45);
+    --faint: rgba(232, 228, 220, 0.25);
+    --border: rgba(232,228,220,0.12);
+    --mono: 'Courier Prime', monospace;
+  }
+
+  html { background: #000; scroll-behavior: smooth; }
+
+  body {
+    position: relative;
+    background: #000;
+    color: var(--off-white);
+    font-family: 'Cormorant Garamond', serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  #map { position: fixed; inset: 0; z-index: 0; touch-action: pan-y; }
+
+  #grain {
+    position: fixed; inset: -50%;
+    width: 200%; height: 200%;
+    z-index: 5; pointer-events: none;
+    opacity: 0.05; mix-blend-mode: overlay;
+  }
+
+  #vignette {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background: radial-gradient(ellipse at center,
+      transparent 40%, rgba(0,0,0,0.45) 78%, rgba(0,0,0,0.85) 100%);
+  }
+
+  /* ---------- hero ---------- */
+  #hero { position: relative; height: 100vh; height: 100svh; z-index: 2; cursor: grab; }
+  #hero.dragging { cursor: grabbing; }
+
+  header {
+    position: absolute; top: 2rem; left: 2.2rem;
+    pointer-events: none; max-width: 330px;
+  }
+
+  .label {
+    display: block; font-family: var(--mono);
+    font-size: 10px; letter-spacing: 0.4em; text-transform: uppercase;
+    color: var(--dimmer); margin-bottom: 0.8rem;
+    opacity: 0; animation: fade-up 1.2s ease 0.1s forwards;
+  }
+
+  h1 {
+    font-weight: 300; font-style: italic;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    letter-spacing: 0.03em; line-height: 1.1;
+    opacity: 0; animation: fade-up 1.4s ease 0.3s forwards;
+  }
+
+  .tagline {
+    font-style: italic; color: var(--dim);
+    font-size: clamp(0.85rem, 1.5vw, 0.98rem);
+    margin-top: 0.8rem;
+    opacity: 0; animation: fade-up 1.4s ease 0.6s forwards;
+  }
+
+  .statstrip {
+    margin-top: 1.1rem;
+    font-family: var(--mono); font-size: 9px;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--faint); line-height: 2;
+    opacity: 0; animation: fade-up 1.4s ease 0.85s forwards;
+  }
+
+  /* ---------- zoom controls ---------- */
+  #zoomer {
+    position: absolute; left: 2.2rem; bottom: calc(7.2rem + env(safe-area-inset-bottom));
+    display: flex; flex-direction: column; gap: 1px;
+    opacity: 0; animation: fade-up 1.2s ease 1.3s forwards;
+  }
+  #zoomer button {
+    font-family: var(--mono); font-size: 14px;
+    width: 30px; height: 30px;
+    color: var(--dimmer); background: rgba(0,0,0,0.55);
+    border: 1px solid var(--border); cursor: pointer;
+    transition: color 0.3s;
+  }
+  #zoomer button:hover { color: var(--off-white); }
+  #zoomer button:focus-visible { outline: 1px solid var(--dimmer); outline-offset: 2px; }
+  #zoomhint {
+    position: absolute; left: 2.2rem; bottom: calc(5.2rem + env(safe-area-inset-bottom));
+    font-family: var(--mono); font-size: 8px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--faint);
+    opacity: 0; animation: fade-up 1.2s ease 1.5s forwards;
+    pointer-events: none;
+  }
+
+  /* ---------- stats panel ---------- */
+  #panel {
+    position: absolute; top: 2rem; right: 2rem;
+    width: 258px;
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--dim);
+    background: rgba(0,0,0,0.55);
+    border: 1px solid var(--border);
+    padding: 1.1rem 1.2rem 1.2rem;
+    opacity: 0; animation: fade-up 1.2s ease 1s forwards;
+  }
+
+  #panel .ptitle {
+    font-size: 9px; letter-spacing: 0.32em; text-transform: uppercase;
+    color: var(--dimmer);
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 0.35rem;
+  }
+  #panel .pname {
+    font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300;
+    font-size: 1.25rem; letter-spacing: 0.02em; color: var(--off-white);
+    margin-bottom: 0.15rem;
+  }
+  #panel .ptotal {
+    font-variant-numeric: tabular-nums;
+    color: var(--dimmer); margin-bottom: 0.2rem;
+    text-transform: uppercase; letter-spacing: 0.18em; font-size: 9px;
+  }
+  #panel .pclose {
+    font-size: 9px; letter-spacing: 0.12em; color: var(--dimmer); margin-bottom: 0.7rem;
+  }
+
+  .sect { border-top: 1px solid var(--border); padding-top: 0.7rem; margin-top: 0.7rem; }
+  .sect .shead {
+    font-size: 8px; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--faint); margin-bottom: 0.55rem;
+  }
+
+  #rhythm { display: flex; align-items: flex-end; gap: 2px; height: 44px; }
+  #rhythm .bar {
+    flex: 1; min-height: 1px;
+    background: var(--layer-c, var(--dimmer));
+    opacity: 0.55; transition: height 0.5s ease;
+  }
+  #rhythm .bar.peak { opacity: 1; box-shadow: 0 0 6px var(--layer-c); }
+  .rhythm-x {
+    display: flex; justify-content: space-between;
+    font-size: 8px; letter-spacing: 0.15em; color: var(--faint);
+    margin-top: 0.3rem;
+  }
+  .peakline { margin-top: 0.45rem; font-size: 9px; color: var(--dimmer); letter-spacing: 0.12em; }
+
+  .brow { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.35rem; }
+  .brow .bname { width: 78px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 9px; letter-spacing: 0.1em; }
+  .brow .btrack { flex: 1; height: 3px; background: rgba(232,228,220,0.07); }
+  .brow .bfill { height: 100%; background: var(--layer-c, var(--dimmer)); opacity: 0.8; transition: width 0.5s ease; display: block; }
+  .brow .bnum { width: 44px; text-align: right; font-size: 9px; color: var(--dimmer); font-variant-numeric: tabular-nums; }
+
+  .drow { display: flex; justify-content: space-between; gap: 0.8rem; margin-bottom: 0.3rem; font-size: 9px; }
+  .drow .dname { color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: 0.06em; }
+  .drow .dnum { color: var(--dimmer); font-variant-numeric: tabular-nums; }
+
+  #livebox { font-size: 9px; letter-spacing: 0.12em; color: var(--dimmer); line-height: 1.9; }
+  .livedot {
+    display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+    background: #fff; margin-right: 0.5em;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 0.3; } 50% { opacity: 1; box-shadow: 0 0 8px #fff; } }
+
+  /* ---------- tooltip ---------- */
+  #tip {
+    position: fixed; z-index: 6; pointer-events: none;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em;
+    color: var(--dim);
+    background: rgba(0,0,0,0.72);
+    border: 1px solid var(--border);
+    padding: 0.55rem 0.75rem;
+    max-width: 230px;
+    opacity: 0; transition: opacity 0.2s;
+  }
+  #tip.show { opacity: 1; }
+  #tip .tname {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 1rem; color: var(--off-white); letter-spacing: 0.02em;
+    margin-bottom: 0.2rem;
+  }
+  #tip .trow { display: flex; justify-content: space-between; gap: 1rem; font-size: 9px; }
+  #tip .tsig { font-size: 9px; margin-top: 0.25rem; }
+  #tip .tnote { font-size: 8px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--faint); margin-top: 0.3rem; }
+
+  /* ---------- modes + chips ---------- */
+  #controls {
+    position: absolute; left: 0; right: 0;
+    bottom: calc(1.6rem + env(safe-area-inset-bottom));
+    display: flex; flex-direction: column; align-items: center; gap: 0.55rem;
+    opacity: 0; animation: fade-up 1.2s ease 1.2s forwards;
+  }
+
+  #hourbox {
+    display: none; align-items: center; gap: 0.9rem;
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.25em;
+    text-transform: uppercase; color: var(--dimmer);
+    background: rgba(0,0,0,0.55); border: 1px solid var(--border);
+    padding: 0.5rem 0.9rem;
+  }
+  #hourbox.show { display: flex; }
+  #hourbox #hourval { width: 3.4em; color: var(--off-white); font-variant-numeric: tabular-nums; }
+  #hour {
+    -webkit-appearance: none; appearance: none;
+    width: min(300px, 40vw); height: 2px;
+    background: rgba(232,228,220,0.2); outline: none;
+  }
+  #hour::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--off-white); cursor: pointer;
+  }
+  #hour::-moz-range-thumb {
+    width: 12px; height: 12px; border-radius: 50%; border: none;
+    background: var(--off-white); cursor: pointer;
+  }
+  #playhour {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em;
+    color: var(--dimmer); background: none; border: none; cursor: pointer;
+    text-transform: uppercase;
+  }
+  #playhour:hover { color: var(--off-white); }
+
+  #modes { display: flex; gap: 1.6rem; }
+  .mode {
+    font-family: var(--mono); font-size: 9px;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--faint); background: none; border: none;
+    border-bottom: 1px solid transparent;
+    padding: 0.3rem 0.1rem; cursor: pointer;
+    transition: color 0.3s, border-color 0.3s;
+  }
+  .mode:hover { color: var(--dim); }
+  .mode:focus-visible { outline: 1px solid var(--dimmer); outline-offset: 3px; }
+  .mode.on { color: var(--off-white); border-bottom-color: var(--dimmer); }
+
+  #layers {
+    display: flex; justify-content: center; flex-wrap: wrap;
+    gap: 0.4rem 1.6rem; padding: 0 1rem;
+  }
+  #layers.disabled .chip:not(.live) { opacity: 0.45; pointer-events: none; }
+
+  .chip {
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.28em; text-transform: uppercase;
+    color: var(--dimmer);
+    background: none; border: none; border-bottom: 1px solid transparent;
+    padding: 0.4rem 0.1rem; cursor: pointer;
+    transition: color 0.3s, border-color 0.3s, opacity 0.3s;
+    display: inline-flex; align-items: center; gap: 0.55em;
+  }
+  .chip .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--c, var(--dimmer));
+    opacity: 0.35; transition: opacity 0.3s, box-shadow 0.3s;
+  }
+  .chip:hover { color: var(--dim); }
+  .chip:focus-visible { outline: 1px solid var(--dimmer); outline-offset: 3px; }
+  .chip.on { color: var(--off-white); border-bottom-color: var(--border); }
+  .chip.on .dot { opacity: 1; box-shadow: 0 0 8px var(--c); }
+  .chip.live .dot { animation: pulse 2s ease-in-out infinite; }
+
+  #scrollcue {
+    position: absolute; bottom: 0.45rem; left: 0; right: 0;
+    text-align: center; font-family: var(--mono); font-size: 8px;
+    letter-spacing: 0.25em; text-transform: uppercase; color: var(--faint);
+    opacity: 0; animation: fade-up 1.2s ease 1.6s forwards;
+    pointer-events: none;
+  }
+
+  #panel-toggle { display: none; }
+
+  /* ---------- article sections ---------- */
+  #article {
+    position: relative; z-index: 4;
+    background: #000;
+    border-top: 1px solid var(--border);
+  }
+  .inner { max-width: 640px; margin: 0 auto; padding: 5rem 1.5rem; }
+
+  .shead-lg {
+    display: block; font-family: var(--mono);
+    font-size: 10px; letter-spacing: 0.4em; text-transform: uppercase;
+    color: var(--dimmer); margin-bottom: 1.4rem;
+  }
+  h2 {
+    font-weight: 300; font-style: italic;
+    font-size: clamp(1.7rem, 4.5vw, 2.4rem);
+    letter-spacing: 0.03em; line-height: 1.15;
+    margin-bottom: 1rem;
+  }
+  .lede { font-style: italic; color: var(--dim); font-size: 1.02rem; margin-bottom: 2.6rem; max-width: 520px; }
+
+  .note {
+    border-top: 1px solid var(--border);
+    padding: 1.8rem 0;
+    display: grid; grid-template-columns: 2.4rem 1fr; gap: 1.1rem;
+  }
+  .note:last-of-type { border-bottom: 1px solid var(--border); }
+  .note .nnum {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em;
+    color: var(--faint); padding-top: 0.45rem;
+  }
+  .note h3 {
+    font-weight: 300; font-style: italic;
+    font-size: 1.35rem; letter-spacing: 0.02em; margin-bottom: 0.5rem;
+  }
+  .note p { color: var(--dim); font-size: 0.97rem; max-width: 500px; }
+  .note .stat { color: var(--off-white); font-style: italic; }
+  .viewbtn {
+    display: inline-block; margin-top: 0.8rem;
+    font-family: var(--mono); font-size: 9px;
+    letter-spacing: 0.28em; text-transform: uppercase;
+    color: var(--dimmer); background: none;
+    border: 1px solid var(--border); padding: 0.5rem 0.9rem;
+    cursor: pointer; transition: color 0.3s, border-color 0.3s;
+  }
+  .viewbtn:hover { color: var(--off-white); border-color: var(--dimmer); }
+  .viewbtn:focus-visible { outline: 1px solid var(--dimmer); outline-offset: 3px; }
+
+  /* response-time table */
+  .rt-layer { border-top: 1px solid var(--border); padding: 1.4rem 0; }
+  .rt-layer:last-of-type { border-bottom: 1px solid var(--border); }
+  .rt-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 0.9rem;
+  }
+  .rt-head .rt-name {
+    font-style: italic; font-size: 1.2rem;
+    display: inline-flex; align-items: center; gap: 0.6rem;
+  }
+  .rt-head .rt-name .dot2 { width: 7px; height: 7px; border-radius: 50%; background: var(--c); box-shadow: 0 0 8px var(--c); }
+  .rt-head .rt-sub { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--faint); }
+  .rt-row {
+    display: grid; grid-template-columns: 92px 1fr 110px;
+    gap: 0.9rem; align-items: center; margin-bottom: 0.45rem;
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em;
+  }
+  .rt-row .rb-name { color: var(--dimmer); text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rt-row .rb-track { height: 3px; background: rgba(232,228,220,0.07); }
+  .rt-row .rb-fill { height: 100%; background: var(--c); opacity: 0.8; display: block; }
+  .rt-row .rb-num { color: var(--dimmer); text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .rt-row .rb-num strong { color: var(--off-white); font-weight: 400; }
+
+  /* method */
+  .method p { color: var(--dim); font-size: 0.97rem; margin-bottom: 1rem; max-width: 540px; }
+  .method .mlabel {
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.3em;
+    text-transform: uppercase; color: var(--faint);
+    display: block; margin: 1.6rem 0 0.4rem;
+  }
+
+  #back {
+    display: block; text-align: center; margin: 0 0 3.5rem;
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--dimmer); text-decoration: none; transition: color 0.3s;
+  }
+  #back:hover { color: var(--off-white); }
+
+  #foot {
+    text-align: center; padding: 3rem 1rem 4rem;
+    font-family: var(--mono); font-size: 8px;
+    letter-spacing: 0.22em; text-transform: uppercase; color: var(--faint);
+  }
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .label, h1, .tagline, .statstrip, #panel, #controls, #scrollcue, #zoomer, #zoomhint { animation: none; opacity: 1; }
+    #rhythm .bar, .brow .bfill { transition: none; }
+    .livedot, .chip.live .dot { animation: none; opacity: 1; }
+  }
+
+  @media (max-width: 900px) {
+    header { top: 1.5rem; left: 1.3rem; max-width: 240px; }
+    .statstrip { display: none; }
+    #panel {
+      top: auto; right: 0.8rem; left: 0.8rem;
+      bottom: calc(8.8rem + env(safe-area-inset-bottom));
+      width: auto; max-height: 38vh; overflow-y: auto;
+      display: none;
+    }
+    #panel.open { display: block; animation: none; opacity: 1; }
+    #panel-toggle {
+      display: inline-flex;
+      position: absolute; top: 1.5rem; right: 1.3rem;
+      font-family: var(--mono); font-size: 9px;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--dimmer); background: rgba(0,0,0,0.55);
+      border: 1px solid var(--border); padding: 0.45rem 0.7rem;
+      cursor: pointer;
+    }
+    #zoomer { bottom: calc(9.4rem + env(safe-area-inset-bottom)); }
+    #zoomhint { display: none; }
+    #layers { gap: 0.25rem 1rem; }
+    .chip { letter-spacing: 0.18em; }
+    .note { grid-template-columns: 1fr; gap: 0.3rem; }
+    .rt-row { grid-template-columns: 72px 1fr 96px; gap: 0.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="map"></canvas>
+<div id="vignette"></div>
+<canvas id="grain"></canvas>
+
+<section id="hero">
+  <header>
+    <span class="label">Field Study &middot; NYC Open Data</span>
+    <h1>the grievance <em>atlas</em></h1>
+    <p class="tagline">Twelve months of 311 complaints, mapped as light. Every point is a place someone called the city about.</p>
+    <div class="statstrip">
+      <span id="grand-total">&mdash;</span> records &middot; 110m grid<br>
+      hover to interrogate a block &middot; scroll for field notes
+    </div>
+  </header>
+
+  <button id="panel-toggle" type="button" aria-expanded="false">stats</button>
+
+  <aside id="panel" aria-live="polite">
+    <div class="ptitle"><span>specimen</span><span id="pshare">&mdash;</span></div>
+    <div class="pname" id="pname">&mdash;</div>
+    <div class="ptotal" id="ptotal">&mdash;</div>
+    <div class="pclose" id="pclose">&mdash;</div>
+
+    <div class="sect">
+      <div class="shead">24-hour rhythm</div>
+      <div id="rhythm"></div>
+      <div class="rhythm-x"><span>12am</span><span>6</span><span>noon</span><span>6</span><span>11pm</span></div>
+      <div class="peakline" id="peakline">&mdash;</div>
+    </div>
+
+    <div class="sect">
+      <div class="shead">by borough</div>
+      <div id="boros"></div>
+    </div>
+
+    <div class="sect">
+      <div class="shead">most common complaint</div>
+      <div id="descs"></div>
+    </div>
+
+    <div class="sect">
+      <div class="shead">latest day on record</div>
+      <div id="livebox"><span class="livedot"></span><span id="livecount">&mdash;</span> new complaints<br><span style="color:var(--faint)">dataset refreshes daily &middot; toggle &ldquo;last 24h&rdquo;</span></div>
+    </div>
+  </aside>
+
+  <div id="zoomer">
+    <button id="zin" type="button" aria-label="Zoom in">+</button>
+    <button id="zout" type="button" aria-label="Zoom out">&minus;</button>
+  </div>
+  <div id="zoomhint">drag to pan &middot; dbl-click to zoom &middot; shift+click chips to stack layers</div>
+
+  <div id="controls">
+    <div id="hourbox">
+      <button id="playhour" type="button" aria-label="Play hours">&#9654; play</button>
+      <input id="hour" type="range" min="0" max="23" value="0" step="1" aria-label="Hour of day">
+      <span id="hourval">12am</span>
+    </div>
+    <div id="modes" role="tablist" aria-label="Map mode">
+      <button class="mode on" data-mode="density" type="button">Density</button>
+      <button class="mode" data-mode="signature" type="button">Signature</button>
+      <button class="mode" data-mode="rhythm" type="button">Rhythm</button>
+    </div>
+    <div id="layers" role="group" aria-label="Complaint layers"></div>
+  </div>
+
+  <p id="scrollcue">&darr; field notes below</p>
+</section>
+
+<div id="tip" role="status"></div>
+
+<div id="article">
+  <div class="inner">
+    <span class="shead-lg">Field Notes</span>
+    <h2>what the light actually says</h2>
+    <p class="lede">A raw complaint map mostly shows where people live and who calls 311. These notes control for that &mdash; each one links to a configured view of the map.</p>
+
+    <div class="note">
+      <span class="nnum">01</span>
+      <div>
+        <h3>The Bronx runs hot &mdash; and cold</h3>
+        <p>Heat, hot-water, and plumbing complaints are <span class="stat">34% over-represented in the Bronx</span> relative to its share of all 311 calls &mdash; the strongest borough signature of any layer. In signature mode the borough burns ember: this isn't where the most people call, it's where the calls are disproportionately about the building itself failing.</p>
+        <button class="viewbtn" data-view="sig-heat" type="button">&uarr; see it on the map</button>
+      </div>
+    </div>
+
+    <div class="note">
+      <span class="nnum">02</span>
+      <div>
+        <h3>Trash waits longest in the Bronx</h3>
+        <p>Sanitation complaints get closed in a median of <span class="stat">6 days in the Bronx versus 2 in Queens</span> &mdash; only 12% are resolved same-day there, half the rate of Queens. Of the five layers, sanitation shows the widest gap between boroughs in how long the city takes to show up. The full breakdown is in the response-time table below.</p>
+        <button class="viewbtn" data-view="den-sanitation" type="button">&uarr; see it on the map</button>
+      </div>
+    </div>
+
+    <div class="note">
+      <span class="nnum">03</span>
+      <div>
+        <h3>Manhattan is the rat capital &mdash; per capita of complaint</h3>
+        <p>Brooklyn files the most rodent reports in raw numbers, but relative to each borough's overall 311 volume, <span class="stat">Manhattan's rodent share runs 44% above the citywide rate</span>. On the map, the rodent layer traces the pre-war brownstone belt &mdash; Bed-Stuy, Harlem, the Upper West Side &mdash; with almost surgical precision.</p>
+        <button class="viewbtn" data-view="den-rodent" type="button">&uarr; see it on the map</button>
+      </div>
+    </div>
+
+    <div class="note">
+      <span class="nnum">04</span>
+      <div>
+        <h3>Noise is nocturnal, parking is a morning ritual</h3>
+        <p>Noise complaints peak at <span class="stat">midnight</span>, led by &ldquo;loud music/party&rdquo;; parking complaints crest with the morning commute. Scrub the rhythm slider from 6am to 2am and the city visibly changes shifts &mdash; gold fades out as violet blooms. Worth knowing: <span class="stat">over 90% of noise complaints are closed the same day</span>, which says more about how the NYPD clears tickets than how fast the party stopped.</p>
+        <button class="viewbtn" data-view="rhythm-0" type="button">&uarr; watch the night shift</button>
+      </div>
+    </div>
+
+    <div class="note">
+      <span class="nnum">05</span>
+      <div>
+        <h3>Queens would like a word about your car</h3>
+        <p>Illegal parking, blocked driveways, and abandoned vehicles are <span class="stat">45% over-represented in Queens</span> &mdash; the most car-dependent borough with the most driveways to block. It's the single largest complaint group in the city: nearly 900,000 calls in twelve months, and effectively all of them closed within a day.</p>
+        <button class="viewbtn" data-view="sig-parking" type="button">&uarr; see it on the map</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="inner" style="padding-top: 0;">
+    <span class="shead-lg">Response Times</span>
+    <h2>how long until the city shows up</h2>
+    <p class="lede">Share of complaints closed the same day they were filed, by borough &mdash; with the median days to close. Closure means the agency marked it resolved, which is not always the same as fixed.</p>
+    <div id="rtable"></div>
+  </div>
+
+  <div class="inner method" style="padding-top: 0;">
+    <span class="shead-lg">Method</span>
+    <h2>how this was built</h2>
+    <p>Roughly 3.3 million service requests from NYC Open Data's 311 dataset (July 2025 &ndash; July 2026), aggregated server-side with SoQL into a ~110-meter grid &mdash; the browser never sees a raw row. Five complaint families, log-scaled and rendered additively on canvas. No map tiles: the street grid you see is the complaints themselves.</p>
+    <span class="mlabel">signature mode</span>
+    <p>Each cell is colored by its most over-represented complaint family &mdash; the layer whose local share most exceeds its citywide share (a location quotient). Population density cancels out of the ratio, so the map shows character, not crowding.</p>
+    <span class="mlabel">freshness</span>
+    <p>The dataset refreshes daily. The &ldquo;last 24h&rdquo; layer and headline counts are fetched live from the API on page load; the twelve-month baseline is a static extract, rebuilt on a schedule.</p>
+    <span class="mlabel">caveats</span>
+    <p>311 measures the propensity to complain, not the underlying condition &mdash; a quiet block may simply have given up. Neighborhood labels are nearest-centroid approximations. Same-day closure is an administrative act, and for some agencies a generous one.</p>
+  </div>
+
+  <p id="foot">jul 2025 &ndash; jul 2026 &middot; data.cityofnewyork.us &middot; the grievance atlas</p>
+  <a id="back" href="../index.html">&larr; scootr's laboratory</a>
+</div>
+
+<script>
+window.__atlasReady = (async () => {
+  const load = p => fetch(p).then(r => {
+    if (!r.ok) throw new Error('failed to load ' + p);
+    return r.json();
+  });
+  const [grid, stats, hours, resp, outline] = await Promise.all([
+    load('./data/grid.json'), load('./data/stats.json'), load('./data/hours.json'),
+    load('./data/resp.json'), load('./data/outline.json'),
+  ]);
+  window.GRID = grid; window.STATS = stats; window.HOURS = hours;
+  window.RESP = resp; window.OUTLINE = outline;
+
+  // last-24h layer: fetched live from NYC Open Data, static extract as fallback
+  window.LIVE_IS_FRESH = false;
+  try {
+    const since = new Date(Date.now() - 48 * 3600 * 1000).toISOString().slice(0, 19);
+    const q = 'https://data.cityofnewyork.us/resource/erm2-nwe9.json' +
+      '?$select=latitude,longitude,created_date' +
+      '&$where=' + encodeURIComponent("created_date > '" + since + "'") +
+      '&$limit=25000';
+    const rows = await load(q);
+    const pts = [];
+    for (const r of rows) {
+      const lat = +r.latitude, lng = +r.longitude;
+      if (!(lat >= 40.49 && lat <= 40.92 && lng >= -74.27 && lng <= -73.68)) continue;
+      pts.push([Math.round(lat * 1000), Math.round(lng * 1000), +r.created_date.slice(11, 13)]);
+    }
+    if (pts.length > 100) { window.LIVE = pts; window.LIVE_IS_FRESH = true; }
+  } catch (e) { /* offline or API down — fall through to static extract */ }
+  if (!window.LIVE) window.LIVE = await load('./data/live.json');
+})();
+</script>
+
+<script>
+window.__atlasReady.then(() => {
+  'use strict';
+
+  const LAYERS = [
+    { key: 'noise',      name: 'Noise',        rgb: [178, 140, 255] },
+    { key: 'parking',    name: 'Parking',      rgb: [255, 196, 110] },
+    { key: 'heat',       name: 'Heat & Water', rgb: [255, 110, 86] },
+    { key: 'sanitation', name: 'Sanitation',   rgb: [110, 214, 200] },
+    { key: 'rodent',     name: 'Rodents',      rgb: [150, 255, 140] },
+  ];
+  const LAYER_BY_KEY = Object.fromEntries(LAYERS.map(l => [l.key, l]));
+  const active = new Set(['noise']);
+  let focused = 'noise';
+  let liveOn = false;
+  let mode = 'density';   // density | signature | rhythm
+  let hour = 0;
+  let playing = false;
+
+  const HOODS = [
+    ['Financial District',40.707,-74.011],['Tribeca',40.716,-74.008],['Chinatown',40.716,-73.997],
+    ['Lower East Side',40.715,-73.984],['SoHo',40.723,-74.002],['Greenwich Village',40.734,-74.002],
+    ['East Village',40.727,-73.982],['Chelsea',40.746,-74.001],['Midtown',40.754,-73.984],
+    ["Hell's Kitchen",40.763,-73.991],['Murray Hill',40.748,-73.975],['Upper East Side',40.774,-73.957],
+    ['Upper West Side',40.787,-73.975],['Harlem',40.812,-73.946],['East Harlem',40.795,-73.939],
+    ['Washington Heights',40.842,-73.939],['Inwood',40.868,-73.921],
+    ['Williamsburg',40.714,-73.953],['Greenpoint',40.730,-73.951],['Bushwick',40.694,-73.921],
+    ['Bed-Stuy',40.687,-73.941],['Crown Heights',40.668,-73.944],['Flatbush',40.641,-73.959],
+    ['Park Slope',40.671,-73.981],['Sunset Park',40.645,-74.012],['Bay Ridge',40.626,-74.030],
+    ['Bensonhurst',40.605,-73.994],['Coney Island',40.577,-73.981],['Brighton Beach',40.578,-73.961],
+    ['Sheepshead Bay',40.591,-73.944],['Canarsie',40.640,-73.906],['East New York',40.666,-73.882],
+    ['Brownsville',40.665,-73.910],['Downtown Brooklyn',40.694,-73.985],['Brooklyn Heights',40.696,-73.993],
+    ['Red Hook',40.675,-74.012],['Fort Greene',40.688,-73.972],
+    ['Astoria',40.764,-73.923],['Long Island City',40.745,-73.949],['Sunnyside',40.743,-73.920],
+    ['Jackson Heights',40.756,-73.883],['Corona',40.745,-73.860],['Flushing',40.765,-73.831],
+    ['Bayside',40.763,-73.771],['Forest Hills',40.720,-73.845],['Rego Park',40.726,-73.862],
+    ['Elmhurst',40.737,-73.877],['Ridgewood',40.700,-73.906],['Jamaica',40.702,-73.789],
+    ['Richmond Hill',40.696,-73.831],['Ozone Park',40.677,-73.844],['Howard Beach',40.657,-73.843],
+    ['Far Rockaway',40.603,-73.755],['Rockaway Beach',40.586,-73.816],['Woodside',40.746,-73.905],
+    ['College Point',40.786,-73.846],['Whitestone',40.792,-73.809],
+    ['Mott Haven',40.809,-73.923],['Hunts Point',40.813,-73.884],['Concourse',40.832,-73.920],
+    ['Highbridge',40.837,-73.927],['Fordham',40.861,-73.897],['Belmont',40.855,-73.885],
+    ['Tremont',40.845,-73.899],['Soundview',40.824,-73.865],['Parkchester',40.838,-73.860],
+    ['Pelham Bay',40.850,-73.833],['Riverdale',40.890,-73.909],['Kingsbridge',40.881,-73.905],
+    ['Wakefield',40.895,-73.852],['Williamsbridge',40.878,-73.857],['Morris Park',40.848,-73.855],
+    ['Throgs Neck',40.818,-73.820],
+    ['St. George',40.644,-74.077],['Stapleton',40.626,-74.077],['Port Richmond',40.634,-74.137],
+    ['New Springville',40.594,-74.164],['Tottenville',40.508,-74.245],['Great Kills',40.554,-74.151],
+    ['South Beach',40.583,-74.073],['Mariners Harbor',40.637,-74.159],['West Brighton',40.627,-74.109],
+    ['New Dorp',40.573,-74.116],['Eltingville',40.545,-74.164],['Annadale',40.540,-74.178],
+    ['Rossville',40.556,-74.213],['Midland Beach',40.573,-74.094],['Bulls Head',40.609,-74.163],
+    ['Morningside Heights',40.810,-73.962],['Hamilton Heights',40.825,-73.947],['Manhattanville',40.817,-73.955],
+    ['Gramercy',40.737,-73.984],['Kips Bay',40.742,-73.978],['Stuy Town',40.732,-73.978],
+    ['Battery Park City',40.712,-74.016],['Two Bridges',40.711,-73.996],['Yorkville',40.776,-73.947],
+    ['Lenox Hill',40.766,-73.960],['Lincoln Square',40.774,-73.985],['Roosevelt Island',40.762,-73.950],
+    ['Borough Park',40.633,-73.990],['Kensington',40.639,-73.973],['Midwood',40.618,-73.960],
+    ['Dyker Heights',40.617,-74.012],['Gravesend',40.593,-73.973],['Flatlands',40.623,-73.932],
+    ['Mill Basin',40.610,-73.913],['Marine Park',40.609,-73.931],['Bergen Beach',40.618,-73.905],
+    ['East Flatbush',40.649,-73.930],['Cypress Hills',40.682,-73.877],['Gowanus',40.674,-73.990],
+    ['Carroll Gardens',40.680,-73.998],['Prospect Heights',40.677,-73.966],['Windsor Terrace',40.655,-73.976],
+    ['Clinton Hill',40.689,-73.964],['DUMBO',40.703,-73.988],['Bath Beach',40.602,-74.006],
+    ['Maspeth',40.723,-73.906],['Glendale',40.702,-73.882],['Middle Village',40.717,-73.874],
+    ['Kew Gardens',40.709,-73.831],['Fresh Meadows',40.735,-73.783],['Hollis',40.711,-73.762],
+    ['Queens Village',40.727,-73.741],['Cambria Heights',40.692,-73.735],['St. Albans',40.690,-73.760],
+    ['Rosedale',40.658,-73.735],['Laurelton',40.668,-73.745],['Springfield Gardens',40.665,-73.780],
+    ['South Jamaica',40.680,-73.790],['Douglaston',40.769,-73.747],['Little Neck',40.763,-73.732],
+    ['Auburndale',40.761,-73.790],['Glen Oaks',40.747,-73.712],['Bellerose',40.736,-73.715],
+    ['Kew Gardens Hills',40.732,-73.821],['Briarwood',40.710,-73.815],['South Ozone Park',40.674,-73.812],
+    ['East Elmhurst',40.762,-73.870],['Broad Channel',40.603,-73.820],['Breezy Point',40.557,-73.925],
+    ['Castle Hill',40.818,-73.851],['Co-op City',40.874,-73.829],['Norwood',40.877,-73.879],
+    ['Bedford Park',40.870,-73.890],['Melrose',40.824,-73.910],['Morrisania',40.831,-73.901],
+    ['West Farms',40.842,-73.880],['Longwood',40.816,-73.896],['Castle Hill',40.818,-73.851],
+    ['City Island',40.847,-73.787],['Baychester',40.869,-73.838],['Eastchester',40.886,-73.828],
+    ['University Heights',40.860,-73.910],['Marble Hill',40.876,-73.910],['Spuyten Duyvil',40.881,-73.917],
+  ];
+
+  const cv = document.getElementById('map');
+  const ctx = cv.getContext('2d');
+  const staticCv = document.createElement('canvas');
+  const sctx = staticCv.getContext('2d');
+
+  const LAT_MIN = 40.49, LAT_MAX = 40.92;
+  const LNG_MIN = -74.27, LNG_MAX = -73.68;
+  const XSCALE = Math.cos(40.7 * Math.PI / 180);
+
+  let W = 0, H = 0, DPR = 1;
+  let scale = 1, offX = 0, offY = 0;   // base fit
+  let zoom = 1, tx = 0, ty = 0;        // user view
+  let raf = null;
+  let staticDirty = true;
+
+  function projPt(latE3, lngE3) {
+    const bx = offX + (lngE3 / 1000 - LNG_MIN) * XSCALE * scale;
+    const by = offY + (LAT_MAX - latE3 / 1000) * scale;
+    return [(bx - W / 2) * zoom + W / 2 + tx, (by - H / 2) * zoom + H / 2 + ty];
+  }
+  function unproj(x, y) {
+    const bx = (x - tx - W / 2) / zoom + W / 2;
+    const by = (y - ty - H / 2) / zoom + H / 2;
+    return [
+      Math.round((LAT_MAX - (by - offY) / scale) * 1000),
+      Math.round(((bx - offX) / (XSCALE * scale) + LNG_MIN) * 1000),
+    ];
+  }
+
+  function clampView() {
+    zoom = Math.min(14, Math.max(1, zoom));
+    const lim = W * 0.45 * zoom;
+    tx = Math.min(lim, Math.max(-lim, tx));
+    const limY = H * 0.45 * zoom;
+    ty = Math.min(limY, Math.max(-limY, ty));
+  }
+
+  function resize() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    for (const c of [cv, staticCv]) { c.width = W * DPR; c.height = H * DPR; }
+    cv.style.width = W + 'px'; cv.style.height = H + 'px';
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    sctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+
+    const spanX = (LNG_MAX - LNG_MIN) * XSCALE;
+    const spanY = LAT_MAX - LAT_MIN;
+    scale = Math.min(W / spanX, H / spanY) * 0.92;
+    offX = (W - spanX * scale) / 2;
+    offY = (H - spanY * scale) / 2;
+    requestRedraw();
+  }
+
+  // ---- indexes ----
+  const maxN = {}, index = {};
+  for (const { key } of LAYERS) {
+    const d = window.GRID[key] || [];
+    let m = 1;
+    const idx = new Map();
+    for (let i = 0; i < d.length; i += 3) {
+      if (d[i + 2] > m) m = d[i + 2];
+      idx.set(d[i] * 100000 + (d[i + 1] + 74270), d[i + 2]);
+    }
+    maxN[key] = Math.log1p(m);
+    index[key] = idx;
+  }
+  const liveIndex = new Map();
+  for (const p of window.LIVE) {
+    const k = p[0] * 100000 + (p[1] + 74270);
+    liveIndex.set(k, (liveIndex.get(k) || 0) + 1);
+  }
+
+  // ---- signature precompute ----
+  const GRAND = Object.values(window.STATS).reduce((a, s) => a + s.total, 0);
+  const layerShare = {};
+  for (const { key } of LAYERS) layerShare[key] = window.STATS[key].total / GRAND;
+  const SIG = (() => {
+    const cells = new Map(); // cellKey -> [n per layer]
+    LAYERS.forEach(({ key }, li) => {
+      const d = window.GRID[key] || [];
+      for (let i = 0; i < d.length; i += 3) {
+        const k = d[i] * 100000 + (d[i + 1] + 74270);
+        let arr = cells.get(k);
+        if (!arr) { arr = new Array(LAYERS.length).fill(0); cells.set(k, arr); }
+        arr[li] = d[i + 2];
+      }
+    });
+    const out = [];
+    let maxTot = 1;
+    for (const [k, arr] of cells) {
+      const tot = arr.reduce((a, b) => a + b, 0);
+      if (tot < 8) continue;
+      let bi = 0, bl = 0;
+      for (let li = 0; li < arr.length; li++) {
+        const lq = (arr[li] / tot) / layerShare[LAYERS[li].key];
+        if (lq > bl) { bl = lq; bi = li; }
+      }
+      const lat = Math.floor(k / 100000);
+      const lng = (k % 100000) - 74270;
+      out.push([lat, lng, bi, tot, Math.min(bl, 4)]);
+      if (tot > maxTot) maxTot = tot;
+    }
+    return { cells: out, logMax: Math.log1p(maxTot) };
+  })();
+  const sigIndex = new Map();
+  for (const c of SIG.cells) sigIndex.set(c[0] * 100000 + (c[1] + 74270), c);
+
+  // ---- hours normalization ----
+  const hourMax = {};
+  for (const { key } of LAYERS) {
+    let m = 1;
+    for (const row of (window.HOURS[key] || [])) if (row[2] > m) m = row[2];
+    hourMax[key] = Math.log1p(m);
+  }
+
+  // ---- rendering ----
+  function drawOutline() {
+    sctx.globalCompositeOperation = 'source-over';
+    sctx.beginPath();
+    for (const poly of window.OUTLINE) {
+      let first = true;
+      for (const [a, b] of poly) {
+        const [x, y] = projPt(a, b);
+        if (first) { sctx.moveTo(x, y); first = false; }
+        else sctx.lineTo(x, y);
+      }
+      sctx.closePath();
+    }
+    sctx.fillStyle = 'rgba(232,228,220,0.025)';
+    sctx.fill();
+    sctx.strokeStyle = 'rgba(232,228,220,0.13)';
+    sctx.lineWidth = 1;
+    sctx.stroke();
+  }
+
+  function renderStatic() {
+    sctx.clearRect(0, 0, W, H);
+    drawOutline();
+    sctx.globalCompositeOperation = 'lighter';
+    const basePx = Math.max(1.4, Math.min(2.6, W / 560));
+    // dampen additive pile-up when several layers are stacked
+    const nAct = Math.max(1, active.size);
+    const damp = [1, 0.72, 0.58, 0.5, 0.45][nAct - 1] || 0.45;
+
+    if (mode === 'density') {
+      const px = basePx * Math.pow(zoom, 0.72);
+      for (const { key, rgb } of LAYERS) {
+        if (!active.has(key)) continue;
+        const d = window.GRID[key] || [];
+        const [r, g, b] = rgb;
+        const logMax = maxN[key];
+        for (let i = 0; i < d.length; i += 3) {
+          const [x, y] = projPt(d[i], d[i + 1]);
+          if (x < -20 || x > W + 20 || y < -20 || y > H + 20) continue;
+          const t = Math.log1p(d[i + 2]) / logMax;
+          sctx.fillStyle = `rgba(${r},${g},${b},${((0.02 + t * 0.10) * damp).toFixed(3)})`;
+          sctx.fillRect(x - px * 1.6, y - px * 1.6, px * 3.2, px * 3.2);
+          sctx.fillStyle = `rgba(${r},${g},${b},${((0.10 + t * 0.75) * damp).toFixed(3)})`;
+          sctx.fillRect(x - px / 2, y - px / 2, px, px);
+        }
+      }
+    } else if (mode === 'signature') {
+      const px = basePx * Math.pow(zoom, 0.72);
+      for (const [lat, lng, li, tot, lq] of SIG.cells) {
+        const [x, y] = projPt(lat, lng);
+        if (x < -20 || x > W + 20 || y < -20 || y > H + 20) continue;
+        const [r, g, b] = LAYERS[li].rgb;
+        const t = Math.log1p(tot) / SIG.logMax;
+        const s = Math.min(1, (lq - 0.9) / 1.6);   // how disproportionate
+        const a = (0.06 + t * 0.35) * (0.35 + s * 0.65);
+        sctx.fillStyle = `rgba(${r},${g},${b},${(a * 0.35).toFixed(3)})`;
+        sctx.fillRect(x - px * 1.7, y - px * 1.7, px * 3.4, px * 3.4);
+        sctx.fillStyle = `rgba(${r},${g},${b},${Math.min(0.95, a * 2.4).toFixed(3)})`;
+        sctx.fillRect(x - px / 2, y - px / 2, px, px);
+      }
+    } else if (mode === 'rhythm') {
+      const px = Math.max(7, W / 130) * Math.pow(zoom, 0.8);
+      for (const { key, rgb } of LAYERS) {
+        if (!active.has(key)) continue;
+        const rows = window.HOURS[key] || [];
+        const [r, g, b] = rgb;
+        const logMax = hourMax[key];
+        for (const row of rows) {
+          const n = row[3 + hour] / 99 * row[2];
+          if (n < 0.5) continue;
+          const [x, y] = projPt(row[0] * 10, row[1] * 10);
+          if (x < -40 || x > W + 40 || y < -40 || y > H + 40) continue;
+          const t = Math.log1p(n) / logMax;
+          sctx.fillStyle = `rgba(${r},${g},${b},${((0.03 + t * 0.10) * damp).toFixed(3)})`;
+          sctx.fillRect(x - px, y - px, px * 2, px * 2);
+          sctx.fillStyle = `rgba(${r},${g},${b},${((0.05 + t * 0.5) * damp).toFixed(3)})`;
+          sctx.fillRect(x - px * 0.35, y - px * 0.35, px * 0.7, px * 0.7);
+        }
+      }
+    }
+    sctx.globalCompositeOperation = 'source-over';
+    staticDirty = false;
+  }
+
+  function composite(now) {
+    raf = null;
+    if (staticDirty) renderStatic();
+    ctx.clearRect(0, 0, W, H);
+    ctx.drawImage(staticCv, 0, 0, W, H);
+    if (liveOn) {
+      const t = (now || performance.now()) / 1000;
+      ctx.globalCompositeOperation = 'lighter';
+      const sz = Math.max(2, 2 * Math.pow(zoom, 0.6));
+      for (const p of window.LIVE) {
+        if (mode === 'rhythm' && p[2] !== hour) continue;
+        const [x, y] = projPt(p[0], p[1]);
+        if (x < -10 || x > W + 10 || y < -10 || y > H + 10) continue;
+        const tw = 0.45 + 0.55 * Math.sin(t * 2.2 + (p[0] * 7 + p[1] * 13) % 6.28);
+        ctx.fillStyle = `rgba(255,255,255,${(0.25 * tw + 0.08).toFixed(3)})`;
+        ctx.fillRect(x - sz / 2, y - sz / 2, sz, sz);
+      }
+      ctx.globalCompositeOperation = 'source-over';
+      raf = requestAnimationFrame(composite);
+    }
+  }
+  function requestRedraw() {
+    staticDirty = true;
+    if (!raf) raf = requestAnimationFrame(composite);
+  }
+
+  // ---- pan / zoom ----
+  // NB: #hero overlays the canvas, so pointer interactions attach there
+  const hero = document.getElementById('hero');
+  const isMapTarget = e => !e.target.closest('#panel, #controls, #panel-toggle, #zoomer, button, input, a');
+  let dragging = false, moved = false, lx = 0, ly = 0;
+  hero.addEventListener('mousedown', e => {
+    if (!isMapTarget(e)) return;
+    dragging = true; moved = false; lx = e.clientX; ly = e.clientY;
+    hero.classList.add('dragging');
+  });
+  window.addEventListener('mouseup', () => { dragging = false; hero.classList.remove('dragging'); });
+  window.addEventListener('mousemove', e => {
+    if (dragging) {
+      const dx = e.clientX - lx, dy = e.clientY - ly;
+      if (Math.abs(dx) + Math.abs(dy) > 2) moved = true;
+      tx += dx; ty += dy; lx = e.clientX; ly = e.clientY;
+      clampView(); requestRedraw();
+      tip.classList.remove('show');
+    }
+  });
+
+  function zoomAt(cx, cy, f) {
+    const nz = Math.min(14, Math.max(1, zoom * f));
+    const r = nz / zoom;
+    // point-preserving zoom around (cx, cy):
+    tx = (tx - (cx - W / 2)) * r + (cx - W / 2);
+    ty = (ty - (cy - H / 2)) * r + (cy - H / 2);
+    zoom = nz;
+    if (zoom === 1) { tx = 0; ty = 0; }
+    clampView(); requestRedraw();
+  }
+  document.getElementById('zin').addEventListener('click', () => zoomAt(W / 2, H / 2, 1.6));
+  document.getElementById('zout').addEventListener('click', () => zoomAt(W / 2, H / 2, 1 / 1.6));
+  hero.addEventListener('dblclick', e => { if (isMapTarget(e)) zoomAt(e.clientX, e.clientY, 1.7); });
+  window.addEventListener('wheel', e => {
+    if (!(e.ctrlKey || e.metaKey)) return;
+    if (window.scrollY > 10) return;
+    e.preventDefault();
+    zoomAt(e.clientX, e.clientY, e.deltaY < 0 ? 1.25 : 0.8);
+  }, { passive: false });
+
+  // ---------- stats panel ----------
+  const HOURLABEL = h => h === 0 ? '12am' : h < 12 ? h + 'am' : h === 12 ? 'noon' : (h - 12) + 'pm';
+  const fmt = n => n.toLocaleString('en-US');
+  document.getElementById('grand-total').textContent = fmt(GRAND);
+  document.getElementById('livecount').textContent = fmt(window.LIVE.length);
+
+  function citywideClose(key) {
+    const per = window.RESP[key] || {};
+    let ns = 0, same = 0;
+    for (const b in per) { ns += per[b].n; same += per[b].same * per[b].n; }
+    return ns ? (same / ns).toFixed(0) : '—';
+  }
+
+  function renderPanel() {
+    const L = LAYER_BY_KEY[focused];
+    const s = window.STATS[focused];
+    const c = `rgb(${L.rgb.join(',')})`;
+    document.getElementById('panel').style.setProperty('--layer-c', c);
+    document.getElementById('pname').textContent = L.name.toLowerCase();
+    document.getElementById('ptotal').textContent = fmt(s.total) + ' complaints / 12 mo';
+    document.getElementById('pshare').textContent = ((s.total / GRAND) * 100).toFixed(1) + '% of all';
+    document.getElementById('pclose').textContent = citywideClose(focused) + '% closed same-day citywide';
+
+    const rhythm = document.getElementById('rhythm');
+    rhythm.innerHTML = '';
+    const hmax = Math.max(...s.hourly);
+    const peak = s.hourly.indexOf(hmax);
+    s.hourly.forEach((n, h) => {
+      const bar = document.createElement('div');
+      bar.className = 'bar' + (h === peak ? ' peak' : '');
+      bar.style.height = Math.max(2, (n / hmax) * 44) + 'px';
+      bar.title = HOURLABEL(h) + ' — ' + fmt(n);
+      rhythm.appendChild(bar);
+    });
+    document.getElementById('peakline').textContent = 'peak hour: ' + HOURLABEL(peak) + ' (' + fmt(hmax) + ')';
+
+    const boros = document.getElementById('boros');
+    boros.innerHTML = '';
+    const bmax = s.boro.length ? s.boro[0][1] : 1;
+    for (const [name, n] of s.boro) {
+      const row = document.createElement('div');
+      row.className = 'brow';
+      row.innerHTML = `<span class="bname">${name}</span><span class="btrack"><span class="bfill" style="width:${(n / bmax * 100).toFixed(1)}%"></span></span><span class="bnum">${fmt(n)}</span>`;
+      boros.appendChild(row);
+    }
+
+    const descs = document.getElementById('descs');
+    descs.innerHTML = '';
+    for (const [name, n] of s.desc) {
+      const row = document.createElement('div');
+      row.className = 'drow';
+      const nm = document.createElement('span');
+      nm.className = 'dname'; nm.textContent = (name || '—').toLowerCase();
+      const num = document.createElement('span');
+      num.className = 'dnum'; num.textContent = fmt(n);
+      row.append(nm, num);
+      descs.appendChild(row);
+    }
+  }
+
+  // ---------- tooltip ----------
+  const tip = document.getElementById('tip');
+  const R = 4;
+  let tipTimer = null;
+
+  function inspect(clientX, clientY) {
+    if (window.scrollY > H * 0.5) { tip.classList.remove('show'); return; }
+    const [latE3, lngE3] = unproj(clientX, clientY);
+    if (latE3 < LAT_MIN * 1000 || latE3 > LAT_MAX * 1000 || lngE3 < LNG_MIN * 1000 || lngE3 > LNG_MAX * 1000) {
+      tip.classList.remove('show'); return;
+    }
+    const rows = [];
+    let any = 0;
+    for (const { key, name, rgb } of LAYERS) {
+      if (mode === 'density' || mode === 'rhythm' ? !active.has(key) : false) continue;
+      const idx = index[key];
+      let sum = 0;
+      for (let dy = -R; dy <= R; dy++)
+        for (let dx = -R; dx <= R; dx++) {
+          const v = idx.get((latE3 + dy) * 100000 + (lngE3 + dx + 74270));
+          if (v) sum += v;
+        }
+      any += sum;
+      rows.push({ name, sum, c: `rgb(${rgb.join(',')})` });
+    }
+    if (liveOn) {
+      let sum = 0;
+      for (let dy = -R; dy <= R; dy++)
+        for (let dx = -R; dx <= R; dx++) {
+          const v = liveIndex.get((latE3 + dy) * 100000 + (lngE3 + dx + 74270));
+          if (v) sum += v;
+        }
+      any += sum;
+      rows.push({ name: 'last 24h', sum, c: '#ffffff' });
+    }
+    if (!any) { tip.classList.remove('show'); return; }
+
+    let best = null, bestD = Infinity;
+    const lat = latE3 / 1000, lng = lngE3 / 1000;
+    for (const [hn, hlat, hlng] of HOODS) {
+      const dy = (hlat - lat), dx = (hlng - lng) * XSCALE;
+      const d = dy * dy + dx * dx;
+      if (d < bestD) { bestD = d; best = hn; }
+    }
+    const dist = Math.sqrt(bestD);
+    const near = dist < 0.014 ? best : 'near ' + best;
+
+    // dominant signature at this spot
+    let sig = '';
+    if (mode === 'signature') {
+      const cell = sigIndex.get(latE3 * 100000 + (lngE3 + 74270));
+      if (cell) {
+        const L = LAYERS[cell[2]];
+        sig = `<div class="tsig" style="color: rgb(${L.rgb.join(',')})">signature: ${L.name.toLowerCase()} &middot; ${cell[4].toFixed(1)}&times; expected</div>`;
+      }
+    }
+
+    tip.innerHTML = `<div class="tname">${near}</div>` +
+      rows.map(r => `<div class="trow"><span style="color:${r.c}">${r.name.toLowerCase()}</span><span>${fmt(r.sum)}</span></div>`).join('') +
+      sig + `<div class="tnote">within ~450m &middot; 12 mo</div>`;
+    tip.classList.add('show');
+
+    const tw = tip.offsetWidth, th = tip.offsetHeight;
+    let x = clientX + 16, y = clientY + 16;
+    if (x + tw > W - 10) x = clientX - tw - 16;
+    if (y + th > H - 10) y = clientY - th - 16;
+    tip.style.left = x + 'px';
+    tip.style.top = y + 'px';
+  }
+
+  window.addEventListener('mousemove', e => {
+    if (dragging) return;
+    if (e.target.closest('#panel, #controls, #panel-toggle, #zoomer, #article')) { tip.classList.remove('show'); return; }
+    if (tipTimer) cancelAnimationFrame(tipTimer);
+    tipTimer = requestAnimationFrame(() => inspect(e.clientX, e.clientY));
+  });
+  hero.addEventListener('touchstart', e => {
+    if (!isMapTarget(e)) return;
+    const t = e.touches[0];
+    inspect(t.clientX, t.clientY);
+  }, { passive: true });
+
+  // ---------- chips ----------
+  const wrap = document.getElementById('layers');
+  const chipEls = {};
+  for (const { key, name, rgb } of LAYERS) {
+    const btn = document.createElement('button');
+    btn.className = 'chip' + (active.has(key) ? ' on' : '');
+    btn.type = 'button';
+    btn.style.setProperty('--c', `rgb(${rgb.join(',')})`);
+    btn.setAttribute('aria-pressed', active.has(key));
+    btn.innerHTML = `<span class="dot"></span>${name}`;
+    btn.addEventListener('click', e => {
+      if (e.shiftKey) {
+        // stack: toggle this layer alongside the others
+        if (active.has(key) && active.size > 1) active.delete(key);
+        else active.add(key);
+      } else {
+        // default: switch to this layer alone
+        active.clear(); active.add(key);
+      }
+      focused = active.has(key) ? key : (active.values().next().value || key);
+      syncChips(); requestRedraw(); renderPanel();
+    });
+    wrap.appendChild(btn);
+    chipEls[key] = btn;
+  }
+  function syncChips() {
+    for (const { key } of LAYERS) {
+      chipEls[key].classList.toggle('on', active.has(key));
+      chipEls[key].setAttribute('aria-pressed', active.has(key));
+    }
+  }
+  let liveBtn;
+  {
+    liveBtn = document.createElement('button');
+    liveBtn.className = 'chip live';
+    liveBtn.type = 'button';
+    liveBtn.style.setProperty('--c', '#ffffff');
+    liveBtn.setAttribute('aria-pressed', 'false');
+    liveBtn.innerHTML = `<span class="dot"></span>Last 24h`;
+    liveBtn.addEventListener('click', () => {
+      liveOn = !liveOn;
+      liveBtn.classList.toggle('on', liveOn);
+      liveBtn.setAttribute('aria-pressed', liveOn);
+      if (!raf) raf = requestAnimationFrame(composite);
+    });
+    wrap.appendChild(liveBtn);
+  }
+
+  // ---------- modes ----------
+  const modeBtns = document.querySelectorAll('.mode');
+  const hourbox = document.getElementById('hourbox');
+  const hourInput = document.getElementById('hour');
+  const hourval = document.getElementById('hourval');
+  const playBtn = document.getElementById('playhour');
+  let playTimer = null;
+
+  function setMode(m) {
+    mode = m;
+    modeBtns.forEach(b => b.classList.toggle('on', b.dataset.mode === m));
+    hourbox.classList.toggle('show', m === 'rhythm');
+    document.getElementById('layers').classList.toggle('disabled', m === 'signature');
+    if (m !== 'rhythm' && playing) togglePlay();
+    requestRedraw();
+  }
+  modeBtns.forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
+
+  function setHour(h) {
+    hour = ((h % 24) + 24) % 24;
+    hourInput.value = hour;
+    hourval.textContent = HOURLABEL(hour);
+    requestRedraw();
+  }
+  hourInput.addEventListener('input', () => setHour(+hourInput.value));
+  function togglePlay() {
+    playing = !playing;
+    playBtn.innerHTML = playing ? '&#9632; stop' : '&#9654; play';
+    if (playing) playTimer = setInterval(() => setHour(hour + 1), 650);
+    else clearInterval(playTimer);
+  }
+  playBtn.addEventListener('click', togglePlay);
+  setHour(0);
+
+  // ---------- field-note view links ----------
+  const VIEWS = {
+    'sig-heat':      () => { setMode('signature'); focused = 'heat'; renderPanel(); },
+    'sig-parking':   () => { setMode('signature'); focused = 'parking'; renderPanel(); },
+    'den-sanitation':() => { setMode('density'); active.clear(); active.add('sanitation'); focused = 'sanitation'; syncChips(); renderPanel(); requestRedraw(); },
+    'den-rodent':    () => { setMode('density'); active.clear(); active.add('rodent'); focused = 'rodent'; syncChips(); renderPanel(); requestRedraw(); },
+    'rhythm-0':      () => { active.clear(); active.add('noise'); active.add('parking'); focused = 'noise'; syncChips(); setMode('rhythm'); setHour(0); if (!playing) togglePlay(); renderPanel(); },
+  };
+  document.querySelectorAll('.viewbtn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const fn = VIEWS[btn.dataset.view];
+      if (fn) fn();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  // ---------- response-time table ----------
+  {
+    const host = document.getElementById('rtable');
+    const BORDER = ['Bronx','Brooklyn','Manhattan','Queens','Staten Island'];
+    for (const { key, name, rgb } of LAYERS) {
+      const per = window.RESP[key] || {};
+      const box = document.createElement('div');
+      box.className = 'rt-layer';
+      box.style.setProperty('--c', `rgb(${rgb.join(',')})`);
+      let rows = '';
+      for (const b of BORDER) {
+        const v = per[b];
+        if (!v) continue;
+        rows += `<div class="rt-row">
+          <span class="rb-name">${b}</span>
+          <span class="rb-track"><span class="rb-fill" style="width:${v.same}%"></span></span>
+          <span class="rb-num"><strong>${v.same}%</strong> · med ${v.med}d</span>
+        </div>`;
+      }
+      box.innerHTML = `<div class="rt-head">
+          <span class="rt-name"><span class="dot2"></span>${name.toLowerCase()}</span>
+          <span class="rt-sub">% closed same day</span>
+        </div>` + rows;
+      host.appendChild(box);
+    }
+  }
+
+  // ---------- mobile panel toggle ----------
+  const ptog = document.getElementById('panel-toggle');
+  ptog.addEventListener('click', () => {
+    const open = document.getElementById('panel').classList.toggle('open');
+    ptog.setAttribute('aria-expanded', open);
+  });
+
+  window.addEventListener('resize', resize);
+  resize();
+  renderPanel();
+
+  // grain
+  const grainCanvas = document.getElementById('grain');
+  const gctx = grainCanvas.getContext('2d');
+  function drawGrain() {
+    const w = grainCanvas.width = window.innerWidth * 1.5;
+    const h = grainCanvas.height = window.innerHeight * 1.5;
+    const imageData = gctx.createImageData(w, h);
+    const data = imageData.data;
+    for (let i = 0; i < data.length; i += 4) {
+      const v = Math.random() > 0.5 ? 255 : 0;
+      data[i] = v; data[i+1] = v; data[i+2] = v; data[i+3] = 255;
+    }
+    gctx.putImageData(imageData, 0, 0);
+  }
+  drawGrain();
+  window.addEventListener('resize', drawGrain);
+
+  setMode('signature');
+  if (window.LIVE_IS_FRESH) {
+    const lb = document.querySelector('#livebox span[style]');
+    if (lb) lb.textContent = 'fetched live from the api just now';
+  }
+}).catch(err => {
+  console.error(err);
+  const el = document.querySelector('.statstrip');
+  if (el) { el.textContent = 'data failed to load — refresh to retry'; el.style.opacity = 1; }
+});
+</script>
+
+</body>
+</html>
