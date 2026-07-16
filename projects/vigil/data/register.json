@@ -1,0 +1,225 @@
+[
+ {
+  "name": "Gaza",
+  "lat": 31.42,
+  "lng": 34.37,
+  "started": "2023-10-07",
+  "summary": "War and humanitarian catastrophe. The majority of the population has been displaced, much of it repeatedly; famine conditions have been documented by the IPC. Tens of thousands killed.",
+  "toll": "majority of ~2.2M population displaced \u00b7 famine conditions documented",
+  "sources": [
+   "UN OCHA",
+   "IPC",
+   "WHO"
+  ],
+  "asof": "early 2026",
+  "help": [
+   {
+    "name": "UNRWA",
+    "url": "https://www.unrwa.org/donate"
+   },
+   {
+    "name": "WFP",
+    "url": "https://www.wfp.org/emergencies/palestine-emergency"
+   },
+   {
+    "name": "MSF",
+    "url": "https://www.msf.org"
+   }
+  ]
+ },
+ {
+  "name": "Sudan",
+  "lat": 15.6,
+  "lng": 32.53,
+  "started": "2023-04-15",
+  "summary": "Civil war between the SAF and RSF. The world's largest displacement crisis \u2014 over 11 million people driven from their homes \u2014 with famine confirmed in parts of Darfur and mass atrocities reported in El Fasher and elsewhere.",
+  "toll": "11M+ displaced \u00b7 famine confirmed (IPC) \u00b7 mass atrocities reported",
+  "sources": [
+   "UN OCHA",
+   "IPC",
+   "UCDP"
+  ],
+  "asof": "early 2026",
+  "help": [
+   {
+    "name": "WFP",
+    "url": "https://www.wfp.org/emergencies/sudan-emergency"
+   },
+   {
+    "name": "MSF",
+    "url": "https://www.msf.org"
+   },
+   {
+    "name": "IRC",
+    "url": "https://www.rescue.org"
+   }
+  ]
+ },
+ {
+  "name": "Eastern DR Congo",
+  "lat": -1.68,
+  "lng": 29.22,
+  "started": "2022-03-28",
+  "summary": "M23 offensive atop three decades of conflict in the Kivus. Roughly 7 million people internally displaced \u2014 among the largest displacement crises on earth \u2014 alongside an active Ebola outbreak.",
+  "toll": "~7M internally displaced \u00b7 Goma seized 2025 \u00b7 active Ebola outbreak",
+  "sources": [
+   "UN OCHA",
+   "UNHCR",
+   "WHO"
+  ],
+  "asof": "early 2026",
+  "help": [
+   {
+    "name": "IRC",
+    "url": "https://www.rescue.org"
+   },
+   {
+    "name": "MSF",
+    "url": "https://www.msf.org"
+   },
+   {
+    "name": "UNICEF",
+    "url": "https://www.unicef.org/drcongo"
+   }
+  ]
+ },
+ {
+  "name": "Myanmar",
+  "lat": 21.0,
+  "lng": 96.1,
+  "started": "2021-02-01",
+  "summary": "Civil war since the military coup. Over 3.5 million displaced; the Rohingya remain stateless, with hundreds of thousands confined to camps in Bangladesh a decade after genocidal violence drove them out.",
+  "toll": "3.5M+ displaced \u00b7 ~1M Rohingya refugees in Bangladesh",
+  "sources": [
+   "UNHCR",
+   "UN OCHA",
+   "ACLED"
+  ],
+  "asof": "early 2026",
+  "help": [
+   {
+    "name": "UNHCR",
+    "url": "https://www.unhcr.org"
+   },
+   {
+    "name": "IRC",
+    "url": "https://www.rescue.org"
+   }
+  ]
+ },
+ {
+  "name": "Haiti",
+  "lat": 18.54,
+  "lng": -72.34,
+  "started": "2021-07-07",
+  "summary": "State collapse. Armed groups control most of Port-au-Prince; over a million people displaced inside the country and half the population facing acute hunger.",
+  "toll": "1M+ displaced \u00b7 ~half the population in acute food insecurity",
+  "sources": [
+   "UN OCHA",
+   "IPC"
+  ],
+  "asof": "early 2026",
+  "help": [
+   {
+    "name": "WFP",
+    "url": "https://www.wfp.org/countries/haiti"
+   },
+   {
+    "name": "Partners in Health",
+    "url": "https://www.pih.org"
+   }
+  ]
+ },
+ {
+  "name": "Central Sahel",
+  "lat": 14.3,
+  "lng": -1.5,
+  "started": "2015-01-01",
+  "summary": "Insurgencies across Burkina Faso, Mali, and Niger. Millions displaced, thousands of schools closed, aid access shrinking \u2014 routinely ranked the world's most neglected crisis.",
+  "toll": "~3M displaced across three countries \u00b7 aid access collapsing",
+  "sources": [
+   "UN OCHA",
+   "NRC"
+  ],
+  "asof": "early 2026",
+  "help": [
+   {
+    "name": "NRC",
+    "url": "https://www.nrc.no"
+   },
+   {
+    "name": "WFP",
+    "url": "https://www.wfp.org"
+   }
+  ]
+ },
+ {
+  "name": "Ukraine",
+  "lat": 48.5,
+  "lng": 37.5,
+  "started": "2022-02-24",
+  "summary": "Full-scale Russian invasion. Millions of refugees across Europe and millions more displaced internally; sustained strikes on civilian infrastructure.",
+  "toll": "~6M refugees abroad \u00b7 millions internally displaced",
+  "sources": [
+   "UNHCR",
+   "UCDP"
+  ],
+  "asof": "early 2026",
+  "help": [
+   {
+    "name": "UNHCR",
+    "url": "https://www.unhcr.org/ukraine-emergency"
+   },
+   {
+    "name": "ICRC",
+    "url": "https://www.icrc.org"
+   }
+  ]
+ },
+ {
+  "name": "Yemen",
+  "lat": 15.35,
+  "lng": 44.2,
+  "started": "2014-09-21",
+  "summary": "A decade of war and blockade. One of the world's worst humanitarian crises for years running \u2014 most of the population needs assistance, with recurring cholera epidemics and child malnutrition.",
+  "toll": "~18M people in need \u00b7 recurring cholera epidemics",
+  "sources": [
+   "UN OCHA",
+   "WHO"
+  ],
+  "asof": "early 2026",
+  "help": [
+   {
+    "name": "UNICEF",
+    "url": "https://www.unicef.org/yemen"
+   },
+   {
+    "name": "WFP",
+    "url": "https://www.wfp.org/emergencies/yemen-emergency"
+   }
+  ]
+ },
+ {
+  "name": "Afghanistan",
+  "lat": 34.5,
+  "lng": 66.0,
+  "started": "2021-08-15",
+  "summary": "Humanitarian collapse under Taliban rule. Over 20 million people need assistance; women and girls erased from public life, education, and most work.",
+  "toll": "20M+ in need \u00b7 women banned from secondary school and most work",
+  "sources": [
+   "UN OCHA",
+   "UNESCO"
+  ],
+  "asof": "early 2026",
+  "help": [
+   {
+    "name": "UNICEF",
+    "url": "https://www.unicef.org/afghanistan"
+   },
+   {
+    "name": "WFP",
+    "url": "https://www.wfp.org/countries/afghanistan"
+   }
+  ]
+ }
+]

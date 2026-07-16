@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Vigil &mdash; scootr's laboratory</title>
+<meta name="description" content="A live map of everything the earth is going through right now — earthquakes, wildfires, floods, outbreaks, and the ongoing crises that never make the feed.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --off-white: #e8e4dc;
+    --dim: rgba(232, 228, 220, 0.7);
+    --dimmer: rgba(232, 228, 220, 0.45);
+    --faint: rgba(232, 228, 220, 0.25);
+    --border: rgba(232,228,220,0.12);
+    --mono: 'Courier Prime', monospace;
+  }
+
+  html { background: #000; scroll-behavior: smooth; }
+
+  body {
+    position: relative;
+    background: #000;
+    color: var(--off-white);
+    font-family: 'Cormorant Garamond', serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  #map { position: fixed; inset: 0; z-index: 0; }
+
+  #hero {
+    position: relative; height: 100vh; height: 100svh; z-index: 2;
+    cursor: grab; touch-action: pan-y;
+  }
+  #hero.dragging { cursor: grabbing; }
+
+  #grain {
+    position: fixed; inset: -50%;
+    width: 200%; height: 200%;
+    z-index: 5; pointer-events: none;
+    opacity: 0.05; mix-blend-mode: overlay;
+  }
+
+  #vignette {
+    position: fixed; inset: 0; z-index: 2; pointer-events: none;
+    background: radial-gradient(ellipse at center,
+      transparent 42%, rgba(0,0,0,0.4) 80%, rgba(0,0,0,0.82) 100%);
+  }
+
+  header {
+    position: absolute; top: 2rem; left: 2.2rem; z-index: 4;
+    pointer-events: none; max-width: 350px;
+  }
+
+  .label {
+    display: block; font-family: var(--mono);
+    font-size: 10px; letter-spacing: 0.4em; text-transform: uppercase;
+    color: var(--dimmer); margin-bottom: 0.8rem;
+    opacity: 0; animation: fade-up 1.2s ease 0.1s forwards;
+  }
+
+  h1 {
+    font-weight: 300; font-style: italic;
+    font-size: clamp(1.9rem, 4vw, 2.7rem);
+    letter-spacing: 0.03em; line-height: 1.1;
+    opacity: 0; animation: fade-up 1.4s ease 0.3s forwards;
+  }
+
+  .tagline {
+    font-style: italic; color: var(--dim);
+    font-size: clamp(0.85rem, 1.5vw, 0.98rem);
+    margin-top: 0.8rem;
+    opacity: 0; animation: fade-up 1.4s ease 0.6s forwards;
+  }
+
+  .statstrip {
+    margin-top: 1.1rem;
+    font-family: var(--mono); font-size: 9px;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--faint); line-height: 2;
+    opacity: 0; animation: fade-up 1.4s ease 0.85s forwards;
+  }
+
+  /* ---------- situation panel ---------- */
+  #panel {
+    position: absolute; top: 2rem; right: 2rem; z-index: 4;
+    width: 292px; max-height: calc(100vh - 10rem);
+    overflow-y: auto;
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--dim);
+    background: rgba(0,0,0,0.55);
+    border: 1px solid var(--border);
+    padding: 1.1rem 1.2rem 1.2rem;
+    opacity: 0; animation: fade-up 1.2s ease 1s forwards;
+    scrollbar-width: thin;
+  }
+
+  #panel .shead {
+    font-size: 8px; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--faint); margin-bottom: 0.55rem;
+  }
+  .sect { border-top: 1px solid var(--border); padding-top: 0.7rem; margin-top: 0.8rem; }
+  .sect:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+
+  .reg-item {
+    padding: 0.45rem 0; cursor: pointer;
+    border-bottom: 1px dotted rgba(232,228,220,0.08);
+  }
+  .reg-item:last-child { border-bottom: none; }
+  .reg-item .rname {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.05rem;
+    color: var(--off-white);
+  }
+  .reg-item .rname .days {
+    font-family: var(--mono); font-size: 9px; font-style: normal;
+    color: rgba(255,110,86,0.85); letter-spacing: 0.12em;
+    font-variant-numeric: tabular-nums;
+  }
+  .reg-item .rtoll { font-size: 8.5px; color: var(--dimmer); letter-spacing: 0.06em; line-height: 1.7; }
+  .reg-item:hover .rname { text-decoration: underline; text-underline-offset: 3px; }
+
+  .ev-item { display: flex; gap: 0.55rem; padding: 0.28rem 0; font-size: 9px; align-items: baseline; }
+  .ev-item .edot { width: 6px; height: 6px; border-radius: 50%; flex: none; position: relative; top: 1px; background: var(--c); box-shadow: 0 0 6px var(--c); }
+  .ev-item .etitle { color: var(--dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; letter-spacing: 0.04em; }
+  .ev-item .ewhen { margin-left: auto; color: var(--faint); flex: none; letter-spacing: 0.08em; }
+
+  /* ---------- detail card ---------- */
+  #detail {
+    position: absolute; left: 2.2rem; bottom: calc(6.4rem + env(safe-area-inset-bottom));
+    z-index: 4; width: 330px; max-width: calc(100vw - 4rem);
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em;
+    color: var(--dim);
+    background: rgba(0,0,0,0.72);
+    border: 1px solid var(--border);
+    padding: 1rem 1.15rem;
+    display: none;
+  }
+  #detail.show { display: block; }
+  #detail .dname {
+    font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300;
+    font-size: 1.4rem; color: var(--off-white); margin-bottom: 0.1rem;
+  }
+  #detail .ddays {
+    font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase;
+    color: rgba(255,110,86,0.85); margin-bottom: 0.6rem;
+  }
+  #detail .dsummary { font-family: 'Cormorant Garamond', serif; font-size: 0.92rem; color: var(--dim); line-height: 1.55; margin-bottom: 0.6rem; }
+  #detail .dtoll { font-size: 9px; color: var(--dimmer); line-height: 1.8; letter-spacing: 0.08em; }
+  #detail .dsrc { margin-top: 0.5rem; font-size: 8px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--faint); }
+  #detail .dlinks { margin-top: 0.6rem; display: flex; flex-wrap: wrap; gap: 0.45rem; }
+  #detail .dlinks a {
+    font-family: var(--mono); font-size: 8.5px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--dimmer); text-decoration: none;
+    border: 1px solid var(--border); padding: 0.35rem 0.6rem;
+    transition: color 0.3s, border-color 0.3s;
+  }
+  #detail .dlinks a:hover { color: var(--off-white); border-color: var(--dimmer); }
+  #detail .dlinks .dl-label {
+    font-size: 8px; letter-spacing: 0.28em; text-transform: uppercase;
+    color: var(--faint); width: 100%; margin-bottom: 0.1rem;
+  }
+
+  #featured {
+    margin-top: 1.2rem; max-width: 300px;
+    border: 1px solid var(--border);
+    background: rgba(0,0,0,0.5);
+    padding: 0.7rem 0.85rem;
+    pointer-events: auto; cursor: pointer;
+    opacity: 0; animation: fade-up 1.4s ease 1.05s forwards;
+    transition: border-color 0.3s;
+  }
+  #featured:hover { border-color: var(--dimmer); }
+  #featured .flabel {
+    font-family: var(--mono); font-size: 8px;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    color: rgba(255,170,80,0.8); margin-bottom: 0.3rem;
+  }
+  #featured .ftitle {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 1.02rem; color: var(--off-white); line-height: 1.35;
+  }
+  #featured .fmeta {
+    font-family: var(--mono); font-size: 8.5px;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--dimmer); margin-top: 0.3rem;
+  }
+  #detail .dclose {
+    position: absolute; top: 0.5rem; right: 0.7rem;
+    background: none; border: none; color: var(--dimmer);
+    font-family: var(--mono); font-size: 11px; cursor: pointer;
+  }
+  #detail .dclose:hover { color: var(--off-white); }
+
+  /* ---------- tooltip ---------- */
+  #tip {
+    position: fixed; z-index: 6; pointer-events: none;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em;
+    color: var(--dim);
+    background: rgba(0,0,0,0.75);
+    border: 1px solid var(--border);
+    padding: 0.5rem 0.7rem;
+    max-width: 250px;
+    opacity: 0; transition: opacity 0.15s;
+  }
+  #tip.show { opacity: 1; }
+  #tip .tname { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.98rem; color: var(--off-white); margin-bottom: 0.15rem; }
+  #tip .tline { font-size: 9px; color: var(--dimmer); }
+  #tip .tsrc { font-size: 8px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--faint); margin-top: 0.25rem; }
+
+  /* ---------- chips ---------- */
+  #layers {
+    position: absolute; left: 0; right: 0;
+    bottom: calc(1.7rem + env(safe-area-inset-bottom));
+    z-index: 4;
+    display: flex; justify-content: center; flex-wrap: wrap;
+    gap: 0.4rem 1.4rem; padding: 0 1rem;
+    opacity: 0; animation: fade-up 1.2s ease 1.2s forwards;
+  }
+
+  .chip {
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.24em; text-transform: uppercase;
+    color: var(--dimmer);
+    background: none; border: none; border-bottom: 1px solid transparent;
+    padding: 0.4rem 0.1rem; cursor: pointer;
+    transition: color 0.3s, border-color 0.3s;
+    display: inline-flex; align-items: center; gap: 0.5em;
+  }
+  .chip .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--c, var(--dimmer));
+    opacity: 0.35; transition: opacity 0.3s, box-shadow 0.3s;
+  }
+  .chip:hover { color: var(--dim); }
+  .chip:focus-visible { outline: 1px solid var(--dimmer); outline-offset: 3px; }
+  .chip.on { color: var(--off-white); border-bottom-color: var(--border); }
+  .chip.on .dot { opacity: 1; box-shadow: 0 0 8px var(--c); }
+  .chip .n { font-size: 8px; color: var(--faint); letter-spacing: 0.1em; }
+
+  #timewin {
+    position: absolute; left: 0; right: 0;
+    bottom: calc(4.4rem + env(safe-area-inset-bottom));
+    z-index: 4;
+    display: flex; justify-content: center; align-items: baseline; gap: 1.1rem;
+    opacity: 0; animation: fade-up 1.2s ease 1.35s forwards;
+  }
+  .twlabel {
+    font-family: var(--mono); font-size: 8px;
+    letter-spacing: 0.3em; text-transform: uppercase; color: var(--faint);
+  }
+  .tw {
+    font-family: var(--mono); font-size: 9px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--faint); background: none; border: none;
+    border-bottom: 1px solid transparent;
+    padding: 0.25rem 0.05rem; cursor: pointer;
+    transition: color 0.3s, border-color 0.3s;
+  }
+  .tw:hover { color: var(--dim); }
+  .tw:focus-visible { outline: 1px solid var(--dimmer); outline-offset: 3px; }
+  .tw.on { color: var(--off-white); border-bottom-color: var(--dimmer); }
+
+  #note {
+    position: absolute; bottom: calc(0.5rem + env(safe-area-inset-bottom));
+    left: 0; right: 0; z-index: 4; text-align: center;
+    font-family: var(--mono); font-size: 8px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--faint);
+    opacity: 0; animation: fade-up 1.2s ease 1.5s forwards;
+    pointer-events: none;
+  }
+
+  #zoomer {
+    position: absolute; left: 2.2rem; bottom: calc(1.9rem + env(safe-area-inset-bottom));
+    z-index: 4; display: flex; flex-direction: column; gap: 1px;
+    opacity: 0; animation: fade-up 1.2s ease 1.3s forwards;
+  }
+  #zoomer button {
+    font-family: var(--mono); font-size: 14px;
+    width: 30px; height: 30px;
+    color: var(--dimmer); background: rgba(0,0,0,0.55);
+    border: 1px solid var(--border); cursor: pointer;
+    transition: color 0.3s;
+  }
+  #zoomer button:hover { color: var(--off-white); }
+
+  /* ---------- article ---------- */
+  #article {
+    position: relative; z-index: 4;
+    background: #000;
+    border-top: 1px solid var(--border);
+  }
+  .inner { max-width: 640px; margin: 0 auto; padding: 5rem 1.5rem 3rem; }
+  .shead-lg {
+    display: block; font-family: var(--mono);
+    font-size: 10px; letter-spacing: 0.4em; text-transform: uppercase;
+    color: var(--dimmer); margin-bottom: 1.4rem;
+  }
+  h2 {
+    font-weight: 300; font-style: italic;
+    font-size: clamp(1.7rem, 4.5vw, 2.4rem);
+    letter-spacing: 0.03em; line-height: 1.15;
+    margin-bottom: 1rem;
+  }
+  .lede { font-style: italic; color: var(--dim); font-size: 1.02rem; margin-bottom: 2.2rem; max-width: 540px; }
+  .mlabel {
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.3em;
+    text-transform: uppercase; color: var(--faint);
+    display: block; margin: 1.8rem 0 0.4rem;
+  }
+  #article p:not(.lede) { color: var(--dim); font-size: 0.97rem; max-width: 540px; }
+  #article a { color: var(--off-white); text-decoration-color: var(--dimmer); text-underline-offset: 3px; }
+  #article a:hover { text-decoration-color: var(--off-white); }
+  #back {
+    display: block; text-align: center; margin: 0 0 3.5rem;
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--dimmer); text-decoration: none; transition: color 0.3s;
+  }
+  #back:hover { color: var(--off-white); }
+
+  #foot {
+    text-align: center; padding: 2.5rem 1rem 3.5rem;
+    font-family: var(--mono); font-size: 8px;
+    letter-spacing: 0.22em; text-transform: uppercase; color: var(--faint);
+  }
+
+  #panel-toggle { display: none; }
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .label, h1, .tagline, .statstrip, #panel, #layers, #timewin, #note, #zoomer { animation: none; opacity: 1; }
+  }
+
+  @media (max-width: 900px) {
+    header { top: 1.5rem; left: 1.3rem; max-width: 230px; }
+    .statstrip { display: none; }
+    #panel {
+      top: auto; right: 0.8rem; left: 0.8rem;
+      bottom: calc(8.6rem + env(safe-area-inset-bottom));
+      width: auto; max-height: 40vh;
+      display: none;
+    }
+    #panel.open { display: block; animation: none; opacity: 1; }
+    #panel-toggle {
+      display: inline-flex;
+      position: absolute; top: 1.5rem; right: 1.3rem; z-index: 4;
+      font-family: var(--mono); font-size: 9px;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--dimmer); background: rgba(0,0,0,0.55);
+      border: 1px solid var(--border); padding: 0.45rem 0.7rem;
+      cursor: pointer;
+    }
+    #detail { left: 0.8rem; right: 0.8rem; width: auto; }
+    .chip { letter-spacing: 0.14em; font-size: 9px; padding: 0.3rem 0.05rem; }
+    .chip .n { display: none; }
+    #layers { gap: 0.15rem 0.8rem; bottom: calc(1.4rem + env(safe-area-inset-bottom)); }
+    #timewin { bottom: calc(4.6rem + env(safe-area-inset-bottom)); gap: 0.8rem; }
+    #zoomer { left: 1.3rem; bottom: calc(8.6rem + env(safe-area-inset-bottom)); }
+    #note { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="map"></canvas>
+<div id="vignette"></div>
+<canvas id="grain"></canvas>
+
+<section id="hero">
+<header>
+  <span class="label">Live Observation Deck</span>
+  <h1>the <em>vigil</em></h1>
+  <p class="tagline">Everything the earth is going through, right now. Quakes, fires, floods, outbreaks &mdash; and the crises that never make the feed.</p>
+  <div class="statstrip">
+    <span id="evcount">&mdash;</span> active events &middot; <span id="regcount">&mdash;</span> ongoing crises<br>
+    hover anything &middot; click an ember for the story<br>
+    snapshot <span id="snap"></span>
+  </div>
+  <div id="featured" role="button" tabindex="0" aria-label="Featured underreported event"></div>
+</header>
+
+<button id="panel-toggle" type="button" aria-expanded="false">log</button>
+
+<aside id="panel">
+  <div class="sect">
+    <div class="shead">ongoing crises &middot; day counts</div>
+    <div id="reglist"></div>
+  </div>
+  <div class="sect">
+    <div class="shead">latest events</div>
+    <div id="evlist"></div>
+  </div>
+</aside>
+
+<div id="detail" role="dialog" aria-live="polite">
+  <button class="dclose" type="button" aria-label="Close">&times;</button>
+  <div class="dname"></div>
+  <div class="ddays"></div>
+  <p class="dsummary"></p>
+  <div class="dtoll"></div>
+  <div class="dlinks"></div>
+  <div class="dsrc"></div>
+</div>
+
+<div id="tip" role="status"></div>
+
+<div id="zoomer">
+  <button id="zin" type="button" aria-label="Zoom in">+</button>
+  <button id="zout" type="button" aria-label="Zoom out">&minus;</button>
+</div>
+
+<div id="timewin" role="group" aria-label="Recency window">
+  <span class="twlabel">showing</span>
+  <button class="tw" data-h="24" type="button">last 24h</button>
+  <button class="tw" data-h="72" type="button">3 days</button>
+  <button class="tw on" data-h="168" type="button">7 days</button>
+  <button class="tw" data-h="100000" type="button">all active</button>
+</div>
+<div id="layers" role="group" aria-label="Event categories"></div>
+<p id="note">usgs &middot; nasa eonet &middot; gdacs &middot; who &middot; curated register &middot; scroll for the writeup</p>
+</section>
+
+<div id="article">
+  <div class="inner">
+    <span class="shead-lg">About This Instrument</span>
+    <h2>a map of the world's open wounds</h2>
+    <p class="lede">Most of what happens to the planet never reaches a feed you follow. This page holds vigil: every earthquake, wildfire, flood, storm, outbreak, and eruption currently registered by the systems that watch for them &mdash; alongside the slower catastrophes that no sensor detects.</p>
+
+    <span class="mlabel">detected</span>
+    <p>The moving lights are machine-witnessed. Earthquakes arrive from the USGS within minutes of the ground settling. NASA's EONET tracks active wildfires and eruptions by satellite. GDACS &mdash; the UN's disaster alert system &mdash; scores floods, cyclones, and droughts by severity. The WHO publishes outbreak bulletins: as of this snapshot, that includes an active Ebola outbreak in the DRC and Uganda, Nipah virus in India, and a hantavirus cluster spreading through cruise ships. These layers refresh themselves; nobody chooses what appears.</p>
+
+    <span class="mlabel">witnessed</span>
+    <p>The steady embers are different. No API fires an event when a famine begins, and nothing alerts when the world stops paying attention. Each ongoing crisis on this map &mdash; Gaza, Sudan, eastern Congo, Myanmar, Haiti, the Sahel, Ukraine, Yemen, Afghanistan &mdash; is curated by hand, with figures drawn from UN OCHA, the IPC, UNHCR, and conflict-data projects, and a day counter that does not stop. The crises people know least about are not the ones lacking sensors. They are the ones lacking witnesses.</p>
+
+    <span class="mlabel">the night line</span>
+    <p>The shadow crossing the map is the actual terminator &mdash; the line between day and night on Earth at this moment, computed from the clock. It is there as a reminder that this is not an archive. All of it is happening now.</p>
+
+    <span class="mlabel">method</span>
+    <p>No map tiles and no libraries: coastlines and borders are Natural Earth geometry rendered to canvas, events are drawn as light, and the page is a single HTML file. Feeds are fetched live on load; the curated register is a JSON file with cited sources, reviewed by hand.</p>
+
+    <span class="mlabel">how to help</span>
+    <p>Every ongoing crisis on the map lists organizations working inside it &mdash; click an ember and the card carries direct links. If choosing feels paralyzing, the honest default is an unrestricted gift to a field organization with global reach: <a href="https://www.msf.org" target="_blank" rel="noopener noreferrer">M&eacute;decins Sans Fronti&egrave;res</a>, the <a href="https://www.wfp.org" target="_blank" rel="noopener noreferrer">World Food Programme</a>, the <a href="https://www.icrc.org" target="_blank" rel="noopener noreferrer">ICRC</a>, or the <a href="https://www.rescue.org" target="_blank" rel="noopener noreferrer">IRC</a>. Unrestricted means they can send it where the map is darkest, not where the headlines are.</p>
+
+    <span class="mlabel">caveats</span>
+    <p>Feed coverage is not suffering coverage &mdash; a magnitude 4.5 near a city matters more than a 6.0 under the ocean, and no severity score captures a school year lost or a hospital closed. Day counts mark duration, not importance. The register reflects editorial judgment and its figures should be read with their dates.</p>
+    <p>Known blind spots: heat waves and cold snaps (no public feed tracks them well, though they kill more people than most of what is shown), day-to-day conflict violence (event data lags weeks and needs licensing; the register carries the standing crises instead), and small earthquakes outside the US, where the global seismic network's floor is roughly magnitude 4. Every feed sees the world unevenly &mdash; finding the gaps was half the work.</p>
+  </div>
+  <p id="foot">live feeds &middot; usgs &middot; nasa &middot; gdacs &middot; who &middot; un ocha &middot; the vigil</p>
+  <a id="back" href="../index.html">&larr; scootr's laboratory</a>
+</div>
+
+<script>
+window.SNAPSHOT = '2026-07-16 05:18 utc';
+window.__vigilReady = (async () => {
+  const load = u => fetch(u).then(r => {
+    if (!r.ok) throw new Error('failed: ' + u);
+    return r.json();
+  });
+  const [snapshot, register, countries] = await Promise.all([
+    load('./data/events.json'), load('./data/register.json'), load('./data/countries.json'),
+  ]);
+  window.REGISTER = register;
+  window.COUNTRIES = countries;
+  window.LIVE_FEEDS = false;
+
+  // Live feeds (CORS-open): USGS quakes, NASA EONET, WHO outbreak news.
+  // GDACS blocks cross-origin requests, so its floods/droughts/global fires
+  // always come from the snapshot. Each live source falls back independently.
+  const results = await Promise.allSettled([
+    load('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson'),
+    load('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson'),
+    load('https://eonet.gsfc.nasa.gov/api/v3/events?status=open&limit=600'),
+    load('https://www.who.int/api/emergencies/diseaseoutbreaknews?%24orderby=PublicationDateAndTime%20desc&%24top=30'),
+  ]);
+  const [qw, qd, eo, who] = results.map(r => r.status === 'fulfilled' ? r.value : null);
+  const nowS = Date.now() / 1000;
+  const events = [];
+  let anyLive = false;
+
+  if (qw || qd) {
+    anyLive = true;
+    const seen = new Set();
+    for (const feed of [qw, qd]) {
+      if (!feed) continue;
+      for (const f of feed.features) {
+        if (seen.has(f.id)) continue;
+        seen.add(f.id);
+        const p = f.properties, c = f.geometry.coordinates;
+        if (p.mag == null) continue;
+        events.push({ cat: 'quake', lat: c[1], lng: c[0],
+          sev: Math.min(1, (p.mag - 2.5) / 4.5),
+          title: 'M' + p.mag.toFixed(1) + ' \u2014 ' + (p.place || 'unknown location'),
+          ts: Math.round(p.time / 1000),
+          detail: 'depth ' + Math.round(c[2]) + ' km', src: 'usgs', url: p.url });
+      }
+    }
+  } else {
+    for (const e of snapshot) if (e.src === 'usgs') events.push(e);
+  }
+
+  const eoFires = [];
+  if (eo) {
+    anyLive = true;
+    const CM = { 'Wildfires': 'fire', 'Volcanoes': 'volcano', 'Severe Storms': 'storm' };
+    for (const ev of eo.events) {
+      const cat = CM[ev.categories[0].title];
+      if (!cat) continue;
+      const pts = ev.geometry.filter(g => g.type === 'Point');
+      if (!pts.length) continue;
+      const g = pts[pts.length - 1];
+      const ts = Math.round(new Date(g.date).getTime() / 1000);
+      if (cat === 'fire' && nowS - ts > 14 * 86400) continue;
+      const lat = g.coordinates[1], lng = g.coordinates[0];
+      if (cat === 'fire') eoFires.push([lat, lng]);
+      events.push({ cat, lat, lng, sev: cat === 'fire' ? 0.45 : 0.7,
+        title: ev.title, ts, detail: 'active \u2014 satellite-tracked',
+        src: 'nasa eonet', url: (ev.sources && ev.sources[0] && ev.sources[0].url) || null });
+    }
+  } else {
+    for (const e of snapshot) if (e.src === 'nasa eonet') { events.push(e); if (e.cat === 'fire') eoFires.push([e.lat, e.lng]); }
+  }
+
+  if (who && who.value) {
+    anyLive = true;
+    const CC = {'democratic republic of the congo':[-2.9,23.6],'uganda':[1.4,32.3],'india':[22,79],
+      'bangladesh':[23.7,90.4],'italy':[42.8,12.5],'nigeria':[9.1,8.7],'ethiopia':[9.1,40.5],
+      'kenya':[0.4,37.9],'pakistan':[30.4,69.4],'afghanistan':[33.9,67.7],'yemen':[15.6,48],
+      'sudan':[15.6,32.5],'south sudan':[7.3,30.3],'chad':[15.5,18.7],'niger':[17.6,8.1],
+      'mali':[17.6,-4],'haiti':[18.9,-72.3],'brazil':[-10.3,-53.2],'peru':[-9.2,-75],
+      'china':[35,103.8],'indonesia':[-2.5,118],'philippines':[12.9,121.8],'vietnam':[16,106.3],
+      'cambodia':[12.5,104.9],'saudi arabia':[24.2,44.5],'egypt':[26.8,30],'tanzania':[-6.4,34.9],
+      'zambia':[-13.5,27.8],'zimbabwe':[-19,29.9],'mozambique':[-17.3,35.5],'madagascar':[-19.4,46.7],
+      'senegal':[14.4,-14.5],'guinea':[10.4,-11.8],'ghana':[7.9,-1.2],'cameroon':[5.7,12.7],
+      'central african republic':[6.6,20.9],'burundi':[-3.4,29.9],'rwanda':[-2,29.9],
+      'united states':[39.8,-98.6],'mexico':[23.9,-102.5],'france':[46.6,2.5],
+      'united kingdom':[52.6,-1.5],'spain':[40.2,-3.6],'australia':[-25.7,134.5]};
+    const seenT = new Set();
+    for (const it of who.value) {
+      const title = (it.Title || '').replace(/\u2013/g, '-');
+      const root = title.split(/[,\-]/)[0].trim().toLowerCase();
+      if (!root || seenT.has(root)) continue;
+      seenT.add(root);
+      let hit = null;
+      const tl = title.toLowerCase();
+      for (const c in CC) if (tl.includes(c)) { hit = c; break; }
+      if (!hit) continue;
+      const ts = Math.round(new Date((it.PublicationDateAndTime || '').slice(0, 10) + 'T12:00:00Z').getTime() / 1000);
+      let url = it.ItemDefaultUrl || null;
+      if (url && !url.startsWith('http')) url = 'https://www.who.int/emergencies/disease-outbreak-news/item' + url;
+      events.push({ cat: 'outbreak', lat: CC[hit][0], lng: CC[hit][1], sev: 0.8,
+        title: title.split(',')[0].slice(0, 80), ts: isFinite(ts) ? ts : Math.round(nowS),
+        detail: 'who don \u00b7 ' + hit.replace(/\b\w/g, m => m.toUpperCase()), src: 'who', url });
+    }
+  } else {
+    for (const e of snapshot) if (e.src === 'who') events.push(e);
+  }
+
+  // GDACS floods/droughts/storms + non-US fires ride on the snapshot
+  const liveStormNames = events.filter(e => e.cat === 'storm').map(e => e.title.toLowerCase());
+  for (const e of snapshot) {
+    if (e.src !== 'gdacs') continue;
+    if (e.cat === 'fire' && eoFires.some(p => Math.abs(p[0] - e.lat) < 0.5 && Math.abs(p[1] - e.lng) < 0.5)) continue;
+    if (e.cat === 'storm') {
+      const nm = e.title.toLowerCase().replace(/tropical cyclone|typhoon|hurricane/g, '').split('-')[0].trim();
+      if (nm && liveStormNames.some(s => s.includes(nm))) continue;
+    }
+    events.push(e);
+  }
+
+  window.EVENTS = events;
+  window.LIVE_FEEDS = anyLive;
+})();
+</script>
+
+<script>
+window.__vigilReady.then(() => {
+  'use strict';
+
+  const CATS = [
+    { key: 'crisis',   name: 'Ongoing crises', rgb: [255, 110, 86] },
+    { key: 'outbreak', name: 'Outbreaks',      rgb: [150, 255, 140] },
+    { key: 'quake',    name: 'Earthquakes',    rgb: [178, 140, 255] },
+    { key: 'fire',     name: 'Wildfires',      rgb: [255, 170, 80] },
+    { key: 'storm',    name: 'Storms',         rgb: [120, 200, 255] },
+    { key: 'flood',    name: 'Floods',         rgb: [110, 214, 200] },
+    { key: 'drought',  name: 'Drought',        rgb: [232, 210, 140] },
+    { key: 'volcano',  name: 'Volcanoes',      rgb: [255, 120, 120] },
+  ];
+  const CAT = Object.fromEntries(CATS.map(c => [c.key, c]));
+  const active = new Set(CATS.map(c => c.key));
+
+  // hydrate event ages from epoch timestamps (live-computed, works for any snapshot)
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const pad2 = n => String(n).padStart(2, '0');
+  for (const e of window.EVENTS) {
+    e.ageh = Math.max(0, (Date.now() / 1000 - e.ts) / 3600);
+    const d = new Date(e.ts * 1000);
+    e.when = `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()} ${pad2(d.getUTCHours())}:${pad2(d.getUTCMinutes())} utc`;
+  }
+
+  const cv = document.getElementById('map');
+  const ctx = cv.getContext('2d');
+  const baseCv = document.createElement('canvas');
+  const bctx = baseCv.getContext('2d');
+
+  // pre-rendered glow sprites per category (radial gradients are too slow per-frame)
+  const SPRITE = 64;
+  const sprites = {};
+  for (const c of CATS) {
+    const s = document.createElement('canvas');
+    s.width = s.height = SPRITE;
+    const sc = s.getContext('2d');
+    const [r, g, b] = c.rgb;
+    const grd = sc.createRadialGradient(SPRITE/2, SPRITE/2, 0, SPRITE/2, SPRITE/2, SPRITE/2);
+    grd.addColorStop(0, `rgba(255,255,255,0.9)`);
+    grd.addColorStop(0.12, `rgba(${r},${g},${b},0.85)`);
+    grd.addColorStop(0.3, `rgba(${r},${g},${b},0.28)`);
+    grd.addColorStop(1, 'rgba(0,0,0,0)');
+    sc.fillStyle = grd;
+    sc.fillRect(0, 0, SPRITE, SPRITE);
+    sprites[c.key] = s;
+  }
+
+  const LAT_MAX = 78, LAT_MIN = -58;
+  let W = 0, H = 0, DPR = 1;
+  let scale = 1, offX = 0, offY = 0;
+  let zoom = 1, tx = 0, ty = 0;
+  let raf = null;
+
+  function projPt(lat, lng) {
+    const bx = offX + (lng + 180) / 360 * scale * 360;
+    const by = offY + (LAT_MAX - lat) / (LAT_MAX - LAT_MIN) * scale * (LAT_MAX - LAT_MIN);
+    return [(bx - W / 2) * zoom + W / 2 + tx, (by - H / 2) * zoom + H / 2 + ty];
+  }
+
+  function resize() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    cv.width = W * DPR; cv.height = H * DPR;
+    baseCv.width = W * DPR; baseCv.height = H * DPR;
+    cv.style.width = W + 'px'; cv.style.height = H + 'px';
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    scale = Math.min(W / 360, H / (LAT_MAX - LAT_MIN)) * 0.96;
+    offX = (W - 360 * scale) / 2;
+    offY = (H - (LAT_MAX - LAT_MIN) * scale) / 2;
+    baseKey = '';
+  }
+
+  function clampView() {
+    zoom = Math.min(10, Math.max(1, zoom));
+    const lim = W * 0.45 * zoom;
+    tx = Math.min(lim, Math.max(-lim, tx));
+    const limY = H * 0.45 * zoom;
+    ty = Math.min(limY, Math.max(-limY, ty));
+  }
+
+  // decode delta-encoded country rings once: [[lat,lng],...] in 0.1-deg ints
+  const RINGS = window.COUNTRIES.map(enc => {
+    const pts = [[enc[0], enc[1]]];
+    for (let i = 2; i < enc.length; i += 2)
+      pts.push([pts[pts.length-1][0] + enc[i], pts[pts.length-1][1] + enc[i+1]]);
+    return pts;
+  });
+
+  // ---- day/night terminator (approximate, live) ----
+  function sunPos() {
+    const now = new Date();
+    const start = Date.UTC(now.getUTCFullYear(), 0, 0);
+    const doy = (now.getTime() - start) / 86400000;
+    const decl = -23.44 * Math.cos((2 * Math.PI / 365) * (doy + 10));
+    const utcH = now.getUTCHours() + now.getUTCMinutes() / 60;
+    const subLng = -15 * (utcH - 12);
+    return { decl, subLng };
+  }
+
+  // hit targets rebuilt each frame: {x, y, r, ev|reg}
+  let targets = [];
+  let recencyH = 24 * 7;   // filter window in hours (default: past week)
+
+  // ---- basemap: countries + graticule + terminator, re-rendered only on
+  // view change or once a minute (the terminator crawls ~0.25°/min) ----
+  let baseKey = '';
+  let baseAt = 0;
+  function renderBase() {
+    bctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    bctx.clearRect(0, 0, W, H);
+
+    bctx.beginPath();
+    for (let lng = -180; lng <= 180; lng += 30) {
+      const [x1, y1] = projPt(LAT_MAX, lng), [x2, y2] = projPt(LAT_MIN, lng);
+      bctx.moveTo(x1, y1); bctx.lineTo(x2, y2);
+    }
+    for (let lat = -45; lat <= 75; lat += 15) {
+      const [x1, y1] = projPt(lat, -180), [x2, y2] = projPt(lat, 180);
+      bctx.moveTo(x1, y1); bctx.lineTo(x2, y2);
+    }
+    bctx.strokeStyle = 'rgba(232,228,220,0.035)';
+    bctx.lineWidth = 1;
+    bctx.stroke();
+
+    bctx.beginPath();
+    for (const pts of RINGS) {
+      if (pts.length === 1) {
+        const [x, y] = projPt(pts[0][0] / 10, pts[0][1] / 10);
+        bctx.moveTo(x, y); bctx.arc(x, y, 0.7, 0, 6.283);
+        continue;
+      }
+      let first = true;
+      for (const [a, b] of pts) {
+        const [x, y] = projPt(a / 10, b / 10);
+        if (first) { bctx.moveTo(x, y); first = false; }
+        else bctx.lineTo(x, y);
+      }
+      bctx.closePath();
+    }
+    bctx.fillStyle = 'rgba(232,228,220,0.035)';
+    bctx.fill();
+    bctx.strokeStyle = 'rgba(232,228,220,0.16)';
+    bctx.lineWidth = Math.min(1, 0.6 + zoom * 0.12);
+    bctx.stroke();
+
+    // night side
+    const { decl, subLng } = sunPos();
+    bctx.beginPath();
+    let firstT = true;
+    const tanD = Math.tan(decl * Math.PI / 180) || 1e-6;
+    for (let lng = -180; lng <= 180; lng += 3) {
+      const h = (lng - subLng) * Math.PI / 180;
+      let phi = Math.atan(-Math.cos(h) / tanD) * 180 / Math.PI;
+      phi = Math.max(LAT_MIN, Math.min(LAT_MAX, phi));
+      const [x, y] = projPt(phi, lng);
+      if (firstT) { bctx.moveTo(x, y); firstT = false; } else bctx.lineTo(x, y);
+    }
+    const nightPoleLat = decl > 0 ? LAT_MIN : LAT_MAX;
+    const [xe, ye] = projPt(nightPoleLat, 180);
+    const [xw, yw] = projPt(nightPoleLat, -180);
+    bctx.lineTo(xe, ye); bctx.lineTo(xw, yw);
+    bctx.closePath();
+    bctx.fillStyle = 'rgba(0,0,0,0.5)';
+    bctx.fill();
+    bctx.strokeStyle = 'rgba(232,228,220,0.05)';
+    bctx.stroke();
+  }
+
+  function draw(now) {
+    raf = requestAnimationFrame(draw);
+    const t = now / 1000;
+
+    const key = `${zoom.toFixed(3)},${tx.toFixed(1)},${ty.toFixed(1)},${W}x${H}`;
+    if (key !== baseKey || now - baseAt > 60000) {
+      renderBase();
+      baseKey = key; baseAt = now;
+    }
+
+    ctx.clearRect(0, 0, W, H);
+    ctx.drawImage(baseCv, 0, 0, W, H);
+    targets = [];
+
+    ctx.globalCompositeOperation = 'lighter';
+    const zs = Math.pow(zoom, 0.55);
+
+    // ---- events (pre-rendered sprites; cheap enough for mobile) ----
+    for (const ev of window.EVENTS) {
+      if (!active.has(ev.cat)) continue;
+      if (ev.ageh > recencyH) continue;
+      const [x, y] = projPt(ev.lat, ev.lng);
+      if (x < -30 || x > W + 30 || y < -30 || y > H + 30) continue;
+      const fresh = ev.ageh <= 24;
+      const base = 1.6 + ev.sev * 2.6;
+      const pulse = fresh ? (0.75 + 0.25 * Math.sin(t * 3 + x)) : 1;
+      const rad = base * zs * pulse;
+      const size = rad * 8;
+      ctx.globalAlpha = pulse;
+      ctx.drawImage(sprites[ev.cat], x - size / 2, y - size / 2, size, size);
+      targets.push({ x, y, r: Math.max(10, rad * 2.5), ev });
+    }
+    ctx.globalAlpha = 1;
+
+    // ---- register: steady embers ----
+    for (const rg of window.REGISTER) {
+      if (!active.has('crisis')) break;
+      const [x, y] = projPt(rg.lat, rg.lng);
+      const [r, g, b] = CAT.crisis.rgb;
+      const breathe = 0.88 + 0.12 * Math.sin(t * 0.9 + rg.lng);
+      const rad = 5.2 * zs;
+      const grd = ctx.createRadialGradient(x, y, 0, x, y, rad * 5);
+      grd.addColorStop(0, `rgba(${r},${g},${b},${0.4 * breathe})`);
+      grd.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = grd;
+      ctx.fillRect(x - rad * 5, y - rad * 5, rad * 10, rad * 10);
+      ctx.fillStyle = `rgba(255,235,225,${0.9 * breathe})`;
+      ctx.beginPath(); ctx.arc(x, y, rad * 0.42, 0, 6.283); ctx.fill();
+      // ring
+      ctx.strokeStyle = `rgba(${r},${g},${b},0.5)`;
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(x, y, rad * (1.3 + 0.18 * Math.sin(t * 0.9 + rg.lng)), 0, 6.283); ctx.stroke();
+      targets.push({ x, y, r: Math.max(12, rad * 2.2), reg: rg });
+
+      // label
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.font = '9px "Courier Prime", monospace';
+      ctx.fillStyle = 'rgba(232,228,220,0.55)';
+      ctx.textAlign = 'left';
+      ctx.fillText(rg.name.toUpperCase(), x + rad * 1.9, y + 3);
+      ctx.globalCompositeOperation = 'lighter';
+    }
+    ctx.globalCompositeOperation = 'source-over';
+  }
+
+  // ---- interactions (attached to #hero, which overlays the canvas) ----
+  const hero = document.getElementById('hero');
+  const isMapTarget = e => !e.target.closest('#panel, #detail, #timewin, #layers, #zoomer, #panel-toggle, #article, button, input, a');
+  let dragging = false, lx = 0, ly = 0, downAt = 0;
+  hero.addEventListener('mousedown', e => {
+    if (!isMapTarget(e)) return;
+    dragging = true; lx = e.clientX; ly = e.clientY; downAt = performance.now();
+    hero.classList.add('dragging');
+  });
+  window.addEventListener('mouseup', () => { dragging = false; hero.classList.remove('dragging'); });
+  window.addEventListener('mousemove', e => {
+    if (dragging) {
+      tx += e.clientX - lx; ty += e.clientY - ly;
+      lx = e.clientX; ly = e.clientY;
+      clampView();
+      tip.classList.remove('show');
+      return;
+    }
+    if (window.scrollY > H * 0.5 || !isMapTarget(e)) { tip.classList.remove('show'); return; }
+    hover(e.clientX, e.clientY);
+  });
+  window.addEventListener('scroll', () => { tip.classList.remove('show'); }, { passive: true });
+
+  function hitAt(x, y) {
+    let best = null, bd = Infinity;
+    for (const tg of targets) {
+      const d = (tg.x - x) ** 2 + (tg.y - y) ** 2;
+      if (d < tg.r * tg.r && d < bd) { bd = d; best = tg; }
+    }
+    return best;
+  }
+
+  const tip = document.getElementById('tip');
+  function hover(x, y) {
+    const hit = hitAt(x, y);
+    if (!hit) { tip.classList.remove('show'); return; }
+    if (hit.reg) {
+      const rg = hit.reg;
+      tip.innerHTML = `<div class="tname">${rg.name}</div>
+        <div class="tline">ongoing &middot; day ${days(rg.started).toLocaleString()}</div>
+        <div class="tline">${rg.toll}</div>
+        <div class="tsrc">click for the story</div>`;
+    } else {
+      const ev = hit.ev;
+      const c = CAT[ev.cat];
+      const fresh = ev.ageh <= 24 ? ' &middot; <span style="color:#fff">new</span>' : '';
+      tip.innerHTML = `<div class="tname">${esc(ev.title)}</div>
+        <div class="tline" style="color: rgb(${c.rgb.join(',')})">${c.name.toLowerCase()} &middot; ${esc(ev.when)}${fresh}</div>
+        <div class="tline">${esc(ev.detail)}</div>
+        <div class="tsrc">${esc(ev.src)}${ev.url ? ' &middot; click for source' : ''}</div>`;
+    }
+    tip.classList.add('show');
+    const tw = tip.offsetWidth, th = tip.offsetHeight;
+    let px = x + 14, py = y + 14;
+    if (px + tw > W - 8) px = x - tw - 14;
+    if (py + th > H - 8) py = y - th - 14;
+    tip.style.left = px + 'px'; tip.style.top = py + 'px';
+  }
+
+  hero.addEventListener('click', e => {
+    if (!isMapTarget(e)) return;
+    if (performance.now() - downAt > 250) return; // was a drag
+    const hit = hitAt(e.clientX, e.clientY);
+    if (hit && hit.reg) showDetail(hit.reg);
+    else if (hit && hit.ev) showEventDetail(hit.ev);
+    else hideDetail();
+  });
+
+  function zoomAt(cx, cy, f) {
+    const nz = Math.min(10, Math.max(1, zoom * f));
+    const r = nz / zoom;
+    tx = (tx - (cx - W / 2)) * r + (cx - W / 2);
+    ty = (ty - (cy - H / 2)) * r + (cy - H / 2);
+    zoom = nz;
+    clampView();
+  }
+  document.getElementById('zin').addEventListener('click', () => zoomAt(W / 2, H / 2, 1.6));
+  document.getElementById('zout').addEventListener('click', () => zoomAt(W / 2, H / 2, 1 / 1.6));
+  hero.addEventListener('dblclick', e => { if (isMapTarget(e)) zoomAt(e.clientX, e.clientY, 1.7); });
+  // plain wheel scrolls the page toward the writeup; ctrl/cmd+wheel zooms the map
+  window.addEventListener('wheel', e => {
+    if (!(e.ctrlKey || e.metaKey)) return;
+    if (window.scrollY > 10 || !isMapTarget(e)) return;
+    e.preventDefault();
+    zoomAt(e.clientX, e.clientY, e.deltaY < 0 ? 1.18 : 1 / 1.18);
+  }, { passive: false });
+
+  // touch: one finger scrolls the page (and taps inspect); two fingers pinch-zoom and pan
+  let touchD = 0, touchMid = null;
+  hero.addEventListener('touchstart', e => {
+    if (!isMapTarget(e)) return;
+    if (e.touches.length === 2) {
+      const [a, b] = e.touches;
+      touchD = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+      touchMid = [(a.clientX + b.clientX) / 2, (a.clientY + b.clientY) / 2];
+    } else if (e.touches.length === 1) {
+      const t0 = e.touches[0];
+      const hit = hitAt(t0.clientX, t0.clientY);
+      if (hit && hit.reg) showDetail(hit.reg);
+      else if (hit) hover(t0.clientX, t0.clientY);
+      else { tip.classList.remove('show'); hideDetail(); }
+    }
+  }, { passive: true });
+  hero.addEventListener('touchmove', e => {
+    if (e.touches.length === 2 && touchD) {
+      e.preventDefault();
+      const [a, b] = e.touches;
+      const d = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+      const mid = [(a.clientX + b.clientX) / 2, (a.clientY + b.clientY) / 2];
+      zoomAt(touchMid[0], touchMid[1], d / touchD);
+      tx += mid[0] - touchMid[0]; ty += mid[1] - touchMid[1];
+      clampView();
+      touchD = d; touchMid = mid;
+    }
+  }, { passive: false });
+  hero.addEventListener('touchend', () => { touchD = 0; }, { passive: true });
+
+  // ---- detail card (register crises and events both) ----
+  const detail = document.getElementById('detail');
+  const days = iso => Math.floor((Date.now() - new Date(iso + 'T00:00:00Z')) / 86400000);
+  let countTimer = null;
+  function countUp(el, target, prefix) {
+    if (countTimer) clearInterval(countTimer);
+    const t0 = performance.now(), dur = 900;
+    countTimer = setInterval(() => {
+      const p = Math.min(1, (performance.now() - t0) / dur);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = prefix + Math.round(target * eased).toLocaleString();
+      if (p >= 1) clearInterval(countTimer);
+    }, 30);
+  }
+  function showDetail(rg) {
+    detail.querySelector('.dname').textContent = rg.name;
+    const dd = detail.querySelector('.ddays');
+    countUp(dd, days(rg.started), 'ongoing · day ');
+    detail.querySelector('.dsummary').textContent = rg.summary;
+    detail.querySelector('.dtoll').textContent = rg.toll;
+    const links = detail.querySelector('.dlinks');
+    links.innerHTML = '<span class="dl-label">ways to help</span>' +
+      (rg.help || []).map(h =>
+        `<a href="${h.url}" target="_blank" rel="noopener noreferrer">${esc(h.name)}</a>`).join('');
+    detail.querySelector('.dsrc').textContent = 'sources: ' + rg.sources.join(' · ') + ' — figures as of ' + rg.asof;
+    detail.classList.add('show');
+  }
+  function showEventDetail(ev) {
+    const c = CAT[ev.cat];
+    detail.querySelector('.dname').textContent = ev.title;
+    detail.querySelector('.ddays').textContent = c.name.toLowerCase() + ' · ' + ev.when;
+    detail.querySelector('.dsummary').textContent = ev.detail;
+    detail.querySelector('.dtoll').textContent = '';
+    const links = detail.querySelector('.dlinks');
+    links.innerHTML = ev.url
+      ? `<a href="${ev.url}" target="_blank" rel="noopener noreferrer">view source report &rarr;</a>` : '';
+    detail.querySelector('.dsrc').textContent = 'source: ' + ev.src;
+    detail.classList.add('show');
+  }
+  function hideDetail() { detail.classList.remove('show'); }
+  detail.querySelector('.dclose').addEventListener('click', hideDetail);
+
+  // ---- chips ----
+  const counts = {};
+  for (const ev of window.EVENTS) counts[ev.cat] = (counts[ev.cat] || 0) + 1;
+  counts.crisis = window.REGISTER.length;
+  const wrap = document.getElementById('layers');
+  for (const c of CATS) {
+    const btn = document.createElement('button');
+    btn.className = 'chip on';
+    btn.type = 'button';
+    btn.style.setProperty('--c', `rgb(${c.rgb.join(',')})`);
+    btn.setAttribute('aria-pressed', 'true');
+    btn.innerHTML = `<span class="dot"></span>${c.name} <span class="n">${counts[c.key] || 0}</span>`;
+    btn.addEventListener('click', () => {
+      if (active.has(c.key)) active.delete(c.key); else active.add(c.key);
+      btn.classList.toggle('on', active.has(c.key));
+      btn.setAttribute('aria-pressed', active.has(c.key));
+    });
+    wrap.appendChild(btn);
+  }
+
+  // ---- panel lists ----
+  document.getElementById('evcount').textContent = window.EVENTS.length;
+  document.getElementById('regcount').textContent = window.REGISTER.length;
+
+  const reglist = document.getElementById('reglist');
+  const sorted = [...window.REGISTER].sort((a, b) => new Date(a.started) - new Date(b.started));
+  for (const rg of sorted) {
+    const el = document.createElement('div');
+    el.className = 'reg-item';
+    el.innerHTML = `<div class="rname"><span>${rg.name}</span><span class="days">day ${days(rg.started).toLocaleString()}</span></div>
+      <div class="rtoll">${rg.toll}</div>`;
+    el.addEventListener('click', () => showDetail(rg));
+    reglist.appendChild(el);
+  }
+
+  const evlist = document.getElementById('evlist');
+  const fmtAge = h => h < 1 ? 'now' : h < 24 ? Math.round(h) + 'h' : Math.round(h / 24) + 'd';
+  // freshest first, but cap 3 per category so quakes don't drown out everything else
+  const perCat = {};
+  const recent = [];
+  for (const ev of [...window.EVENTS].sort((a, b) => a.ageh - b.ageh)) {
+    if ((perCat[ev.cat] || 0) >= 3) continue;
+    perCat[ev.cat] = (perCat[ev.cat] || 0) + 1;
+    recent.push(ev);
+    if (recent.length >= 14) break;
+  }
+  for (const ev of recent) {
+    const c = CAT[ev.cat];
+    const el = document.createElement('div');
+    el.className = 'ev-item';
+    el.style.setProperty('--c', `rgb(${c.rgb.join(',')})`);
+    el.innerHTML = `<span class="edot"></span><span class="etitle">${esc(ev.title)}</span><span class="ewhen">${fmtAge(ev.ageh)}</span>`;
+    evlist.appendChild(el);
+  }
+
+  // ---- recency window ----
+  document.querySelectorAll('.tw').forEach(btn => {
+    btn.addEventListener('click', () => {
+      recencyH = +btn.dataset.h;
+      document.querySelectorAll('.tw').forEach(b => b.classList.toggle('on', b === btn));
+      const shown = window.EVENTS.filter(e => e.ageh <= recencyH).length;
+      document.getElementById('evcount').textContent = shown;
+    });
+  });
+  document.getElementById('evcount').textContent =
+    window.EVENTS.filter(e => e.ageh <= recencyH).length;
+  document.getElementById('snap').textContent = window.LIVE_FEEDS ? 'live \u00b7 fetched just now' : window.SNAPSHOT + ' \u00b7 offline snapshot';
+
+  // ---- featured: highest-severity slow disaster people likely haven't heard of ----
+  {
+    const cand = window.EVENTS
+      .filter(e => ['drought', 'flood', 'outbreak', 'storm'].includes(e.cat) && e.sev >= 0.7)
+      .sort((a, b) => b.sev - a.sev || a.ageh - b.ageh);
+    const pick = cand[0];
+    const box = document.getElementById('featured');
+    if (pick) {
+      box.innerHTML = `<div class="flabel">while you weren't looking</div>
+        <div class="ftitle">${esc(pick.title)}</div>
+        <div class="fmeta">${esc(pick.detail)}</div>`;
+      const openIt = () => showEventDetail(pick);
+      box.addEventListener('click', openIt);
+      box.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openIt(); } });
+    } else {
+      box.style.display = 'none';
+    }
+  }
+
+  // mobile panel toggle
+  const ptog = document.getElementById('panel-toggle');
+  ptog.addEventListener('click', () => {
+    const open = document.getElementById('panel').classList.toggle('open');
+    ptog.setAttribute('aria-expanded', open);
+  });
+
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  raf = requestAnimationFrame(draw);
+
+  // grain
+  const grainCanvas = document.getElementById('grain');
+  const gctx = grainCanvas.getContext('2d');
+  function drawGrain() {
+    const w = grainCanvas.width = window.innerWidth * 1.5;
+    const h = grainCanvas.height = window.innerHeight * 1.5;
+    const imageData = gctx.createImageData(w, h);
+    const data = imageData.data;
+    for (let i = 0; i < data.length; i += 4) {
+      const v = Math.random() > 0.5 ? 255 : 0;
+      data[i] = v; data[i+1] = v; data[i+2] = v; data[i+3] = 255;
+    }
+    gctx.putImageData(imageData, 0, 0);
+  }
+  drawGrain();
+  window.addEventListener('resize', drawGrain);
+}).catch(err => {
+  console.error(err);
+  const el = document.querySelector('.statstrip');
+  if (el) { el.textContent = 'data failed to load \u2014 refresh to retry'; el.style.opacity = 1; }
+});
+</script>
+
+</body>
+</html>
