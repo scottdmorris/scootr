@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>scootr.fm &mdash; scootr's laboratory</title>
+<meta name="description" content="A 24/7 pirate radio transmission — clock-synced jungle, drum &amp; bass, and tracker music from the netlabel underground. Everyone who tunes in hears the same moment.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --off-white: #e8e4dc;
+    --dim: #8a867e;
+    --dimmer: #55524c;
+    --border: #232323;
+    --amber: #f5a83c;
+    --amber-dim: rgba(245, 168, 60, 0.14);
+    --phosphor: #8be09b;
+    --mono: 'Courier Prime', monospace;
+    --serif: 'Cormorant Garamond', serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { background: #060605; }
+  body {
+    background: #060605; color: var(--off-white);
+    font-family: var(--serif); font-weight: 300;
+    overflow-x: hidden; min-height: 100vh;
+  }
+  #grain { position: fixed; inset: 0; z-index: 30; pointer-events: none; opacity: 0.5; }
+  #vignette {
+    position: fixed; inset: 0; z-index: 29; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 40%, transparent 55%, rgba(0,0,0,0.6) 100%);
+  }
+  #scanlines {
+    position: fixed; inset: 0; z-index: 28; pointer-events: none; opacity: 0.06;
+    background: repeating-linear-gradient(0deg, transparent 0 2px, #000 2px 4px);
+  }
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fu { opacity: 0; animation: fade-up 1.1s cubic-bezier(0.19, 1, 0.22, 1) forwards; }
+
+  main { position: relative; z-index: 2; max-width: 860px; margin: 0 auto; padding: 0 1.4rem; }
+
+  /* ---------- hero / tuner ---------- */
+  #hero { padding: 16vh 0 4rem; text-align: center; }
+  #hero .eyebrow {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.4em;
+    text-transform: uppercase; color: var(--dim); animation-delay: 0.1s;
+  }
+  #hero h1 {
+    font-size: clamp(3.2rem, 11vw, 6.4rem); font-weight: 300; font-style: italic;
+    letter-spacing: 0.02em; margin: 1.2rem 0 0.4rem; animation-delay: 0.25s;
+  }
+  #hero .sub {
+    font-size: clamp(1.05rem, 2.6vw, 1.3rem); font-style: italic; color: var(--dim);
+    animation-delay: 0.4s;
+  }
+  #dial {
+    margin: 3rem auto 0; max-width: 560px; animation-delay: 0.55s;
+    border: 1px solid var(--border); padding: 1.6rem 1.4rem 1.4rem;
+    background: rgba(10, 9, 8, 0.72);
+  }
+  #freqline { position: relative; height: 34px; margin-bottom: 0.9rem; }
+  #freqcanvas { width: 100%; height: 100%; display: block; }
+  #freq-readout {
+    font-family: var(--mono); font-size: clamp(1.5rem, 4.5vw, 2rem);
+    color: var(--amber); letter-spacing: 0.12em;
+    text-shadow: 0 0 18px rgba(245, 168, 60, 0.45);
+  }
+  #freq-label {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.3em;
+    text-transform: uppercase; color: var(--dimmer); margin-top: 0.4rem;
+  }
+  #power {
+    margin-top: 1.5rem; display: inline-block;
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.35em;
+    text-transform: uppercase; color: var(--off-white);
+    border: 1px solid var(--dim); background: none; padding: 0.95rem 2.6rem;
+    cursor: pointer; transition: all 0.35s;
+  }
+  #power:hover { border-color: var(--amber); color: var(--amber); box-shadow: 0 0 24px rgba(245,168,60,0.18); }
+  #power[disabled] { opacity: 0.4; cursor: wait; }
+
+  /* ---------- deck ---------- */
+  #deck { display: none; padding-bottom: 1rem; }
+  #deck.on { display: block; }
+
+  .chanrow { display: flex; gap: 0.6rem; justify-content: center; margin: 0.5rem 0 2rem; flex-wrap: wrap; }
+  .chan {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--dim); border: 1px solid var(--border); background: none;
+    padding: 0.7rem 1.3rem; cursor: pointer; transition: all 0.3s;
+  }
+  .chan:hover { color: var(--off-white); border-color: var(--dim); }
+  .chan.active { color: var(--amber); border-color: var(--amber); }
+  .chan.active.b { color: var(--phosphor); border-color: var(--phosphor); }
+
+  #onair {
+    display: flex; align-items: center; justify-content: center; gap: 0.55rem;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.35em;
+    text-transform: uppercase; color: var(--dim); margin-bottom: 1.6rem;
+  }
+  #onair .lamp {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--amber);
+    box-shadow: 0 0 12px rgba(245,168,60,0.8); animation: blink 2.4s ease-in-out infinite;
+  }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+  #nowplaying { text-align: center; margin-bottom: 1.8rem; min-height: 6.4rem; }
+  #np-title {
+    font-size: clamp(1.5rem, 4.5vw, 2.2rem); font-style: italic; line-height: 1.15;
+    text-wrap: balance;
+  }
+  #np-artist { font-size: 1.15rem; color: var(--dim); font-style: italic; margin-top: 0.35rem; }
+  #np-meta {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--dimmer); margin-top: 0.8rem;
+  }
+  #np-meta a { color: var(--dimmer); text-decoration: underline; text-underline-offset: 3px; }
+  #np-meta a:hover { color: var(--amber); }
+
+  #spectrum { width: 100%; height: 110px; display: block; margin-bottom: 0.2rem; }
+  #trackpos {
+    display: flex; justify-content: space-between;
+    font-family: var(--mono); font-size: 10px; color: var(--dimmer);
+    letter-spacing: 0.15em; margin-bottom: 2rem;
+  }
+  #trackerline {
+    display: none; text-align: center; font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.25em; color: var(--phosphor); margin: -1.2rem 0 2rem;
+    opacity: 0.8;
+  }
+
+  #controls { display: flex; align-items: center; justify-content: center; gap: 1.2rem; margin-bottom: 2.6rem; }
+  #vol { -webkit-appearance: none; appearance: none; width: 140px; height: 2px; background: var(--border); outline: none; }
+  #vol::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none; width: 10px; height: 10px;
+    background: var(--off-white); border-radius: 50%; cursor: pointer;
+  }
+  #vol::-moz-range-thumb { width: 10px; height: 10px; background: var(--off-white); border: none; border-radius: 50%; cursor: pointer; }
+  #controls .lbl { font-family: var(--mono); font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--dimmer); }
+
+  #translog {
+    border: 1px solid var(--border); background: rgba(8, 8, 7, 0.6);
+    font-family: var(--mono); font-size: 10.5px; line-height: 1.9;
+    color: var(--dim); padding: 1rem 1.2rem; height: 132px; overflow: hidden;
+    margin-bottom: 3rem;
+  }
+  #translog .t { color: var(--dimmer); margin-right: 0.8em; }
+  #translog .hl { color: var(--amber); }
+
+  /* ---------- receiver ---------- */
+  section.block { border-top: 1px solid var(--border); padding: 3.2rem 0; }
+  .block h2 {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.4em;
+    text-transform: uppercase; color: var(--dim); font-weight: 400; margin-bottom: 1.6rem;
+  }
+  #rx-current { font-size: 1.5rem; font-style: italic; line-height: 1.3; }
+  #rx-current .who { color: var(--dim); }
+  #rx-note { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; color: var(--dimmer); text-transform: uppercase; margin-top: 0.9rem; }
+  #rx-recent { list-style: none; margin-top: 1.4rem; }
+  #rx-recent li {
+    font-size: 1.05rem; font-style: italic; color: var(--dim);
+    padding: 0.45rem 0; border-bottom: 1px dotted var(--border);
+  }
+  #rx-recent li span.tt { font-family: var(--mono); font-size: 9px; font-style: normal; letter-spacing: 0.15em; color: var(--dimmer); float: right; margin-top: 0.45em; }
+
+  /* ---------- writeup ---------- */
+  article p { font-size: 1.18rem; line-height: 1.75; color: var(--dim); margin-bottom: 1.3rem; max-width: 64ch; }
+  article p strong { color: var(--off-white); font-weight: 400; }
+  article a { color: var(--off-white); text-decoration: underline; text-underline-offset: 3px; }
+  article a:hover { color: var(--amber); }
+
+  /* ---------- footer ---------- */
+  #back {
+    display: block; text-align: center; margin: 1.5rem 0 3.5rem;
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--dimmer); text-decoration: none; transition: color 0.3s;
+  }
+  #back:hover { color: var(--off-white); }
+  #foot {
+    text-align: center; font-family: var(--mono); font-size: 9px;
+    letter-spacing: 0.25em; text-transform: uppercase; color: var(--dimmer);
+    padding-bottom: 1.2rem;
+  }
+
+  @media (max-width: 600px) {
+    #hero { padding-top: 11vh; }
+    #translog { height: 118px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .fu { animation: none; opacity: 1; }
+    #onair .lamp { animation: none; }
+  }
+</style>
+</head>
+<body>
+<canvas id="grain"></canvas>
+<div id="vignette"></div>
+<div id="scanlines"></div>
+
+<main>
+  <section id="hero">
+    <p class="eyebrow fu">an unlicensed frequency &middot; broadcasting from brooklyn</p>
+    <h1 class="fu">scootr.fm</h1>
+    <p class="sub fu">jungle &middot; drum &amp; bass &middot; tracker music &mdash; everyone hears the same moment</p>
+    <div id="dial" class="fu">
+      <div id="freqline"><canvas id="freqcanvas"></canvas></div>
+      <div id="freq-readout">&mdash;&mdash;.&mdash; MHz</div>
+      <div id="freq-label">carrier detected &middot; awaiting power</div>
+      <button id="power">tune in</button>
+    </div>
+  </section>
+
+  <section id="deck">
+    <div id="onair"><span class="lamp"></span><span id="onair-txt">on air</span></div>
+    <div class="chanrow">
+      <button class="chan active" id="chan-a">freq a &mdash; the broadcast</button>
+      <button class="chan b" id="chan-b">freq b &mdash; the tracker signal</button>
+    </div>
+    <div id="nowplaying">
+      <div id="np-title">tuning&hellip;</div>
+      <div id="np-artist"></div>
+      <div id="np-meta"></div>
+    </div>
+    <canvas id="spectrum"></canvas>
+    <div id="trackpos"><span id="tp-cur">0:00</span><span id="tp-dur">0:00</span></div>
+    <div id="trackerline">ptn -- &middot; row --</div>
+    <div id="controls">
+      <span class="lbl">vol</span>
+      <input type="range" id="vol" min="0" max="100" value="80">
+    </div>
+    <div id="translog"></div>
+  </section>
+
+  <section class="block" id="receiver">
+    <h2>the receiver &mdash; what scott is actually playing</h2>
+    <div id="rx-current"><span class="who">signal dark &mdash;</span> receiver awaiting uplink</div>
+    <div id="rx-note">last.fm uplink &middot; scrobbled live from spotify</div>
+    <ul id="rx-recent"></ul>
+  </section>
+
+  <section class="block">
+    <h2>transmission notes</h2>
+    <article>
+      <p><strong>This is not a playlist. It is a broadcast.</strong> There is no pause button and no skip. The station has been playing since its epoch and the page simply computes where the signal is right now &mdash; so every listener, on every continent, hears the same track at the same second. You don't press play; you tune in.</p>
+      <p><strong>Freq A</strong> rotates roughly five hours of jungle, ragga jungle, dub, and drum &amp; bass from the <a href="https://archive.org/details/netlabels" target="_blank" rel="noopener">netlabel underground</a> &mdash; artist-released, Creative Commons&ndash;licensed records from labels that gave their music away on purpose. Every track credits its source and links back to the original release.</p>
+      <p><strong>Freq B</strong> is the video-game signal: jungle and breakbeat written as tracker modules &mdash; the .mod and .xm files of the Amiga and demoscene era that PlayStation-generation soundtracks grew out of. The modules stream from <a href="https://modarchive.org" target="_blank" rel="noopener">The Mod Archive</a> and are synthesized live in your browser; the readout under the spectrum shows the pattern and row actually being executed. A new module takes the slot every half hour, on the half hour, for everyone at once.</p>
+      <p>The receiver panel above is the honest part: a live wire into what I'm personally listening to, scrobbled from Spotify. The broadcast is what I can legally play you; the receiver is what I'd play you if the record industry were a different thing.</p>
+      <p>No backend, no stream server, no framework. One HTML file, a fixed epoch, and arithmetic.</p>
+    </article>
+  </section>
+
+  <p id="foot">scootr.fm &middot; pirate transmission &middot; sources: internet archive netlabels &middot; the mod archive &middot; last.fm</p>
+  <a id="back" href="../index.html">&larr; projects</a>
+</main>
+
+<script type="module">
+'use strict';
+
+/* ---------- config ---------- */
+const LASTFM_USER = 'scootrm';
+const LASTFM_KEY = '6b7363865dc080ccefc4bd7f43d4d744';
+const CHIPTUNE_CDN = 'https://cdn.jsdelivr.net/npm/chiptune3@0.9.0-r25475/chiptune3.js';
+const MOD_SLOT_S = 1800;          // one module per half hour
+const STATION_FREQ = '101.7';
+
+/* ---------- grain ---------- */
+const g = document.getElementById('grain'), gx = g.getContext('2d');
+function drawGrain() {
+  g.width = innerWidth; g.height = innerHeight;
+  const im = gx.createImageData(g.width, g.height), d = im.data;
+  for (let i = 0; i < d.length; i += 4) {
+    const v = Math.random() * 22;
+    d[i] = d[i+1] = d[i+2] = v; d[i+3] = 14;
+  }
+  gx.putImageData(im, 0, 0);
+}
+drawGrain();
+addEventListener('resize', drawGrain);
+
+/* ---------- helpers ---------- */
+const $ = id => document.getElementById(id);
+const mmss = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+function mulberry32(a) {
+  return function() {
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+const logEl = $('translog');
+const logLines = [];
+function tlog(msg, hl) {
+  const now = new Date();
+  const t = `${String(now.getUTCHours()).padStart(2,'0')}${String(now.getUTCMinutes()).padStart(2,'0')}z`;
+  logLines.push(`<div><span class="t">${t}</span><span${hl ? ' class="hl"' : ''}>${msg}</span></div>`);
+  while (logLines.length > 6) logLines.shift();
+  logEl.innerHTML = logLines.join('');
+}
+
+/* ---------- data ---------- */
+const DATA = await fetch('./data/playlist.json').then(r => {
+  if (!r.ok) throw new Error('playlist failed');
+  return r.json();
+}).catch(err => {
+  $('freq-label').textContent = 'signal lost — refresh to retry';
+  throw err;
+});
+const TRACKS = DATA.tracks, MODS = DATA.mods, EPOCH = DATA.epoch;
+const TOTAL = TRACKS.reduce((s, t) => s + t.dur, 0);
+
+/* ---------- audio graph ---------- */
+let actx = null, analyser = null, mediaSrc = null, chip = null;
+const audio = new Audio();
+audio.crossOrigin = 'anonymous';
+audio.preload = 'auto';
+
+function initAudio() {
+  actx = new (window.AudioContext || window.webkitAudioContext)();
+  analyser = actx.createAnalyser();
+  analyser.fftSize = 256;
+  analyser.smoothingTimeConstant = 0.82;
+  mediaSrc = actx.createMediaElementSource(audio);
+  mediaSrc.connect(analyser);
+  analyser.connect(actx.destination);
+}
+
+/* static burst between tracks */
+function staticBurst(dur = 0.35) {
+  if (!actx) return;
+  const n = actx.sampleRate * dur;
+  const buf = actx.createBuffer(1, n, actx.sampleRate);
+  const ch = buf.getChannelData(0);
+  for (let i = 0; i < n; i++) ch[i] = (Math.random() * 2 - 1) * (1 - i / n);
+  const src = actx.createBufferSource(); src.buffer = buf;
+  const bp = actx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 2400; bp.Q.value = 0.6;
+  const gn = actx.createGain(); gn.gain.value = 0.045 * (vol.value / 100);
+  src.connect(bp); bp.connect(gn); gn.connect(actx.destination);
+  src.start();
+}
+
+/* ---------- channel A: the broadcast ---------- */
+let powered = false;
+let channel = 'a';
+let curIdx = -1, curStart = 0;
+
+function schedNow() {
+  let pos = (Date.now() / 1000 - EPOCH) % TOTAL;
+  if (pos < 0) pos += TOTAL;
+  let i = 0;
+  while (pos >= TRACKS[i].dur) { pos -= TRACKS[i].dur; i++; }
+  return { i, off: pos };
+}
+
+function playBroadcast(resync) {
+  const { i, off } = schedNow();
+  if (i === curIdx && !resync) return;
+  curIdx = i;
+  const t = TRACKS[i];
+  audio.src = t.url;
+  audio.currentTime = 0;
+  const seekTo = off > 2 ? off : 0;
+  audio.play().then(() => {
+    if (seekTo > 2) { try { audio.currentTime = seekTo; } catch (e) {} }
+  }).catch(() => {});
+  $('np-title').textContent = t.title.toLowerCase();
+  $('np-artist').textContent = t.artist ? t.artist.toLowerCase() : '';
+  const licTag = (t.lic.match(/licenses\/([a-z\-]+)/) || [,'cc'])[1];
+  $('np-meta').innerHTML =
+    `${licTag} &middot; <a href="https://archive.org/details/${t.item}" target="_blank" rel="noopener">${t.release.toLowerCase()}</a> &middot; internet archive`;
+  tlog(`now playing — ${(t.artist ? t.artist + ' — ' : '') + t.title}`.toLowerCase(), true);
+}
+
+audio.addEventListener('ended', () => {
+  if (channel !== 'a') return;
+  staticBurst();
+  setTimeout(() => playBroadcast(true), 250);
+});
+audio.addEventListener('error', () => {
+  if (channel !== 'a' || !powered) return;
+  tlog('signal dropout — retuning');
+  curIdx = -1;
+  setTimeout(() => playBroadcast(true), 1500);
+});
+
+/* ---------- channel B: the tracker signal ---------- */
+let chipReady = false, curSlot = -1, chipDur = 0;
+
+async function initChip() {
+  if (chip) return;
+  const mod = await import(CHIPTUNE_CDN);
+  chip = new mod.ChiptuneJsPlayer({ context: actx, repeatCount: -1 });
+  await new Promise(res => chip.onInitialized(res));
+  chip.gain.connect(analyser);
+  chip.setVol(vol.value / 100);
+  chip.onMetadata(meta => {
+    chipDur = meta.dur || 0;
+    const slotStart = Math.floor(Date.now() / 1000 / MOD_SLOT_S) * MOD_SLOT_S;
+    if (chipDur > 5) chip.setPos((Date.now() / 1000 - slotStart) % chipDur);
+  });
+  chip.onError(() => {
+    tlog('module unreadable — skipping frequency');
+    modSalt++;
+    curSlot = -1;
+    setTimeout(() => { if (channel === 'b') playTracker(); }, 1200);
+  });
+  chipReady = true;
+}
+
+let modSalt = 0;
+function pickModule(slot) {
+  const r = mulberry32((slot + modSalt) ^ 0x5EED);
+  return MODS[Math.floor(r() * MODS.length)];
+}
+
+async function playTracker() {
+  await initChip();
+  const slot = Math.floor(Date.now() / 1000 / MOD_SLOT_S);
+  if (slot === curSlot) return;
+  curSlot = slot;
+  const m = pickModule(slot);
+  chipDur = 0;
+  chip.load(`https://api.modarchive.org/downloads.php?moduleid=${m.id}`);
+  $('np-title').textContent = (m.title || m.file).toLowerCase();
+  $('np-artist').textContent = m.file;
+  $('np-meta').innerHTML =
+    `${m.lic === 'tma' ? 'mod archive dist. license' : 'cc ' + m.lic} &middot; ` +
+    `<a href="https://modarchive.org/index.php?request=view_by_moduleid&query=${m.id}" target="_blank" rel="noopener">the mod archive #${m.id}</a>` +
+    (m.rating ? ` &middot; rated ${m.rating}/10` : '');
+  tlog(`module of the half-hour — ${m.file}`, true);
+}
+
+/* slot / drift watch */
+setInterval(() => {
+  if (!powered) return;
+  if (channel === 'b') playTracker();
+  else if (audio.paused && !audio.error) playBroadcast(true);
+}, 5000);
+
+/* ---------- channel switching ---------- */
+const chanA = $('chan-a'), chanB = $('chan-b');
+function setChannel(c) {
+  if (c === channel) return;
+  channel = c;
+  chanA.classList.toggle('active', c === 'a');
+  chanB.classList.toggle('active', c === 'b');
+  $('trackerline').style.display = c === 'b' ? 'block' : 'none';
+  staticBurst(0.5);
+  if (c === 'a') {
+    if (chip) chip.stop();
+    curIdx = -1; curSlot = -1;
+    $('freq-readout').textContent = STATION_FREQ + ' MHz';
+    tlog('retuned — freq a · the broadcast');
+    playBroadcast(true);
+  } else {
+    audio.pause();
+    curSlot = -1;
+    $('freq-readout').textContent = '087.9 MHz';
+    tlog('retuned — freq b · the tracker signal');
+    playTracker();
+  }
+}
+chanA.addEventListener('click', () => setChannel('a'));
+chanB.addEventListener('click', () => setChannel('b'));
+
+/* ---------- volume ---------- */
+const vol = $('vol');
+vol.addEventListener('input', () => {
+  audio.volume = vol.value / 100;
+  if (chip) chip.setVol(vol.value / 100);
+});
+
+/* ---------- spectrum + readouts ---------- */
+const spec = $('spectrum'), sx = spec.getContext('2d');
+function drawSpectrum() {
+  requestAnimationFrame(drawSpectrum);
+  if (!analyser) return;
+  const w = spec.clientWidth, h = spec.clientHeight;
+  if (spec.width !== w * 2) { spec.width = w * 2; spec.height = h * 2; }
+  sx.clearRect(0, 0, spec.width, spec.height);
+  const data = new Uint8Array(analyser.frequencyBinCount);
+  analyser.getByteFrequencyData(data);
+  const bars = 56, bw = spec.width / bars;
+  const col = channel === 'a' ? '245,168,60' : '139,224,155';
+  for (let i = 0; i < bars; i++) {
+    const v = data[Math.floor(i * data.length / bars * 0.72)] / 255;
+    const bh = Math.max(2, v * spec.height * 0.92);
+    sx.fillStyle = `rgba(${col},${0.25 + v * 0.65})`;
+    sx.fillRect(i * bw + bw * 0.18, spec.height - bh, bw * 0.64, bh);
+  }
+  /* positions */
+  if (channel === 'a' && curIdx >= 0) {
+    $('tp-cur').textContent = mmss(audio.currentTime || 0);
+    $('tp-dur').textContent = mmss(TRACKS[curIdx].dur);
+  } else if (channel === 'b' && chip) {
+    $('tp-cur').textContent = mmss(chip.currentTime || 0);
+    $('tp-dur').textContent = chipDur ? mmss(chipDur) : '--:--';
+    $('trackerline').textContent =
+      `ptn ${chip.pattern ?? '--'} · row ${String(chip.row ?? '--').padStart(2, '0')} · ord ${chip.order ?? '--'}`;
+  }
+}
+drawSpectrum();
+
+/* ---------- dial needle animation ---------- */
+const fc = $('freqcanvas'), fcx = fc.getContext('2d');
+let needleT = 0;
+function drawDial() {
+  requestAnimationFrame(drawDial);
+  const w = fc.clientWidth, h = fc.clientHeight;
+  if (!w) return;
+  if (fc.width !== w * 2) { fc.width = w * 2; fc.height = h * 2; }
+  fcx.clearRect(0, 0, fc.width, fc.height);
+  fcx.strokeStyle = 'rgba(138,134,126,0.4)';
+  fcx.lineWidth = 1;
+  for (let i = 0; i <= 40; i++) {
+    const x = (i / 40) * fc.width;
+    const tall = i % 5 === 0 ? 0.55 : 0.3;
+    fcx.beginPath(); fcx.moveTo(x, fc.height); fcx.lineTo(x, fc.height * (1 - tall)); fcx.stroke();
+  }
+  needleT += powered ? 0.002 : 0.011;
+  const nx = fc.width * (powered
+    ? (channel === 'a' ? 0.62 : 0.31) + Math.sin(needleT * 3) * 0.004
+    : 0.5 + Math.sin(needleT) * 0.42);
+  fcx.strokeStyle = '#f5a83c';
+  fcx.lineWidth = 3;
+  fcx.shadowColor = 'rgba(245,168,60,0.8)'; fcx.shadowBlur = 12;
+  fcx.beginPath(); fcx.moveTo(nx, 0); fcx.lineTo(nx, fc.height); fcx.stroke();
+  fcx.shadowBlur = 0;
+}
+drawDial();
+
+/* ---------- power on ---------- */
+$('power').addEventListener('click', async () => {
+  if (powered) return;
+  const btn = $('power');
+  btn.disabled = true;
+  btn.textContent = 'locking signal…';
+  initAudio();
+  await actx.resume();
+  audio.volume = vol.value / 100;
+  powered = true;
+  staticBurst(0.7);
+  const day = Math.floor((Date.now() / 1000 - EPOCH) / 86400) + 1;
+  $('freq-readout').textContent = STATION_FREQ + ' MHz';
+  $('freq-label').textContent = `signal locked · broadcast day ${day}`;
+  btn.style.display = 'none';
+  $('deck').classList.add('on');
+  tlog('receiver powered — searching for carrier');
+  tlog(`carrier locked · ${STATION_FREQ} mhz · broadcast day ${day}`, true);
+  playBroadcast(true);
+  pollLastfm();
+});
+
+/* ---------- last.fm receiver ---------- */
+async function pollLastfm() {
+  if (!LASTFM_KEY) {
+    $('rx-current').innerHTML = '<span class="who">receiver dark —</span> uplink key not yet installed';
+    return;
+  }
+  try {
+    const r = await fetch(`https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${LASTFM_USER}&api_key=${LASTFM_KEY}&format=json&limit=6`);
+    const d = await r.json();
+    const list = d.recenttracks.track || [];
+    if (!list.length) return;
+    const cur = list[0];
+    const live = cur['@attr'] && cur['@attr'].nowplaying;
+    $('rx-current').innerHTML =
+      `<span class="who">${live ? 'scott is playing —' : 'scott last played —'}</span> ` +
+      `${cur.name} · ${cur.artist['#text']}`;
+    $('rx-note').textContent = live ? 'live · scrobbling now' : 'last.fm uplink · recent signal';
+    $('rx-recent').innerHTML = list.slice(1, 6).map(t =>
+      `<li>${t.name} — ${t.artist['#text']}<span class="tt">${t.date ? t.date['#text'] : ''}</span></li>`
+    ).join('');
+  } catch (e) { /* receiver stays quiet */ }
+  setTimeout(pollLastfm, 45000);
+}
+</script>
+</body>
+</html>
