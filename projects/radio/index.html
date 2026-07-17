@@ -580,15 +580,22 @@ function playNow(force) {
     $('status-l').textContent = 'synthesizing module · libopenmpt';
   } else {
     if (chip) chip.stop();
+    lastLoadAt = Date.now();
     audio.src = t.url;
     const seekTo = off > 2 ? off : 0;
+    $('status-l').textContent = 'buffering · locking onto the broadcast…';
     audio.play().then(() => {
       if (seekTo > 2) { try { audio.currentTime = seekTo; } catch (e) {} }
     }).catch(() => {});
-    $('status-l').textContent = 'streaming · archive.org · 128kbps+';
   }
   showEntry(t, i);
 }
+
+let lastLoadAt = 0;
+audio.addEventListener('playing', () => {
+  if (powered && curIdx >= 0 && SCHED[curIdx].type === 'mp3')
+    $('status-l').textContent = 'streaming · archive.org · live';
+});
 
 audio.addEventListener('error', () => {
   if (!powered || curIdx < 0 || SCHED[curIdx].type !== 'mp3') return;
@@ -596,13 +603,15 @@ audio.addEventListener('error', () => {
   setTimeout(() => { if (powered) playNow(true); }, 1500);
 });
 
-/* watchdog: slot changes, drift, stalls */
+/* watchdog: slot changes, drift, stalls — with buffering grace so we
+   never interrupt a track that is still loading */
 setInterval(() => {
   if (!powered) return;
   const { i } = entryNow();
   if (i !== curIdx) { playNow(); return; }
   const t = SCHED[curIdx];
-  if (t.type === 'mp3' && audio.paused && !audio.error) playNow(true);
+  if (t.type === 'mp3' && audio.paused && !audio.error
+      && Date.now() - lastLoadAt > 10000) playNow(true);
   if (t.type === 'mod' && chip && chip.currentTime) {
     $('status-l').textContent =
       `synthesizing · ptn ${chip.pattern ?? '–'} · row ${String(chip.row ?? '–').padStart(2, '0')} · ord ${chip.order ?? '–'}`;
