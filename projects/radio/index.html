@@ -291,7 +291,7 @@
       </div>
       <div id="menubar">
         <span>file</span><span id="menu-view" title="cycle visualization">view</span><span>play</span><span id="menu-tools" title="sleep timer">tools</span><span>help</span>
-        <span id="vizsel"><span id="vizdots"></span><span id="vizname">the yard</span></span>
+        <span id="vizsel"><span id="vizdots"></span><span id="vizname">corridor</span></span>
       </div>
       <div id="wmp-body">
         <div id="toprow">
@@ -343,7 +343,7 @@
       <article>
         <p><strong>This is not a playlist. It is a broadcast.</strong> There is no pause and no skip. The station has been playing since its epoch and the page simply computes where the signal is right now &mdash; so every listener, on every continent, hears the same track at the same second. You don't press play; you tune in.</p>
         <p>The crate is <strong>eleven hours of jungle, ragga jungle, dub, and drum &amp; bass</strong> from twenty-one releases across the <a href="https://archive.org/details/netlabels" target="_blank" rel="noopener">netlabel underground</a> &mdash; artist-released, Creative Commons&ndash;licensed records from labels that gave their music away on purpose. And it never plays the same show twice: every cycle the rotation <strong>reshuffles itself deterministically</strong>, so the order is always new but every listener still computes the identical sequence &mdash; the playlist shows the actual clock time each record will air where you are. Woven between them are <strong>tracker interludes</strong>: jungle written as .mod and .xm modules, the file format PlayStation-era game soundtracks grew out of, streamed from <a href="https://modarchive.org" target="_blank" rel="noopener">The Mod Archive</a> and synthesized live in your browser while the status bar shows the pattern and row being executed.</p>
-        <p>The player is an ode to the media players this music was first heard through &mdash; and the visualization behind it is the part of Windows Media Player everyone actually remembers. It grew out of <a href="../../signal/index.html">the signal</a>, an earlier experiment of mine, and picked up five siblings along the way. It flies through a node field that steers, accelerates, and shifts color with the frequencies of whatever the station is playing. Every track credits its source and links back to the original release.</p>
+        <p>The player is an ode to the media players this music was first heard through &mdash; and the visualization behind it is the part of Windows Media Player everyone actually remembers. It grew out of <a href="../../signal/index.html">the signal</a>, an earlier experiment of mine, and picked up six siblings along the way &mdash; feedback corridors, kaleidoscopes, and starbursts pulled straight from the Winamp era. It flies through a node field that steers, accelerates, and shifts color with the frequencies of whatever the station is playing. Every track credits its source and links back to the original release.</p>
         <p>The receiver panel is the honest part: a live wire into what I'm personally listening to, scrobbled from Spotify. The broadcast is what I can legally play you; the receiver is what I'd play you if the record industry were a different thing.</p>
         <p>No backend, no stream server, no framework. One HTML file, a fixed epoch, and arithmetic.</p>
       </article>
@@ -744,7 +744,7 @@ function sizeViz() { viz.width = innerWidth * DPR; viz.height = innerHeight * DP
 sizeViz();
 addEventListener('resize', sizeViz);
 
-const VIZ_NAMES = ['the yard', 'the signal', 'bars & waves', 'alchemy', 'phase scope', 'the grid'];
+const VIZ_NAMES = ['corridor', 'battery', 'starburst', 'the signal', 'bars & waves', 'alchemy', 'phase scope'];
 let vizMode = 0;
 const vizDots = VIZ_NAMES.map((name, m) => {
   const b = document.createElement('button');
@@ -916,13 +916,14 @@ function frame() {
     appIcon.style.transform = `scale(${1 + beat * 0.5})`;
   }
 
-  if (vizMode === 0) { drawYard(w, h, bass, mid, treb, playing); return; }
-  if (vizMode === 2) { drawBars(w, h, bass, mid, treb, playing); return; }
-  if (vizMode === 3) { drawAlchemy(w, h, bass, mid, treb, playing); return; }
-  if (vizMode === 4) { drawScope(w, h, bass, mid, treb, playing); return; }
-  if (vizMode === 5) { drawGrid(w, h, bass, mid, treb, playing); return; }
+  if (vizMode === 0) { drawCorridor(w, h, bass, mid, treb, playing); return; }
+  if (vizMode === 1) { drawBattery(w, h, bass, mid, treb, playing); return; }
+  if (vizMode === 2) { drawStarburst(w, h, bass, mid, treb, playing); return; }
+  if (vizMode === 4) { drawBars(w, h, bass, mid, treb, playing); return; }
+  if (vizMode === 5) { drawAlchemy(w, h, bass, mid, treb, playing); return; }
+  if (vizMode === 6) { drawScope(w, h, bass, mid, treb, playing); return; }
 
-  /* --- mode 1: the signal --- */
+  /* --- mode 3: the signal --- */
   vx.fillStyle = 'rgba(4,4,7,0.17)';
   vx.fillRect(0, 0, w, h);
 
@@ -1107,425 +1108,133 @@ function drawScope(w, h, bass, mid, treb, playing) {
   vx.stroke();
 }
 
-/* --- mode 0: the yard — dusk over the yard, soundsystem breathing --- */
-const yardRnd = mulberry32(1997);
-const yardBuildings = Array.from({ length: 15 }, (_, i) => ({
-  x: i / 15 + yardRnd() * 0.03, w: 0.045 + yardRnd() * 0.055,
-  h: 0.06 + yardRnd() * 0.16, tank: yardRnd() > 0.72, ant: yardRnd() > 0.8,
-  win: yardRnd(),
-}));
-const yardClouds = Array.from({ length: 4 }, () => ({
-  x: yardRnd(), y: 0.1 + yardRnd() * 0.24, r: 0.1 + yardRnd() * 0.14, sp: 0.00006 + yardRnd() * 0.00012,
-}));
-let yardT = 0;
-
-function palm(gx, gy, s, flip, sway) {
-  vx.strokeStyle = '#060604'; vx.fillStyle = '#060604';
-  vx.lineWidth = 5 * DPR * s;
-  vx.beginPath();
-  vx.moveTo(gx, gy);
-  const topX = gx + flip * 26 * DPR * s + sway * 10 * DPR;
-  const topY = gy - 120 * DPR * s;
-  vx.quadraticCurveTo(gx + flip * 4 * DPR * s, gy - 70 * DPR * s, topX, topY);
-  vx.stroke();
-  for (let i = 0; i < 9; i++) {
-    const a = -Math.PI / 2 + (i - 4) * 0.36 + sway * 0.12;
-    const len = (46 + (i % 3) * 12) * DPR * s;
-    const ex = topX + Math.cos(a) * len, ey = topY + Math.sin(a) * len + len * 0.34;
-    vx.lineWidth = 2.6 * DPR * s;
-    vx.beginPath();
-    vx.moveTo(topX, topY);
-    vx.quadraticCurveTo(topX + Math.cos(a) * len * 0.6, topY + Math.sin(a) * len * 0.52, ex, ey);
-    vx.stroke();
-  }
+/* --- shared idle-safe frequency sampler --- */
+function fval(i) {
+  return (powered && freqData && analyser)
+    ? boost(freqData[i % freqData.length] / 255)
+    : (Math.sin(idlePulse * 2 + i * 0.6) * 0.5 + 0.5) * 0.22;
 }
 
-function drawYard(w, h, bass, mid, treb, playing) {
-  yardT += 0.016;
-  const ground = h * 0.66;
-  const hue = (tintHue + 10) % 360;
-
-  /* dusk sky — tinted by the cover on air */
-  const sky = vx.createLinearGradient(0, 0, 0, ground);
-  sky.addColorStop(0, '#07070f');
-  sky.addColorStop(0.55, `hsla(${(hue + 230) % 360}, 30%, 11%, 1)`);
-  sky.addColorStop(0.88, `hsla(${hue}, 45%, 22%, 1)`);
-  sky.addColorStop(1, `hsla(${hue}, 60%, 30%, 1)`);
-  vx.fillStyle = sky;
-  vx.fillRect(0, 0, w, ground);
-
-  /* stars */
-  for (const s of stars) {
-    const sy = s.y * ground * 0.85;
-    s.ph += s.sp;
-    vx.beginPath();
-    vx.arc(s.x * w, sy, s.r * DPR * 0.8, 0, Math.PI * 2);
-    vx.fillStyle = `rgba(225,220,205,${0.05 + (Math.sin(s.ph) + 1) / 2 * 0.16})`;
-    vx.fill();
-  }
-
-  /* moon */
-  const mx = w * 0.78, my = h * 0.16, mr = Math.min(w, h) * 0.035;
-  const mg = vx.createRadialGradient(mx, my, 0, mx, my, mr * 5);
-  mg.addColorStop(0, 'rgba(235,230,215,0.35)');
-  mg.addColorStop(0.25, 'rgba(235,230,215,0.08)');
-  mg.addColorStop(1, 'rgba(0,0,0,0)');
-  vx.fillStyle = mg; vx.fillRect(mx - mr * 5, my - mr * 5, mr * 10, mr * 10);
-  vx.beginPath(); vx.arc(mx, my, mr, 0, Math.PI * 2);
-  vx.fillStyle = 'rgba(235,230,218,0.9)'; vx.fill();
-
-  /* drifting clouds */
-  for (const c of yardClouds) {
-    c.x = (c.x + c.sp) % 1.3;
-    const cg = vx.createRadialGradient(c.x * w, c.y * h, 0, c.x * w, c.y * h, c.r * w);
-    cg.addColorStop(0, 'rgba(16,16,26,0.55)');
-    cg.addColorStop(1, 'rgba(0,0,0,0)');
-    vx.fillStyle = cg;
-    vx.fillRect(0, 0, w, ground);
-  }
-
-  /* skyline silhouette */
-  vx.fillStyle = '#08080a';
-  for (const b of yardBuildings) {
-    const bx = b.x * w, bw2 = b.w * w, bh = b.h * h;
-    vx.fillRect(bx, ground - bh, bw2, bh);
-    if (b.tank) { /* brooklyn water tank */
-      vx.fillRect(bx + bw2 * 0.25, ground - bh - h * 0.03, bw2 * 0.3, h * 0.03);
-      vx.beginPath();
-      vx.moveTo(bx + bw2 * 0.22, ground - bh - h * 0.03);
-      vx.lineTo(bx + bw2 * 0.4, ground - bh - h * 0.052);
-      vx.lineTo(bx + bw2 * 0.58, ground - bh - h * 0.03);
-      vx.fill();
-    }
-    if (b.ant) { /* pirate aerial */
-      vx.strokeStyle = '#08080a'; vx.lineWidth = 1.6 * DPR;
-      vx.beginPath();
-      vx.moveTo(bx + bw2 * 0.7, ground - bh);
-      vx.lineTo(bx + bw2 * 0.7, ground - bh - h * 0.07);
-      vx.stroke();
-      /* blinking transmitter light */
-      if (Math.sin(yardT * 1.4 + b.x * 20) > 0.55) {
-        vx.beginPath();
-        vx.arc(bx + bw2 * 0.7, ground - bh - h * 0.07, 2.2 * DPR, 0, Math.PI * 2);
-        vx.fillStyle = 'rgba(255,80,60,0.9)'; vx.fill();
-        vx.fillStyle = '#08080a';
-      }
-    }
-    /* a few lit windows */
-    if (b.win > 0.35) {
-      const rows = Math.floor(b.h * 26), cols = 3;
-      const wr = mulberry32(Math.floor(b.x * 1000));
-      vx.fillStyle = `hsla(${hue}, 60%, 55%, 0.5)`;
-      for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
-        if (wr() > 0.86) vx.fillRect(bx + bw2 * (0.2 + c * 0.28), ground - bh + (r + 0.4) * (bh / rows), 2.4 * DPR, 3 * DPR);
-      }
-      vx.fillStyle = '#08080a';
-    }
-  }
-
-  /* ground */
-  const gg2 = vx.createLinearGradient(0, ground, 0, h);
-  gg2.addColorStop(0, '#0a0a08');
-  gg2.addColorStop(1, '#040403');
-  vx.fillStyle = gg2;
-  vx.fillRect(0, ground, w, h - ground);
-
-  /* string lights swinging gently, flickering with the highs */
-  const p1x = w * 0.13, p1y = ground - h * 0.19, p2x = w * 0.55, p2y = ground - h * 0.1;
-  vx.strokeStyle = 'rgba(10,10,8,0.9)'; vx.lineWidth = 1.2 * DPR;
-  vx.beginPath();
-  vx.moveTo(p1x, p1y);
-  vx.quadraticCurveTo((p1x + p2x) / 2, p1y + h * 0.07 + Math.sin(yardT * 0.7) * 3 * DPR, p2x, p2y);
-  vx.stroke();
-  for (let i = 1; i < 9; i++) {
-    const t = i / 9;
-    const lx = (1 - t) * (1 - t) * p1x + 2 * (1 - t) * t * ((p1x + p2x) / 2) + t * t * p2x;
-    const ly = (1 - t) * (1 - t) * p1y + 2 * (1 - t) * t * (p1y + h * 0.07 + Math.sin(yardT * 0.7) * 3 * DPR) + t * t * p2y;
-    const fl = 0.45 + treb * 0.5 + Math.sin(yardT * 2 + i * 2.2) * 0.14;
-    vx.beginPath(); vx.arc(lx, ly + 3 * DPR, 2 * DPR, 0, Math.PI * 2);
-    vx.fillStyle = `hsla(${(hue + i * 8) % 360}, 85%, 62%, ${Math.max(0.15, fl)})`;
-    vx.fill();
-  }
-
-  /* palms swaying with the mids */
-  const sway = Math.sin(yardT * 0.6) * 0.4 + mid * 0.9;
-  const ps = Math.min(w, h) / (900 * DPR);
-  palm(w * 0.13, ground + 2, ps * 1.25, 1, sway);
-  palm(w * 0.92, ground + 2, ps * 1.05, -1, sway * 0.8 + 0.1);
-
-  /* the soundsystem — a speaker stack that actually plays */
-  const sx0 = w * 0.72, sy0 = ground - 4 * DPR;
-  const bs = Math.min(w, h) * 0.075;
-  for (let i = 0; i < 2; i++) {
-    const bx = sx0, by = sy0 - bs * (i + 1) - i * 3 * DPR;
-    vx.fillStyle = '#0b0b09';
-    vx.fillRect(bx, by, bs * 1.45, bs);
-    vx.strokeStyle = 'rgba(60,56,48,0.8)'; vx.lineWidth = 1 * DPR;
-    vx.strokeRect(bx, by, bs * 1.45, bs);
-    /* woofer */
-    const cr = bs * 0.3 * (1 + bass * 0.14 + beat * 0.22);
-    vx.beginPath(); vx.arc(bx + bs * 0.45, by + bs * 0.5, cr, 0, Math.PI * 2);
-    vx.fillStyle = '#050504'; vx.fill();
-    vx.strokeStyle = `hsla(${hue}, 70%, 55%, ${0.25 + beat * 0.6})`;
-    vx.lineWidth = 1.6 * DPR; vx.stroke();
-    /* tweeter */
-    vx.beginPath(); vx.arc(bx + bs * 1.1, by + bs * 0.5, bs * 0.13 * (1 + treb * 0.3), 0, Math.PI * 2);
-    vx.fillStyle = '#050504'; vx.fill();
-    vx.strokeStyle = `hsla(${hue}, 70%, 60%, ${0.2 + treb * 0.5})`;
-    vx.lineWidth = 1.2 * DPR; vx.stroke();
-  }
-  /* bass shockwave rolling off the stack */
-  if (beat > 0.3) {
-    vx.beginPath();
-    vx.arc(sx0 + bs * 0.7, sy0 - bs, bs * (1.3 + (1 - beat) * 2.2), 0, Math.PI * 2);
-    vx.strokeStyle = `hsla(${hue}, 80%, 60%, ${beat * 0.25})`;
-    vx.lineWidth = 2 * DPR;
-    vx.stroke();
-  }
-
-  /* the cat on the stack — homage where homage is due */
-  drawCat(sx0 + bs * 1.05, sy0 - bs * 2 - 6 * DPR, bs * 0.36);
-
-  /* the crowd — heads down by the stack, bouncing on their own phase */
-  if (beatFired) for (const c of yardCrowd) {
-    c.bobV -= (2 + Math.random() * 2.4) * DPR;
-    if (Math.random() > 0.72) { c.armUp = true; c.armT = 40 + Math.random() * 30; }
-  }
-  for (const c of yardCrowd) {
-    c.bobV += (0 - c.bobY) * 0.18; c.bobV *= 0.8; c.bobY += c.bobV;
-    if (c.armT > 0) c.armT--; else c.armUp = false;
-    drawRaver(w * c.x, ground - 2 * DPR + c.bobY, h * c.s, c, hue);
-  }
-
-  /* the selector — foreground, at the decks */
-  drawSelector(w, h, ground, hue);
-}
-
-/* crowd figures */
-const yardCrowd = [
-  { x: 0.575, s: 0.00021, bobY: 0, bobV: 0, armUp: false, armT: 0, dread: true },
-  { x: 0.635, s: 0.000185, bobY: 0, bobV: 0, armUp: false, armT: 0, dread: false },
-  { x: 0.53, s: 0.000165, bobY: 0, bobV: 0, armUp: false, armT: 0, dread: false },
-];
-function drawRaver(x, gy, s, c, hue) {
-  const u = s * 10;
-  vx.fillStyle = '#070705'; vx.strokeStyle = '#070705';
-  vx.lineWidth = 3.2 * u;
-  /* body */
-  vx.beginPath();
-  vx.moveTo(x - 5.5 * u, gy);
-  vx.quadraticCurveTo(x - 6.5 * u, gy - 22 * u, x, gy - 26 * u);
-  vx.quadraticCurveTo(x + 6.5 * u, gy - 22 * u, x + 5.5 * u, gy);
-  vx.fill();
-  /* head */
-  vx.beginPath(); vx.arc(x, gy - 31 * u, 5 * u, 0, Math.PI * 2); vx.fill();
-  if (c.dread) {
-    vx.lineWidth = 1.6 * u;
-    for (let i = -2; i <= 2; i++) {
-      vx.beginPath();
-      vx.moveTo(x + i * 1.8 * u, gy - 34 * u);
-      vx.quadraticCurveTo(x + i * 3.4 * u + c.bobY * 0.4, gy - 27 * u, x + i * 3.8 * u + c.bobY * 0.7, gy - 21 * u);
-      vx.stroke();
-    }
-    vx.lineWidth = 3.2 * u;
-  }
-  /* arms */
-  vx.lineWidth = 2.4 * u;
-  if (c.armUp) { /* gun fingers up */
-    vx.beginPath();
-    vx.moveTo(x + 3 * u, gy - 23 * u);
-    vx.lineTo(x + 8 * u, gy - 36 * u);
-    vx.stroke();
-    vx.beginPath();
-    vx.moveTo(x - 3 * u, gy - 23 * u);
-    vx.lineTo(x - 7 * u, gy - 33 * u);
-    vx.stroke();
-  } else {
-    vx.beginPath();
-    vx.moveTo(x + 3.5 * u, gy - 22 * u);
-    vx.quadraticCurveTo(x + 7 * u, gy - 18 * u, x + 5 * u, gy - 13 * u);
-    vx.stroke();
-  }
-}
-
-/* the cat — sits on the stack, tail keeps its own time */
-let catTail = 0;
-function drawCat(x, y, s) {
-  catTail += 0.02;
-  vx.fillStyle = '#070705'; vx.strokeStyle = '#070705';
-  /* body */
-  vx.beginPath();
-  vx.ellipse(x, y - s * 0.32, s * 0.52, s * 0.34, 0, 0, Math.PI * 2);
-  vx.fill();
-  /* head + ears */
-  vx.beginPath(); vx.arc(x + s * 0.42, y - s * 0.62, s * 0.26, 0, Math.PI * 2); vx.fill();
-  vx.beginPath();
-  vx.moveTo(x + s * 0.26, y - s * 0.8); vx.lineTo(x + s * 0.3, y - s * 1.02); vx.lineTo(x + s * 0.42, y - s * 0.84);
-  vx.moveTo(x + s * 0.5, y - s * 0.86); vx.lineTo(x + s * 0.58, y - s * 1.04); vx.lineTo(x + s * 0.64, y - s * 0.8);
-  vx.fill();
-  /* tail — slow metronome, unbothered by the tempo */
-  vx.lineWidth = s * 0.13;
-  vx.lineCap = 'round';
-  vx.beginPath();
-  vx.moveTo(x - s * 0.48, y - s * 0.3);
-  const ta = Math.sin(catTail) * 0.5;
-  vx.quadraticCurveTo(x - s * 0.95, y - s * 0.55, x - s * (0.95 + ta * 0.22), y - s * (1 + ta * 0.42));
-  vx.stroke();
-  vx.lineCap = 'butt';
-}
-
-/* the selector — head nod on the kick, dreads with lag, record spinning */
-let nodY = 0, nodV = 0, recordA = 0, smoke = [];
-function drawSelector(w, h, ground, hue) {
-  if (beatFired) nodV -= 2.6 * DPR;
-  nodV += (0 - nodY) * 0.16; nodV *= 0.82; nodY += nodV;
-  recordA += 0.045;
-
-  const cx = w * 0.2, gy = ground + h * 0.09;
-  const U = Math.min(w, h) * 0.0011; /* scale unit */
-  const px = v => v * U;
-
-  /* table */
-  vx.fillStyle = '#0a0a08';
-  vx.fillRect(cx - px(52), gy - px(38), px(120), px(6));
-  vx.fillRect(cx - px(46), gy - px(32), px(5), px(32));
-  vx.fillRect(cx + px(56), gy - px(32), px(5), px(32));
-
-  /* turntable + record */
-  const rx = cx + px(26), ry = gy - px(41);
-  vx.fillStyle = '#0c0c0a';
-  vx.fillRect(rx - px(20), ry - px(3), px(40), px(6));
-  vx.beginPath(); vx.arc(rx, ry - px(3), px(15), 0, Math.PI * 2);
-  vx.fillStyle = '#060605'; vx.fill();
-  vx.strokeStyle = `hsla(${hue}, 60%, 55%, 0.5)`;
-  vx.lineWidth = 1 * DPR;
-  vx.stroke();
-  /* the marker line shows the spin */
-  vx.beginPath();
-  vx.moveTo(rx, ry - px(3));
-  vx.lineTo(rx + Math.cos(recordA) * px(13), ry - px(3) + Math.sin(recordA) * px(4.5));
-  vx.stroke();
-
-  /* body — sitting on a crate, leaning into the decks */
-  const hx = cx - px(14), hy = gy - px(74) + nodY;
-  vx.fillStyle = '#060604'; vx.strokeStyle = '#060604';
-  /* crate */
-  vx.fillRect(cx - px(34), gy - px(22), px(26), px(22));
-  /* torso */
-  vx.beginPath();
-  vx.moveTo(cx - px(30), gy - px(20));
-  vx.quadraticCurveTo(cx - px(32), gy - px(52), hx - px(2), gy - px(62));
-  vx.quadraticCurveTo(hx + px(12), gy - px(66), hx + px(12), gy - px(50));
-  vx.quadraticCurveTo(hx + px(10), gy - px(30), cx - px(6), gy - px(20));
-  vx.fill();
-  /* head */
-  vx.beginPath(); vx.arc(hx, hy, px(9), 0, Math.PI * 2); vx.fill();
-  /* tam — the crown sitting on the dreads */
-  vx.beginPath();
-  vx.ellipse(hx - px(1), hy - px(6), px(10.5), px(6.5), -0.18, Math.PI, 0);
-  vx.fill();
-  /* dreads — hang and swing with the nod's leftover energy */
-  vx.lineWidth = px(2.2); vx.lineCap = 'round';
-  for (let i = 0; i < 6; i++) {
-    const a = -0.5 + i * 0.22;
-    const sx = hx + Math.cos(Math.PI * 0.5 + a) * px(9);
-    const sy = hy + Math.sin(Math.PI * 0.5 + a) * px(6) - px(2);
-    const swing = nodY * (0.5 + i * 0.12) + Math.sin(yardT * 1.3 + i * 1.7) * px(1.2);
-    vx.beginPath();
-    vx.moveTo(sx, sy);
-    vx.quadraticCurveTo(sx + swing * 0.6 - px(2), sy + px(10), sx + swing - px(3), sy + px(19 + (i % 3) * 4));
-    vx.stroke();
-  }
-  vx.lineCap = 'butt';
-  /* arm to the deck — rides the record */
-  vx.lineWidth = px(3.4);
-  vx.beginPath();
-  vx.moveTo(hx + px(8), gy - px(52) + nodY * 0.5);
-  vx.quadraticCurveTo(cx + px(10), gy - px(46), rx - px(6), ry + px(1) + nodY * 0.25);
-  vx.stroke();
-  /* rim light — the yard's glow catching his back */
-  vx.strokeStyle = `hsla(${hue}, 75%, 60%, 0.22)`;
-  vx.lineWidth = 1.3 * DPR;
-  vx.beginPath();
-  vx.moveTo(cx - px(30), gy - px(21));
-  vx.quadraticCurveTo(cx - px(32), gy - px(52), hx - px(2), gy - px(62));
-  vx.stroke();
-
-  /* smoke curl off the table — chill made visible */
-  if (Math.random() > 0.82) smoke.push({ x: cx - px(44), y: gy - px(40), a: 0.32, t: Math.random() * 6 });
-  for (let i = smoke.length - 1; i >= 0; i--) {
-    const p = smoke[i];
-    p.t += 0.03; p.y -= 0.55 * DPR; p.a -= 0.0022;
-    if (p.a <= 0) { smoke.splice(i, 1); continue; }
-    vx.beginPath();
-    vx.arc(p.x + Math.sin(p.t * 2) * px(4) * (1 + p.t * 0.25), p.y, px(2.2) * (1 + p.t * 0.3), 0, Math.PI * 2);
-    vx.fillStyle = `rgba(200,195,185,${p.a * 0.28})`;
-    vx.fill();
-  }
-}
-
-/* --- mode 5: the grid (perspective floor that surges on the kick) --- */
-let gridScroll = 0;
-function drawGrid(w, h, bass, mid, treb, playing) {
-  vx.fillStyle = 'rgba(3,3,6,0.35)';
+/* --- mode 0: corridor — geiss-style zoom feedback tunnel --- */
+const fbc = document.createElement('canvas');
+const fbx = fbc.getContext('2d');
+let corrRot = 0;
+function drawCorridor(w, h, bass, mid, treb, playing) {
+  if (fbc.width !== w || fbc.height !== h) { fbc.width = w; fbc.height = h; }
+  /* snapshot last frame, then repaint it into itself scaled + twisted */
+  fbx.globalCompositeOperation = 'copy';
+  fbx.drawImage(viz, 0, 0);
+  const cx = w / 2, cy = h / 2;
+  corrRot = 0.0022 + treb * 0.011 + beat * 0.004;
+  const z = 1.014 + bass * 0.028 + beat * 0.018;
+  vx.fillStyle = '#020204';
   vx.fillRect(0, 0, w, h);
-  const horizon = h * 0.52;
-  const hue = (tintHue + globalHue * 0.25) % 360;
-
-  /* stars above the horizon */
-  for (const s of stars) {
-    if (s.y * h > horizon) continue;
-    s.ph += s.sp;
-    vx.beginPath();
-    vx.arc(s.x * w, s.y * h, s.r * DPR, 0, Math.PI * 2);
-    vx.fillStyle = `rgba(220,215,200,${0.06 + (Math.sin(s.ph) + 1) / 2 * 0.18})`;
-    vx.fill();
-  }
-
-  /* sun — a half-disc sitting on the horizon, breathing on the bass */
-  const sunR = Math.min(w, h) * (0.13 + bass * 0.05 + beat * 0.04);
-  const sun = vx.createRadialGradient(w / 2, horizon, 0, w / 2, horizon, sunR * 2.4);
-  sun.addColorStop(0, `hsla(${hue}, 92%, 62%, ${0.5 + beat * 0.3})`);
-  sun.addColorStop(0.45, `hsla(${hue}, 92%, 50%, 0.14)`);
-  sun.addColorStop(1, 'rgba(0,0,0,0)');
-  vx.fillStyle = sun;
-  vx.fillRect(0, 0, w, horizon + sunR * 2.4);
   vx.save();
-  vx.beginPath(); vx.rect(0, 0, w, horizon); vx.clip();
-  vx.beginPath(); vx.arc(w / 2, horizon, sunR, Math.PI, 0);
-  vx.fillStyle = `hsla(${hue}, 95%, 64%, 0.85)`;
-  vx.fill();
-  /* venetian cuts through the sun */
-  vx.fillStyle = 'rgba(3,3,6,0.9)';
-  for (let i = 0; i < 6; i++) {
-    vx.fillRect(w / 2 - sunR, horizon - sunR * (0.16 + i * 0.15), sunR * 2, sunR * (0.02 + i * 0.012));
-  }
+  vx.globalAlpha = 0.94;
+  vx.translate(cx, cy); vx.rotate(corrRot); vx.scale(z, z); vx.translate(-cx, -cy);
+  vx.drawImage(fbc, 0, 0);
   vx.restore();
+  /* the source shape: a waveform ring feeding the tunnel */
+  const R = Math.min(w, h) * (0.16 + bass * 0.09);
+  const hue = (tintHue + globalHue) % 360;
+  vx.lineWidth = (1.8 + beat * 3.2) * DPR;
+  vx.strokeStyle = `hsla(${hue}, 92%, ${58 + beat * 22}%, 0.9)`;
+  vx.beginPath();
+  const N = 140;
+  for (let i = 0; i <= N; i++) {
+    const a = i / N * Math.PI * 2;
+    const v = (playing && timeData)
+      ? (timeData[(i * 5) % timeData.length] - 128) / 128
+      : Math.sin(idlePulse * 2 + i * 0.3) * 0.18;
+    const r = R * (1 + v * 0.38);
+    const x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r;
+    i === 0 ? vx.moveTo(x, y) : vx.lineTo(x, y);
+  }
+  vx.closePath();
+  vx.stroke();
+  if (beatFired) { /* kick = a bright pulse fed into the feedback */
+    vx.lineWidth = 5 * DPR;
+    vx.strokeStyle = `hsla(${(hue + 40) % 360}, 95%, 72%, 0.75)`;
+    vx.beginPath(); vx.arc(cx, cy, R * 1.35, 0, Math.PI * 2); vx.stroke();
+  }
+}
 
-  /* converging verticals */
-  vx.lineWidth = 1 * DPR;
-  for (let i = -14; i <= 14; i++) {
-    const spread = i * w * 0.09;
-    vx.strokeStyle = `hsla(${hue}, 80%, 58%, ${0.32 - Math.abs(i) * 0.017 + beat * 0.12})`;
+/* --- mode 1: battery — 8-way kaleidoscope spectrum shards --- */
+let batRot = 0;
+function drawBattery(w, h, bass, mid, treb, playing) {
+  vx.fillStyle = 'rgba(3,3,5,0.13)';
+  vx.fillRect(0, 0, w, h);
+  vx.globalCompositeOperation = 'lighter';
+  const cx = w / 2, cy = h / 2, RM = Math.min(w, h);
+  batRot += 0.0025 + mid * 0.012 + beat * 0.01;
+  const SEG = 8, span = Math.PI * 2 / SEG;
+  const hue = (tintHue + globalHue) % 360;
+  for (let k = 0; k < SEG; k++) {
+    vx.save();
+    vx.translate(cx, cy);
+    vx.rotate(batRot + k * span);
+    if (k % 2) vx.scale(1, -1);
     vx.beginPath();
-    vx.moveTo(w / 2 + spread * 0.06, horizon);
-    vx.lineTo(w / 2 + spread, h);
+    vx.moveTo(0, 0);
+    const STEPS = 26;
+    for (let i = 0; i <= STEPS; i++) {
+      const a = i / STEPS * span;
+      const r = RM * (0.05 + fval(i * 4) * (0.34 + bass * 0.1));
+      vx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+    }
+    vx.closePath();
+    vx.fillStyle = `hsla(${(hue + k * 9) % 360}, 88%, 55%, ${0.09 + bass * 0.1 + beat * 0.08})`;
+    vx.fill();
+    vx.lineWidth = 1.1 * DPR;
+    vx.strokeStyle = `hsla(${(hue + k * 9 + 30) % 360}, 92%, 68%, ${0.28 + beat * 0.3})`;
+    vx.stroke();
+    vx.restore();
+  }
+  vx.globalCompositeOperation = 'source-over';
+}
+
+/* --- mode 2: starburst — radial spectrum, shockwaves on the kick --- */
+let strRot = 0;
+const shockRings = [];
+function drawStarburst(w, h, bass, mid, treb, playing) {
+  vx.fillStyle = 'rgba(3,3,5,0.17)';
+  vx.fillRect(0, 0, w, h);
+  vx.globalCompositeOperation = 'lighter';
+  const cx = w / 2, cy = h / 2, RM = Math.min(w, h);
+  strRot += 0.003 + mid * 0.013 + beat * 0.012;
+  const hue = (tintHue + globalHue) % 360;
+  const r0 = RM * (0.055 + bass * 0.05);
+  const RAYS = 72;
+  for (let i = 0; i < RAYS; i++) {
+    const a = i / RAYS * Math.PI * 2 + strRot;
+    const v = fval(Math.floor(i / RAYS * 80));
+    const len = v * RM * 0.36;
+    vx.lineWidth = (1.4 + v * 3.2) * DPR;
+    vx.strokeStyle = `hsla(${(hue + i * 5) % 360}, 90%, ${52 + v * 26}%, ${0.3 + v * 0.6})`;
+    vx.beginPath();
+    vx.moveTo(cx + Math.cos(a) * r0, cy + Math.sin(a) * r0);
+    vx.lineTo(cx + Math.cos(a) * (r0 + len), cy + Math.sin(a) * (r0 + len));
     vx.stroke();
   }
-  /* horizontals rushing at the viewer — speed rides the bass */
-  gridScroll = (gridScroll + 0.006 + bass * 0.03 + beat * 0.03) % 1;
-  for (let i = 0; i < 14; i++) {
-    const t = ((i / 14) + gridScroll) % 1;
-    const y = horizon + Math.pow(t, 2.6) * (h - horizon);
-    vx.strokeStyle = `hsla(${hue}, 85%, 60%, ${0.08 + t * 0.5 + beat * 0.15})`;
-    vx.lineWidth = (0.8 + t * 2.2) * DPR;
-    vx.beginPath(); vx.moveTo(0, y); vx.lineTo(w, y); vx.stroke();
+  /* core */
+  const cg = vx.createRadialGradient(cx, cy, 0, cx, cy, r0 * 1.6);
+  cg.addColorStop(0, `hsla(${hue}, 95%, 68%, ${0.35 + beat * 0.4})`);
+  cg.addColorStop(1, 'rgba(0,0,0,0)');
+  vx.fillStyle = cg;
+  vx.beginPath(); vx.arc(cx, cy, r0 * 1.6, 0, Math.PI * 2); vx.fill();
+  /* shockwaves */
+  if (beatFired) shockRings.push({ r: r0, a: 0.55 });
+  for (let i = shockRings.length - 1; i >= 0; i--) {
+    const s = shockRings[i];
+    s.r += RM * 0.012; s.a -= 0.014;
+    if (s.a <= 0) { shockRings.splice(i, 1); continue; }
+    vx.lineWidth = 2 * DPR;
+    vx.strokeStyle = `hsla(${(hue + 30) % 360}, 90%, 65%, ${s.a})`;
+    vx.beginPath(); vx.arc(cx, cy, s.r, 0, Math.PI * 2); vx.stroke();
   }
-  /* horizon line */
-  vx.lineWidth = 1.4 * DPR;
-  vx.strokeStyle = `hsla(${hue}, 90%, 70%, ${0.5 + beat * 0.4})`;
-  vx.beginPath(); vx.moveTo(0, horizon); vx.lineTo(w, horizon); vx.stroke();
+  vx.globalCompositeOperation = 'source-over';
 }
+
 frame();
 
 /* ---------- idle auto-cinema — the screensaver instinct ---------- */
