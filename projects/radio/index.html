@@ -98,6 +98,20 @@
   body.cinema main { opacity: 0; pointer-events: none; }
   body.cinema { overflow: hidden; }
   main { transition: opacity 0.6s; }
+
+  /* cinema HUD — appears on mouse move, fades away */
+  #cine-hud {
+    position: fixed; left: 50%; bottom: 4vh; transform: translateX(-50%);
+    z-index: 45; display: none; align-items: center; gap: 1rem;
+    padding: 0.6rem 1.1rem; border: 1px solid rgba(60,58,54,0.6);
+    background: rgba(6,6,6,0.72); backdrop-filter: blur(4px); border-radius: 3px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--dim);
+    opacity: 0; transition: opacity 0.4s; pointer-events: none;
+  }
+  body.cinema #cine-hud { display: flex; }
+  #cine-hud.show { opacity: 1; pointer-events: auto; }
+  #cine-dots { display: flex; gap: 7px; align-items: center; }
   #menubar #vizsel { margin-left: auto; display: flex; align-items: center; gap: 0.7rem; }
   #menubar #vizname { color: #4a4740; letter-spacing: 0.14em; }
   #vizdots { display: flex; gap: 6px; align-items: center; }
@@ -279,6 +293,7 @@
 <canvas id="viz"></canvas>
 <canvas id="grain"></canvas>
 <div id="vignette"></div>
+<div id="cine-hud"><span id="cine-dots"></span><span id="cine-title">scootr.fm</span></div>
 
 <main>
   <section id="hero">
@@ -287,7 +302,7 @@
       <div id="titlebar">
         <span class="appicon"></span>
         <span class="ttl">scootr.fm &mdash; media player</span>
-        <span class="winbtns"><span id="win-min" title="pop out mini player — keeps playing while you browse">&#95;</span><span>&#9633;</span><span id="win-close">&#10005;</span></span>
+        <span class="winbtns"><span id="win-min" title="pop out mini player — keeps playing while you browse">&#95;</span><span id="win-max" title="fullscreen cinema — just the visualization">&#9633;</span><span id="win-close">&#10005;</span></span>
       </div>
       <div id="menubar">
         <span>file</span><span id="menu-view" title="cycle visualization">view</span><span>play</span><span id="menu-tools" title="sleep timer">tools</span><span>help</span>
@@ -322,7 +337,7 @@
         </div>
       </div>
     </div>
-    <p id="scrollhint" class="fu">scroll &darr; receiver &amp; notes &middot; dbl-click the sky for cinema &middot; [space] tune &middot; [v] viz</p>
+    <p id="scrollhint" class="fu">scroll &darr; receiver &amp; notes &middot; &#9633; or [f] fullscreen cinema &middot; [space] tune &middot; [v] viz</p>
   </section>
 
   <div id="lower"><div class="inner">
@@ -561,6 +576,7 @@ function showEntry(t, i) {
   }
   document.querySelector('#titlebar .ttl').textContent =
     `${(t.title || t.file || '').toLowerCase()} — scootr.fm`;
+  $('cine-title').textContent = (t.title || t.file || 'scootr.fm').toLowerCase();
   if ('mediaSession' in navigator) {
     navigator.mediaSession.metadata = new MediaMetadata({
       title: t.title || t.file || 'scootr.fm',
@@ -744,19 +760,22 @@ function sizeViz() { viz.width = innerWidth * DPR; viz.height = innerHeight * DP
 sizeViz();
 addEventListener('resize', sizeViz);
 
-const VIZ_NAMES = ['corridor', 'battery', 'starburst', 'the signal', 'bars & waves', 'alchemy', 'phase scope'];
+const VIZ_NAMES = ['corridor', 'wormhole', 'inkblot', 'battery', 'starburst', 'the signal', 'bars & waves', 'alchemy', 'phase scope'];
 let vizMode = 0;
-const vizDots = VIZ_NAMES.map((name, m) => {
-  const b = document.createElement('button');
-  b.className = 'vdot' + (m === 0 ? ' on' : '');
-  b.title = name;
-  b.addEventListener('click', () => setViz(m));
-  $('vizdots').appendChild(b);
-  return b;
-});
+function makeDots(container) {
+  return VIZ_NAMES.map((name, m) => {
+    const b = document.createElement('button');
+    b.className = 'vdot' + (m === 0 ? ' on' : '');
+    b.title = name;
+    b.addEventListener('click', () => setViz(m));
+    container.appendChild(b);
+    return b;
+  });
+}
+const allDots = [...makeDots($('vizdots')), ...makeDots($('cine-dots'))];
 function setViz(m) {
   vizMode = m;
-  vizDots.forEach((d, i) => d.classList.toggle('on', i === m));
+  allDots.forEach((d, i) => d.classList.toggle('on', i % VIZ_NAMES.length === m));
   $('vizname').textContent = VIZ_NAMES[m];
   vx.fillStyle = '#050506'; vx.fillRect(0, 0, viz.width, viz.height);
 }
@@ -770,17 +789,38 @@ $('hero').addEventListener('click', e => {
   clearTimeout(skyClickTimer);
   skyClickTimer = setTimeout(cycleViz, 280);
 });
-function toggleCinema() {
+function toggleCinema(wantFullscreen) {
   clearTimeout(skyClickTimer);
+  const entering = !document.body.classList.contains('cinema');
   document.body.classList.toggle('cinema');
+  if (entering && wantFullscreen && document.documentElement.requestFullscreen) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  }
+  if (!entering && document.fullscreenElement) document.exitFullscreen().catch(() => {});
 }
-$('hero').addEventListener('dblclick', e => { if (e.target === $('hero')) toggleCinema(); });
+/* leaving browser fullscreen (esc) also leaves cinema */
+document.addEventListener('fullscreenchange', () => {
+  if (!document.fullscreenElement && document.body.classList.contains('cinema')
+      && !autoCinema) toggleCinema();
+});
+$('win-max').addEventListener('click', () => toggleCinema(true));
+$('hero').addEventListener('dblclick', e => { if (e.target === $('hero')) toggleCinema(true); });
 addEventListener('dblclick', e => {
   if (document.body.classList.contains('cinema')) toggleCinema();
+});
+
+/* cinema HUD — surfaces on mouse move so the viz-watchers can still switch */
+let hudTimer = null;
+addEventListener('mousemove', () => {
+  if (!document.body.classList.contains('cinema')) return;
+  $('cine-hud').classList.add('show');
+  clearTimeout(hudTimer);
+  hudTimer = setTimeout(() => $('cine-hud').classList.remove('show'), 2600);
 });
 addEventListener('keydown', e => {
   if (e.target.tagName === 'INPUT') return;
   if (e.key === 'Escape' && document.body.classList.contains('cinema')) toggleCinema();
+  else if (e.key === 'f' || e.key === 'F') toggleCinema(true);
   else if (e.key === 'v' || e.key === 'V') cycleViz();
   else if (e.code === 'Space') {
     e.preventDefault();
@@ -917,13 +957,15 @@ function frame() {
   }
 
   if (vizMode === 0) { drawCorridor(w, h, bass, mid, treb, playing); return; }
-  if (vizMode === 1) { drawBattery(w, h, bass, mid, treb, playing); return; }
-  if (vizMode === 2) { drawStarburst(w, h, bass, mid, treb, playing); return; }
-  if (vizMode === 4) { drawBars(w, h, bass, mid, treb, playing); return; }
-  if (vizMode === 5) { drawAlchemy(w, h, bass, mid, treb, playing); return; }
-  if (vizMode === 6) { drawScope(w, h, bass, mid, treb, playing); return; }
+  if (vizMode === 1) { drawWormhole(w, h, bass, mid, treb, playing); return; }
+  if (vizMode === 2) { drawInkblot(w, h, bass, mid, treb, playing); return; }
+  if (vizMode === 3) { drawBattery(w, h, bass, mid, treb, playing); return; }
+  if (vizMode === 4) { drawStarburst(w, h, bass, mid, treb, playing); return; }
+  if (vizMode === 6) { drawBars(w, h, bass, mid, treb, playing); return; }
+  if (vizMode === 7) { drawAlchemy(w, h, bass, mid, treb, playing); return; }
+  if (vizMode === 8) { drawScope(w, h, bass, mid, treb, playing); return; }
 
-  /* --- mode 3: the signal --- */
+  /* --- mode 5: the signal --- */
   vx.fillStyle = 'rgba(4,4,7,0.17)';
   vx.fillRect(0, 0, w, h);
 
@@ -1159,7 +1201,98 @@ function drawCorridor(w, h, bass, mid, treb, playing) {
   }
 }
 
-/* --- mode 1: battery — 8-way kaleidoscope spectrum shards --- */
+/* --- mode 1: wormhole — off-center feedback vortex --- */
+let wormT = 0;
+function drawWormhole(w, h, bass, mid, treb, playing) {
+  if (fbc.width !== w || fbc.height !== h) { fbc.width = w; fbc.height = h; }
+  fbx.globalCompositeOperation = 'copy';
+  fbx.drawImage(viz, 0, 0);
+  wormT += 0.007 + mid * 0.008;
+  /* the attractor wanders — the whole field gets dragged into it */
+  const cx = w / 2 + Math.cos(wormT) * w * 0.14;
+  const cy = h / 2 + Math.sin(wormT * 0.83) * h * 0.12;
+  vx.fillStyle = '#020204';
+  vx.fillRect(0, 0, w, h);
+  vx.save();
+  vx.globalAlpha = 0.95;
+  vx.translate(cx, cy);
+  vx.rotate(0.014 + treb * 0.02 + beat * 0.008);
+  const z = 1.028 + bass * 0.03;
+  vx.scale(z, z);
+  vx.translate(-cx, -cy);
+  vx.drawImage(fbc, 0, 0);
+  vx.restore();
+  /* comets orbiting the attractor, feeding the vortex */
+  const RM = Math.min(w, h);
+  const hue = (tintHue + globalHue) % 360;
+  vx.globalCompositeOperation = 'lighter';
+  for (let k = 0; k < 6; k++) {
+    const a = wormT * 2.2 + k * Math.PI / 3;
+    const v = fval(k * 11);
+    const r = RM * (0.09 + v * 0.16 + bass * 0.05);
+    const x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r * 0.8;
+    const rad = (5 + v * 16 + beat * 8) * DPR;
+    const g2 = vx.createRadialGradient(x, y, 0, x, y, rad);
+    g2.addColorStop(0, `hsla(${(hue + k * 22) % 360}, 92%, 64%, ${0.5 + v * 0.4})`);
+    g2.addColorStop(1, 'rgba(0,0,0,0)');
+    vx.fillStyle = g2;
+    vx.beginPath(); vx.arc(x, y, rad, 0, Math.PI * 2); vx.fill();
+  }
+  if (beatFired) {
+    vx.lineWidth = 3.5 * DPR;
+    vx.strokeStyle = `hsla(${(hue + 45) % 360}, 95%, 70%, 0.6)`;
+    vx.beginPath(); vx.arc(cx, cy, RM * 0.11, 0, Math.PI * 2); vx.stroke();
+  }
+  vx.globalCompositeOperation = 'source-over';
+}
+
+/* --- mode 2: inkblot — mirrored feedback, rorschach in motion --- */
+function drawInkblot(w, h, bass, mid, treb, playing) {
+  if (fbc.width !== w || fbc.height !== h) { fbc.width = w; fbc.height = h; }
+  fbx.globalCompositeOperation = 'copy';
+  fbx.drawImage(viz, 0, 0);
+  const cx = w / 2, cy = h / 2;
+  vx.fillStyle = '#020203';
+  vx.fillRect(0, 0, w, h);
+  vx.save();
+  vx.globalAlpha = 0.955;
+  vx.translate(cx, cy);
+  vx.scale(1.011 + bass * 0.02, 1.011 + bass * 0.02);
+  vx.rotate((treb - 0.08) * 0.006);
+  vx.translate(-cx, -cy);
+  vx.drawImage(fbc, 0, 0);
+  vx.restore();
+  /* source: a waveform ribbon drawn on the left wing only */
+  const hue = (tintHue + globalHue) % 360;
+  vx.lineWidth = (2 + bass * 4 + beat * 3) * DPR;
+  vx.strokeStyle = `hsla(${hue}, 90%, ${56 + beat * 20}%, 0.85)`;
+  vx.beginPath();
+  const N = 80, span = h * 0.55;
+  for (let i = 0; i <= N; i++) {
+    const y = cy - span / 2 + i / N * span;
+    const v = (playing && timeData)
+      ? (timeData[(i * 7) % timeData.length] - 128) / 128
+      : Math.sin(idlePulse * 2 + i * 0.25) * 0.2;
+    const x = cx - Math.abs(v) * w * (0.16 + bass * 0.12) - w * 0.012;
+    i === 0 ? vx.moveTo(x, y) : vx.lineTo(x, y);
+  }
+  vx.stroke();
+  /* mirror the whole accumulated field across the spine */
+  fbx.drawImage(viz, 0, 0);
+  vx.save();
+  vx.globalCompositeOperation = 'lighter';
+  vx.globalAlpha = 0.5;
+  vx.translate(w, 0); vx.scale(-1, 1);
+  vx.drawImage(fbc, 0, 0);
+  vx.restore();
+  vx.globalCompositeOperation = 'source-over';
+  /* the spine */
+  vx.lineWidth = 1 * DPR;
+  vx.strokeStyle = `hsla(${hue}, 60%, 60%, ${0.1 + beat * 0.25})`;
+  vx.beginPath(); vx.moveTo(cx, cy - h * 0.32); vx.lineTo(cx, cy + h * 0.32); vx.stroke();
+}
+
+/* --- mode 3: battery — 8-way kaleidoscope spectrum shards --- */
 let batRot = 0;
 function drawBattery(w, h, bass, mid, treb, playing) {
   vx.fillStyle = 'rgba(3,3,5,0.13)';
