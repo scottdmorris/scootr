@@ -264,6 +264,15 @@
   @media (prefers-reduced-motion: reduce) {
     .fu { animation: none; opacity: 1; }
   }
+
+  /* ---------- mini player (popup) ---------- */
+  body.mini #menubar, body.mini #toprow, body.mini #plist, body.mini #plegend,
+  body.mini #scrollhint, body.mini #lower, body.mini .eyebrow { display: none; }
+  body.mini #hero { min-height: 100svh; padding: 0.55rem; justify-content: flex-start; }
+  body.mini #wmp { width: 100%; }
+  body.mini #wmp-body { padding: 0.7rem; }
+  body.mini #transport { margin-top: 0; }
+  body.mini #titlebar .winbtns span:not(#win-close) { display: none; }
 </style>
 </head>
 <body>
@@ -278,7 +287,7 @@
       <div id="titlebar">
         <span class="appicon"></span>
         <span class="ttl">scootr.fm &mdash; media player</span>
-        <span class="winbtns"><span>&#95;</span><span>&#9633;</span><span>&#10005;</span></span>
+        <span class="winbtns"><span id="win-min" title="pop out mini player — keeps playing while you browse">&#95;</span><span>&#9633;</span><span id="win-close">&#10005;</span></span>
       </div>
       <div id="menubar">
         <span>file</span><span id="menu-view" title="cycle visualization">view</span><span>play</span><span id="menu-tools" title="sleep timer">tools</span><span>help</span>
@@ -356,6 +365,10 @@ const CHIPTUNE_CDN = 'https://cdn.jsdelivr.net/npm/chiptune3@0.9.0-r25475/chiptu
 let powered = false;
 let actx = null, analyser = null, freqData = null, mediaSrc = null, chip = null;
 let curIdx = -1, chipDur = 0, chipLoadedIdx = -1;
+
+/* mini-player popup mode */
+const MINI = new URLSearchParams(location.search).has('mini');
+if (MINI) document.body.classList.add('mini');
 
 const $ = id => document.getElementById(id);
 const mmss = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
@@ -659,6 +672,19 @@ if ('mediaSession' in navigator) {
   navigator.mediaSession.setActionHandler('play', () => btnPlay.click());
   navigator.mediaSession.setActionHandler('pause', () => btnStop.click());
 }
+
+/* ---------- pop-out mini player ---------- */
+$('win-min').addEventListener('click', () => {
+  if (MINI) return;
+  window.open(location.pathname + '?mini=1', 'scootrfm_mini',
+    'width=440,height=196,popup=yes');
+  if (powered) btnStop.click(); /* hand the broadcast to the popup — no doubling */
+  $('status-l').textContent = 'handed off to the mini player — press play there';
+});
+$('win-close').addEventListener('click', () => {
+  if (MINI) window.close();
+  else if (powered) btnStop.click();
+});
 
 /* ---------- share this moment ---------- */
 $('btn-share').addEventListener('click', async () => {
@@ -1511,7 +1537,7 @@ function activity() {
 ['mousemove', 'touchstart', 'scroll', 'keydown'].forEach(ev =>
   addEventListener(ev, activity, { passive: true }));
 setInterval(() => {
-  if (powered && !document.body.classList.contains('cinema')
+  if (powered && !MINI && !document.body.classList.contains('cinema')
       && Date.now() - lastActive > 45000 && scrollY < innerHeight * 0.5) {
     autoCinema = true;
     document.body.classList.add('cinema');
