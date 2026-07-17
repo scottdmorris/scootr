@@ -133,6 +133,8 @@
   }
   .prow .num { color: var(--dimmer); width: 2.2em; flex-shrink: 0; }
   .prow .nm { flex: 1; overflow: hidden; text-overflow: ellipsis; }
+  .prow .at { color: #3d3b36; flex-shrink: 0; font-size: 9px; letter-spacing: 0.08em; }
+  .prow.cur .at { color: inherit; }
   .prow .du { color: var(--dimmer); flex-shrink: 0; }
   .prow.mod .nm::before { content: '▚ '; color: var(--phosphor); }
   .prow.cur { color: var(--amber); background: rgba(245,168,60,0.07); }
@@ -148,6 +150,12 @@
   }
   .tbtn:hover { border-color: var(--amber); color: var(--amber); }
   .tbtn[disabled] { opacity: 0.35; cursor: default; }
+  .tbtn.wide { width: auto; padding: 0 0.8rem; font-family: var(--mono); font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; }
+  @keyframes tunepulse {
+    0%, 100% { box-shadow: 0 0 0 rgba(245,168,60,0); border-color: #3a3a38; }
+    50% { box-shadow: 0 0 18px rgba(245,168,60,0.5); border-color: var(--amber); color: var(--amber); }
+  }
+  .tbtn.pulse { animation: tunepulse 2.2s ease-in-out infinite; }
   #prog { flex: 1; height: 5px; background: #1a1a19; border: 1px solid #2c2c2a; position: relative; }
   #prog .fill { position: absolute; inset: 0; width: 0%; background: linear-gradient(90deg, #7a5010, var(--amber)); box-shadow: 0 0 8px rgba(245,168,60,0.5); }
   #ttime { font-family: var(--mono); font-size: 10px; color: var(--dimmer); letter-spacing: 0.1em; flex-shrink: 0; }
@@ -261,24 +269,24 @@
             <canvas id="artmod"></canvas>
           </div>
           <div id="npbox">
-            <div id="np-title">scootr.fm</div>
-            <div id="np-artist">press play to tune into the broadcast</div>
-            <div id="np-meta">24/7 &middot; everyone hears the same moment</div>
+            <div id="np-title">scootr.fm is on air right now</div>
+            <div id="np-artist">a 24/7 broadcast &mdash; no pause, no skip, everyone hears the same second</div>
+            <div id="np-meta">press &#9654; to tune in &middot; playlist below shows air times</div>
             <canvas id="eq"></canvas>
           </div>
         </div>
         <div id="plist"></div>
         <div id="transport">
-          <button class="tbtn" id="btn-play" title="tune in">&#9654;</button>
+          <button class="tbtn pulse" id="btn-play" title="tune into the live broadcast">&#9654;</button>
           <button class="tbtn" id="btn-stop" title="tune out" disabled>&#9632;</button>
           <div id="prog"><div class="fill"></div></div>
           <span id="ttime">--:-- / --:--</span>
-          <button class="tbtn" id="btn-share" title="share this moment — they'll hear the same second">&#8862;</button>
+          <button class="tbtn wide" id="btn-share" title="copy a link — whoever opens it hears this same second">share</button>
           <input type="range" id="vol" min="0" max="100" value="80" title="volume">
         </div>
         <div id="statusbar">
-          <span id="status-l">ready &middot; carrier detected</span>
-          <span id="status-r">day &mdash; &middot; <span class="live">&#9679; live</span></span>
+          <span id="status-l">standby &middot; press &#9654; to tune into the live broadcast</span>
+          <span id="status-r">&#9675; standby</span>
         </div>
       </div>
     </div>
@@ -356,6 +364,8 @@ const TOTAL = SCHED.reduce((s, t) => s + t.dur, 0);
 
 /* ---------- playlist pane ---------- */
 const plist = $('plist');
+const PREFIX = [];
+{ let acc = 0; for (const t of SCHED) { PREFIX.push(acc); acc += t.dur; } }
 plist.innerHTML = SCHED.map((t, i) => {
   const nm = t.type === 'mod'
     ? (t.title || t.file)
@@ -363,8 +373,27 @@ plist.innerHTML = SCHED.map((t, i) => {
   return `<div class="prow${t.type === 'mod' ? ' mod' : ''}" id="pr${i}">` +
     `<span class="num">${String(i + 1).padStart(2, '0')}</span>` +
     `<span class="nm">${nm.toLowerCase()}</span>` +
+    `<span class="at" id="at${i}"></span>` +
     `<span class="du">${mmss(t.dur)}</span></div>`;
 }).join('');
+
+/* air times — when each entry will actually be on air, in the viewer's clock */
+function refreshAirTimes() {
+  const now = Date.now() / 1000;
+  let pos = (now - EPOCH) % TOTAL;
+  if (pos < 0) pos += TOTAL;
+  const loopStart = now - pos;
+  for (let i = 0; i < SCHED.length; i++) {
+    let at = loopStart + PREFIX[i];
+    if (at + SCHED[i].dur < now) at += TOTAL; /* already aired — show next loop */
+    const d = new Date(at * 1000);
+    const onAir = at <= now && now < at + SCHED[i].dur;
+    $('at' + i).textContent = onAir ? '· on air ·'
+      : `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+  }
+}
+refreshAirTimes();
+setInterval(refreshAirTimes, 30000);
 
 /* ---------- audio ---------- */
 const audio = new Audio();
@@ -536,9 +565,10 @@ btnPlay.addEventListener('click', async () => {
   audio.volume = volEl.value / 100;
   powered = true;
   btnPlay.disabled = true;
+  btnPlay.classList.remove('pulse');
   btnStop.disabled = false;
   const day = Math.floor((Date.now() / 1000 - EPOCH) / 86400) + 1;
-  $('status-r').innerHTML = `day ${day} &middot; <span class="live">&#9679; live</span>`;
+  $('status-r').innerHTML = `day ${day} of the broadcast &middot; <span class="live">&#9679; live &middot; synced</span>`;
   staticBurst(0.6);
   playNow(true);
 });
@@ -550,8 +580,10 @@ btnStop.addEventListener('click', () => {
   if (chip) chip.stop();
   curIdx = -1;
   btnPlay.disabled = false;
+  btnPlay.classList.add('pulse');
   btnStop.disabled = true;
   $('status-l').textContent = 'tuned out — the broadcast continues without you';
+  $('status-r').innerHTML = '&#9675; standby';
 });
 
 volEl.addEventListener('input', () => {
@@ -622,7 +654,7 @@ function sizeViz() { viz.width = innerWidth * DPR; viz.height = innerHeight * DP
 sizeViz();
 addEventListener('resize', sizeViz);
 
-const VIZ_NAMES = ['the signal', 'bars & waves', 'alchemy', 'phase scope'];
+const VIZ_NAMES = ['the signal', 'bars & waves', 'alchemy', 'phase scope', 'the grid'];
 let vizMode = 0;
 function cycleViz() {
   vizMode = (vizMode + 1) % VIZ_NAMES.length;
@@ -685,6 +717,26 @@ function sampleArtHue(img) {
 $('art').crossOrigin = 'anonymous';
 $('art').addEventListener('load', () => sampleArtHue($('art')));
 
+/* pre-power test card in the art box */
+function drawTestCard() {
+  const s = 316;
+  artmod.width = artmod.height = s;
+  const cols = ['#8f6428', '#6e7a52', '#54636b', '#7a5a6e', '#5f5f5f', '#463f33', '#2b2b28'];
+  const bw = s / cols.length;
+  cols.forEach((c, i) => { amx.fillStyle = c; amx.fillRect(i * bw, 0, bw + 1, s * 0.68); });
+  amx.fillStyle = '#0a0a09'; amx.fillRect(0, s * 0.68, s, s * 0.32);
+  amx.fillStyle = 'rgba(232,228,220,0.85)';
+  amx.font = '15px "Courier Prime", monospace'; amx.textAlign = 'center';
+  amx.fillText('SCOOTR.FM', s / 2, s * 0.82);
+  amx.font = '10px "Courier Prime", monospace';
+  amx.fillStyle = 'rgba(138,134,126,0.9)';
+  amx.fillText('— awaiting tune in —', s / 2, s * 0.9);
+  amx.textAlign = 'left';
+}
+$('art').style.display = 'none';
+artmod.style.display = 'block';
+drawTestCard();
+
 const NEAR = 0.08, FAR = 3.2, NODE_COUNT = MOBILE ? 55 : 100;
 function spawnNode(band) {
   const a = Math.random() * Math.PI * 2;
@@ -710,6 +762,18 @@ const stars = Array.from({ length: MOBILE ? 140 : 320 }, () => ({
 let globalHue = 0, idlePulse = 0, steerT = 0;
 const boost = v => Math.min(1, Math.pow(v, 0.55) * 1.25);
 let timeData = null;
+
+/* beat detection — bass punching through its own rolling average */
+let bassAvg = 0.08, beat = 0, beatCooldown = 0, frameCount = 0;
+const wmpEl = $('wmp'), appIcon = document.querySelector('#titlebar .appicon');
+function detectBeat(bass) {
+  bassAvg = bassAvg * 0.965 + bass * 0.035;
+  beatCooldown = Math.max(0, beatCooldown - 1);
+  if (bass > Math.max(0.22, bassAvg * 1.32) && beatCooldown === 0) {
+    beat = 1; beatCooldown = 12;
+  }
+  beat *= 0.9;
+}
 const peaks = new Array(48).fill(0);
 const blobs = Array.from({ length: 7 }, (_, i) => ({
   a: (i / 7) * Math.PI * 2, spd: 0.003 + Math.random() * 0.005,
@@ -740,10 +804,20 @@ function frame() {
     treb = (Math.sin(idlePulse * 1.3 + 2) + 1) / 2 * 0.09;
   }
   globalHue = (globalHue + 0.05 + treb * 1.2) % 360;
+  detectBeat(bass);
+
+  /* the player itself breathes with the broadcast */
+  if (++frameCount % 3 === 0) {
+    const glow = powered ? beat * 0.5 + bass * 0.25 : 0;
+    wmpEl.style.boxShadow =
+      `0 30px 80px rgba(0,0,0,0.8), 0 0 0 1px #000, 0 0 ${20 + glow * 60}px hsla(${(tintHue + globalHue * 0.1) % 360},80%,55%,${glow * 0.5})`;
+    appIcon.style.transform = `scale(${1 + beat * 0.5})`;
+  }
 
   if (vizMode === 1) { drawBars(w, h, bass, mid, treb, playing); return; }
   if (vizMode === 2) { drawAlchemy(w, h, bass, mid, treb, playing); return; }
   if (vizMode === 3) { drawScope(w, h, bass, mid, treb, playing); return; }
+  if (vizMode === 4) { drawGrid(w, h, bass, mid, treb, playing); return; }
 
   /* --- mode 0: the signal --- */
   vx.fillStyle = 'rgba(4,4,7,0.17)';
@@ -775,7 +849,7 @@ function frame() {
 
   const cx = w / 2, cy = h / 2;
   const projScale = Math.min(w, h) * 0.85;
-  const flightSpeed = 0.006 + bass * 0.045 + mid * 0.012;
+  const flightSpeed = 0.006 + bass * 0.045 + mid * 0.012 + beat * 0.055;
 
   const projected = nodes.map(n => {
     n.z -= flightSpeed;
@@ -795,7 +869,7 @@ function frame() {
       const distSq = dx * dx + dy * dy + dz * dz;
       if (distSq > 0.42) continue;
       const prox = 1 - Math.sqrt(distSq) / 0.65;
-      const alpha = prox * (0.1 + bass * 0.4) * Math.min(1, (a.persp + b.persp) / 2);
+      const alpha = prox * (0.1 + bass * 0.4 + beat * 0.3) * Math.min(1, (a.persp + b.persp) / 2);
       vx.strokeStyle = `hsla(${((a.n.hue + b.n.hue) / 2 + globalHue) % 360}, 85%, 64%, ${alpha})`;
       vx.beginPath(); vx.moveTo(a.sx, a.sy); vx.lineTo(b.sx, b.sy); vx.stroke();
     }
@@ -824,6 +898,12 @@ function frame() {
 function drawBars(w, h, bass, mid, treb, playing) {
   vx.fillStyle = 'rgba(4,4,6,0.28)';
   vx.fillRect(0, 0, w, h);
+  if (beat > 0.45) { /* kick flash across the floor */
+    const fl = vx.createLinearGradient(0, h * 0.55, 0, h);
+    fl.addColorStop(0, 'rgba(0,0,0,0)');
+    fl.addColorStop(1, `hsla(${(tintHue + globalHue * 0.4) % 360}, 85%, 55%, ${beat * 0.16})`);
+    vx.fillStyle = fl; vx.fillRect(0, h * 0.55, w, h * 0.45);
+  }
   const bars = 48, bw = w / bars;
   const baseHue = (tintHue + globalHue * 0.4) % 360;
   for (let i = 0; i < bars; i++) {
@@ -866,7 +946,7 @@ function drawAlchemy(w, h, bass, mid, treb, playing) {
   for (const b of blobs) {
     b.a += b.dir * (b.spd + bass * 0.02 + mid * 0.008);
     const energy = playing ? boost(freqData[b.band] / 255) : bass;
-    const orbit = R * (b.rad + energy * 0.1 + bass * 0.06);
+    const orbit = R * (b.rad + energy * 0.1 + bass * 0.06 + beat * 0.05);
     const bx = cx + Math.cos(b.a) * orbit;
     const by = cy + Math.sin(b.a * 1.3) * orbit * 0.62;
     const rad = R * (0.05 + energy * 0.13);
@@ -903,7 +983,7 @@ function drawScope(w, h, bass, mid, treb, playing) {
       const x = i / n * w;
       const v = (playing && timeData) ? (timeData[i] - 128) / 128
               : Math.sin(idlePulse * 2.2 + i * 0.03) * 0.14;
-      const y = yMid + v * amp * (1 + bass * 0.8);
+      const y = yMid + v * amp * (1 + bass * 0.8 + beat * 0.7);
       i === 0 ? vx.moveTo(x, y) : vx.lineTo(x, y);
     }
     vx.stroke();
@@ -923,7 +1003,86 @@ function drawScope(w, h, bass, mid, treb, playing) {
   vx.closePath();
   vx.stroke();
 }
+
+/* --- mode 4: the grid (perspective floor that surges on the kick) --- */
+let gridScroll = 0;
+function drawGrid(w, h, bass, mid, treb, playing) {
+  vx.fillStyle = 'rgba(3,3,6,0.35)';
+  vx.fillRect(0, 0, w, h);
+  const horizon = h * 0.52;
+  const hue = (tintHue + globalHue * 0.25) % 360;
+
+  /* stars above the horizon */
+  for (const s of stars) {
+    if (s.y * h > horizon) continue;
+    s.ph += s.sp;
+    vx.beginPath();
+    vx.arc(s.x * w, s.y * h, s.r * DPR, 0, Math.PI * 2);
+    vx.fillStyle = `rgba(220,215,200,${0.06 + (Math.sin(s.ph) + 1) / 2 * 0.18})`;
+    vx.fill();
+  }
+
+  /* sun — a half-disc sitting on the horizon, breathing on the bass */
+  const sunR = Math.min(w, h) * (0.13 + bass * 0.05 + beat * 0.04);
+  const sun = vx.createRadialGradient(w / 2, horizon, 0, w / 2, horizon, sunR * 2.4);
+  sun.addColorStop(0, `hsla(${hue}, 92%, 62%, ${0.5 + beat * 0.3})`);
+  sun.addColorStop(0.45, `hsla(${hue}, 92%, 50%, 0.14)`);
+  sun.addColorStop(1, 'rgba(0,0,0,0)');
+  vx.fillStyle = sun;
+  vx.fillRect(0, 0, w, horizon + sunR * 2.4);
+  vx.save();
+  vx.beginPath(); vx.rect(0, 0, w, horizon); vx.clip();
+  vx.beginPath(); vx.arc(w / 2, horizon, sunR, Math.PI, 0);
+  vx.fillStyle = `hsla(${hue}, 95%, 64%, 0.85)`;
+  vx.fill();
+  /* venetian cuts through the sun */
+  vx.fillStyle = 'rgba(3,3,6,0.9)';
+  for (let i = 0; i < 6; i++) {
+    vx.fillRect(w / 2 - sunR, horizon - sunR * (0.16 + i * 0.15), sunR * 2, sunR * (0.02 + i * 0.012));
+  }
+  vx.restore();
+
+  /* converging verticals */
+  vx.lineWidth = 1 * DPR;
+  for (let i = -14; i <= 14; i++) {
+    const spread = i * w * 0.09;
+    vx.strokeStyle = `hsla(${hue}, 80%, 58%, ${0.32 - Math.abs(i) * 0.017 + beat * 0.12})`;
+    vx.beginPath();
+    vx.moveTo(w / 2 + spread * 0.06, horizon);
+    vx.lineTo(w / 2 + spread, h);
+    vx.stroke();
+  }
+  /* horizontals rushing at the viewer — speed rides the bass */
+  gridScroll = (gridScroll + 0.006 + bass * 0.03 + beat * 0.03) % 1;
+  for (let i = 0; i < 14; i++) {
+    const t = ((i / 14) + gridScroll) % 1;
+    const y = horizon + Math.pow(t, 2.6) * (h - horizon);
+    vx.strokeStyle = `hsla(${hue}, 85%, 60%, ${0.08 + t * 0.5 + beat * 0.15})`;
+    vx.lineWidth = (0.8 + t * 2.2) * DPR;
+    vx.beginPath(); vx.moveTo(0, y); vx.lineTo(w, y); vx.stroke();
+  }
+  /* horizon line */
+  vx.lineWidth = 1.4 * DPR;
+  vx.strokeStyle = `hsla(${hue}, 90%, 70%, ${0.5 + beat * 0.4})`;
+  vx.beginPath(); vx.moveTo(0, horizon); vx.lineTo(w, horizon); vx.stroke();
+}
 frame();
+
+/* ---------- idle auto-cinema — the screensaver instinct ---------- */
+let lastActive = Date.now(), autoCinema = false;
+function activity() {
+  lastActive = Date.now();
+  if (autoCinema) { autoCinema = false; document.body.classList.remove('cinema'); }
+}
+['mousemove', 'touchstart', 'scroll', 'keydown'].forEach(ev =>
+  addEventListener(ev, activity, { passive: true }));
+setInterval(() => {
+  if (powered && !document.body.classList.contains('cinema')
+      && Date.now() - lastActive > 45000 && scrollY < innerHeight * 0.5) {
+    autoCinema = true;
+    document.body.classList.add('cinema');
+  }
+}, 5000);
 
 /* ---------- mini EQ in the player ---------- */
 const eq = $('eq'), ex = eq.getContext('2d');
