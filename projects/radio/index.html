@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>scootr.fm &mdash; scootr's laboratory</title>
-<meta name="description" content="A 24/7 pirate radio transmission — clock-synced jungle, drum &amp; bass, and tracker music from the netlabel underground. Everyone who tunes in hears the same moment.">
+<meta name="description" content="A 24/7 pirate radio broadcast inside an ode to Windows Media Player — clock-synced jungle and drum &amp; bass, live-synthesized tracker interludes, and a visualization that flies through the music.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -14,26 +14,24 @@
     --dimmer: #55524c;
     --border: #232323;
     --amber: #f5a83c;
-    --amber-dim: rgba(245, 168, 60, 0.14);
     --phosphor: #8be09b;
+    --chrome: #101010;
+    --chrome-hi: #1c1c1b;
     --mono: 'Courier Prime', monospace;
     --serif: 'Cormorant Garamond', serif;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { background: #060605; }
+  html { background: #050506; }
   body {
-    background: #060605; color: var(--off-white);
+    background: #050506; color: var(--off-white);
     font-family: var(--serif); font-weight: 300;
     overflow-x: hidden; min-height: 100vh;
   }
-  #grain { position: fixed; inset: 0; z-index: 30; pointer-events: none; opacity: 0.5; }
+  #viz { position: fixed; inset: 0; z-index: 0; }
+  #grain { position: fixed; inset: 0; z-index: 40; pointer-events: none; opacity: 0.42; }
   #vignette {
-    position: fixed; inset: 0; z-index: 29; pointer-events: none;
-    background: radial-gradient(ellipse at 50% 40%, transparent 55%, rgba(0,0,0,0.6) 100%);
-  }
-  #scanlines {
-    position: fixed; inset: 0; z-index: 28; pointer-events: none; opacity: 0.06;
-    background: repeating-linear-gradient(0deg, transparent 0 2px, #000 2px 4px);
+    position: fixed; inset: 0; z-index: 39; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 42%, transparent 52%, rgba(0,0,0,0.72) 100%);
   }
 
   @keyframes fade-up {
@@ -42,125 +40,150 @@
   }
   .fu { opacity: 0; animation: fade-up 1.1s cubic-bezier(0.19, 1, 0.22, 1) forwards; }
 
-  main { position: relative; z-index: 2; max-width: 860px; margin: 0 auto; padding: 0 1.4rem; }
+  main { position: relative; z-index: 2; }
 
-  /* ---------- hero / tuner ---------- */
-  #hero { padding: 16vh 0 4rem; text-align: center; }
+  /* ---------- hero ---------- */
+  #hero {
+    min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 3.5rem 0.8rem 2.5rem;
+  }
   #hero .eyebrow {
     font-family: var(--mono); font-size: 10px; letter-spacing: 0.4em;
-    text-transform: uppercase; color: var(--dim); animation-delay: 0.1s;
-  }
-  #hero h1 {
-    font-size: clamp(3.2rem, 11vw, 6.4rem); font-weight: 300; font-style: italic;
-    letter-spacing: 0.02em; margin: 1.2rem 0 0.4rem; animation-delay: 0.25s;
-  }
-  #hero .sub {
-    font-size: clamp(1.05rem, 2.6vw, 1.3rem); font-style: italic; color: var(--dim);
-    animation-delay: 0.4s;
-  }
-  #dial {
-    margin: 3rem auto 0; max-width: 560px; animation-delay: 0.55s;
-    border: 1px solid var(--border); padding: 1.6rem 1.4rem 1.4rem;
-    background: rgba(10, 9, 8, 0.72);
-  }
-  #freqline { position: relative; height: 34px; margin-bottom: 0.9rem; }
-  #freqcanvas { width: 100%; height: 100%; display: block; }
-  #freq-readout {
-    font-family: var(--mono); font-size: clamp(1.5rem, 4.5vw, 2rem);
-    color: var(--amber); letter-spacing: 0.12em;
-    text-shadow: 0 0 18px rgba(245, 168, 60, 0.45);
-  }
-  #freq-label {
-    font-family: var(--mono); font-size: 10px; letter-spacing: 0.3em;
-    text-transform: uppercase; color: var(--dimmer); margin-top: 0.4rem;
-  }
-  #power {
-    margin-top: 1.5rem; display: inline-block;
-    font-family: var(--mono); font-size: 12px; letter-spacing: 0.35em;
-    text-transform: uppercase; color: var(--off-white);
-    border: 1px solid var(--dim); background: none; padding: 0.95rem 2.6rem;
-    cursor: pointer; transition: all 0.35s;
-  }
-  #power:hover { border-color: var(--amber); color: var(--amber); box-shadow: 0 0 24px rgba(245,168,60,0.18); }
-  #power[disabled] { opacity: 0.4; cursor: wait; }
-
-  /* ---------- deck ---------- */
-  #deck { display: none; padding-bottom: 1rem; }
-  #deck.on { display: block; }
-
-  .chanrow { display: flex; gap: 0.6rem; justify-content: center; margin: 0.5rem 0 2rem; flex-wrap: wrap; }
-  .chan {
-    font-family: var(--mono); font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase;
-    color: var(--dim); border: 1px solid var(--border); background: none;
-    padding: 0.7rem 1.3rem; cursor: pointer; transition: all 0.3s;
-  }
-  .chan:hover { color: var(--off-white); border-color: var(--dim); }
-  .chan.active { color: var(--amber); border-color: var(--amber); }
-  .chan.active.b { color: var(--phosphor); border-color: var(--phosphor); }
-
-  #onair {
-    display: flex; align-items: center; justify-content: center; gap: 0.55rem;
-    font-family: var(--mono); font-size: 10px; letter-spacing: 0.35em;
     text-transform: uppercase; color: var(--dim); margin-bottom: 1.6rem;
+    animation-delay: 0.1s; text-align: center;
   }
-  #onair .lamp {
-    width: 8px; height: 8px; border-radius: 50%; background: var(--amber);
-    box-shadow: 0 0 12px rgba(245,168,60,0.8); animation: blink 2.4s ease-in-out infinite;
-  }
-  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
 
-  #nowplaying { text-align: center; margin-bottom: 1.8rem; min-height: 6.4rem; }
+  /* ---------- the player window ---------- */
+  #wmp {
+    width: min(94vw, 700px);
+    background: rgba(8, 8, 8, 0.88);
+    border: 1px solid #3a3a38;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 0 1px #000;
+    animation-delay: 0.3s;
+    backdrop-filter: blur(3px);
+  }
+  #titlebar {
+    display: flex; align-items: center; gap: 0.6rem;
+    background: linear-gradient(180deg, var(--chrome-hi), var(--chrome));
+    border-bottom: 1px solid #000; padding: 0.45rem 0.7rem;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em;
+    color: var(--dim); user-select: none;
+  }
+  #titlebar .appicon {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ffd28a, var(--amber) 60%, #7a5010);
+    box-shadow: 0 0 8px rgba(245,168,60,0.7); flex-shrink: 0;
+  }
+  #titlebar .ttl { flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  #titlebar .winbtns { display: flex; gap: 4px; }
+  #titlebar .winbtns span {
+    width: 17px; height: 15px; border: 1px solid #444;
+    background: #161615; color: var(--dimmer); font-size: 9px; line-height: 13px;
+    text-align: center; cursor: default;
+  }
+  #titlebar .winbtns span:hover { color: var(--off-white); border-color: var(--dim); }
+  #menubar {
+    display: flex; gap: 1.1rem; padding: 0.32rem 0.75rem;
+    background: var(--chrome); border-bottom: 1px solid #1e1e1d;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em;
+    color: var(--dimmer); user-select: none;
+  }
+  #menubar span { cursor: default; }
+  #menubar span:hover { color: var(--dim); }
+  #menubar #menu-view, #menubar #menu-tools { cursor: pointer; }
+  #menubar #menu-view:hover, #menubar #menu-tools:hover { color: var(--amber); }
+  body.cinema main { opacity: 0; pointer-events: none; }
+  body.cinema { overflow: hidden; }
+  main { transition: opacity 0.6s; }
+  #menubar #vizname { margin-left: auto; color: #3d3b36; letter-spacing: 0.14em; }
+
+  #wmp-body { padding: 0.9rem; }
+  #toprow { display: flex; gap: 0.9rem; margin-bottom: 0.9rem; }
+  #artbox {
+    width: 158px; height: 158px; flex-shrink: 0; position: relative;
+    border: 1px solid #2c2c2a; background: #0a0a09; overflow: hidden;
+  }
+  #art { width: 100%; height: 100%; object-fit: cover; display: block; image-rendering: auto; }
+  #artmod { position: absolute; inset: 0; display: none; }
+  #npbox { flex: 1; min-width: 0; display: flex; flex-direction: column; }
   #np-title {
-    font-size: clamp(1.5rem, 4.5vw, 2.2rem); font-style: italic; line-height: 1.15;
-    text-wrap: balance;
+    font-size: clamp(1.25rem, 3.4vw, 1.7rem); font-style: italic; line-height: 1.12;
+    overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
   }
-  #np-artist { font-size: 1.15rem; color: var(--dim); font-style: italic; margin-top: 0.35rem; }
+  #np-artist { font-size: 1.05rem; color: var(--dim); font-style: italic; margin-top: 0.25rem; }
   #np-meta {
-    font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
-    color: var(--dimmer); margin-top: 0.8rem;
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--dimmer); margin-top: 0.55rem; line-height: 1.8;
   }
-  #np-meta a { color: var(--dimmer); text-decoration: underline; text-underline-offset: 3px; }
+  #np-meta a { color: var(--dimmer); text-decoration: underline; text-underline-offset: 2px; }
   #np-meta a:hover { color: var(--amber); }
+  #eq { margin-top: auto; width: 100%; height: 46px; display: block; }
 
-  #spectrum { width: 100%; height: 110px; display: block; margin-bottom: 0.2rem; }
-  #trackpos {
-    display: flex; justify-content: space-between;
-    font-family: var(--mono); font-size: 10px; color: var(--dimmer);
-    letter-spacing: 0.15em; margin-bottom: 2rem;
+  /* playlist pane */
+  #plist {
+    height: 168px; overflow-y: auto; border: 1px solid #232322;
+    background: rgba(5,5,5,0.65); font-family: var(--mono); font-size: 10.5px;
+    scrollbar-width: thin; scrollbar-color: #333 transparent;
   }
-  #trackerline {
-    display: none; text-align: center; font-family: var(--mono); font-size: 11px;
-    letter-spacing: 0.25em; color: var(--phosphor); margin: -1.2rem 0 2rem;
-    opacity: 0.8;
+  #plist::-webkit-scrollbar { width: 8px; }
+  #plist::-webkit-scrollbar-thumb { background: #2b2b29; }
+  .prow {
+    display: flex; gap: 0.7rem; align-items: center; padding: 0.32rem 0.7rem;
+    color: var(--dim); border-bottom: 1px dotted #1b1b1a; white-space: nowrap;
+  }
+  .prow .num { color: var(--dimmer); width: 2.2em; flex-shrink: 0; }
+  .prow .nm { flex: 1; overflow: hidden; text-overflow: ellipsis; }
+  .prow .du { color: var(--dimmer); flex-shrink: 0; }
+  .prow.mod .nm::before { content: '▚ '; color: var(--phosphor); }
+  .prow.cur { color: var(--amber); background: rgba(245,168,60,0.07); }
+  .prow.cur .num::before { content: '▶'; margin-right: 0.4em; }
+  .prow.cur.mod { color: var(--phosphor); background: rgba(139,224,155,0.06); }
+
+  /* transport */
+  #transport { display: flex; align-items: center; gap: 0.8rem; margin-top: 0.9rem; }
+  .tbtn {
+    width: 40px; height: 30px; background: linear-gradient(180deg, #1d1d1c, #101010);
+    border: 1px solid #3a3a38; color: var(--off-white); cursor: pointer;
+    font-size: 12px; transition: all 0.25s;
+  }
+  .tbtn:hover { border-color: var(--amber); color: var(--amber); }
+  .tbtn[disabled] { opacity: 0.35; cursor: default; }
+  #prog { flex: 1; height: 5px; background: #1a1a19; border: 1px solid #2c2c2a; position: relative; }
+  #prog .fill { position: absolute; inset: 0; width: 0%; background: linear-gradient(90deg, #7a5010, var(--amber)); box-shadow: 0 0 8px rgba(245,168,60,0.5); }
+  #ttime { font-family: var(--mono); font-size: 10px; color: var(--dimmer); letter-spacing: 0.1em; flex-shrink: 0; }
+  #vol { -webkit-appearance: none; appearance: none; width: 76px; height: 3px; background: #2c2c2a; outline: none; }
+  #vol::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 9px; height: 9px; background: var(--off-white); border-radius: 50%; cursor: pointer; }
+  #vol::-moz-range-thumb { width: 9px; height: 9px; background: var(--off-white); border: none; border-radius: 50%; cursor: pointer; }
+
+  #statusbar {
+    display: flex; justify-content: space-between; gap: 1rem;
+    margin-top: 0.8rem; padding-top: 0.5rem; border-top: 1px solid #1e1e1d;
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--dimmer);
+    overflow: hidden; white-space: nowrap;
+  }
+  #status-l { overflow: hidden; text-overflow: ellipsis; }
+  #status-r { flex-shrink: 0; }
+  #status-r .live { color: var(--amber); }
+
+  #scrollhint {
+    margin-top: 2.2rem; font-family: var(--mono); font-size: 9px; letter-spacing: 0.3em;
+    text-transform: uppercase; color: var(--dimmer); animation-delay: 0.7s;
   }
 
-  #controls { display: flex; align-items: center; justify-content: center; gap: 1.2rem; margin-bottom: 2.6rem; }
-  #vol { -webkit-appearance: none; appearance: none; width: 140px; height: 2px; background: var(--border); outline: none; }
-  #vol::-webkit-slider-thumb {
-    -webkit-appearance: none; appearance: none; width: 10px; height: 10px;
-    background: var(--off-white); border-radius: 50%; cursor: pointer;
-  }
-  #vol::-moz-range-thumb { width: 10px; height: 10px; background: var(--off-white); border: none; border-radius: 50%; cursor: pointer; }
-  #controls .lbl { font-family: var(--mono); font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--dimmer); }
-
-  #translog {
-    border: 1px solid var(--border); background: rgba(8, 8, 7, 0.6);
-    font-family: var(--mono); font-size: 10.5px; line-height: 1.9;
-    color: var(--dim); padding: 1rem 1.2rem; height: 132px; overflow: hidden;
-    margin-bottom: 3rem;
-  }
-  #translog .t { color: var(--dimmer); margin-right: 0.8em; }
-  #translog .hl { color: var(--amber); }
-
-  /* ---------- receiver ---------- */
+  /* ---------- lower sections ---------- */
+  #lower { background: linear-gradient(180deg, transparent, rgba(5,5,6,0.92) 8%); }
+  #lower .inner { max-width: 860px; margin: 0 auto; padding: 0 1.4rem; }
   section.block { border-top: 1px solid var(--border); padding: 3.2rem 0; }
   .block h2 {
     font-family: var(--mono); font-size: 11px; letter-spacing: 0.4em;
     text-transform: uppercase; color: var(--dim); font-weight: 400; margin-bottom: 1.6rem;
   }
-  #rx-current { font-size: 1.5rem; font-style: italic; line-height: 1.3; }
+  #rx-row { display: flex; gap: 1.1rem; align-items: center; }
+  #rx-art { width: 74px; height: 74px; border: 1px solid var(--border); object-fit: cover; display: none; }
+  #rx-current { font-size: 1.4rem; font-style: italic; line-height: 1.3; }
   #rx-current .who { color: var(--dim); }
-  #rx-note { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; color: var(--dimmer); text-transform: uppercase; margin-top: 0.9rem; }
+  #rx-note { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; color: var(--dimmer); text-transform: uppercase; margin-top: 0.7rem; }
   #rx-recent { list-style: none; margin-top: 1.4rem; }
   #rx-recent li {
     font-size: 1.05rem; font-style: italic; color: var(--dim);
@@ -168,13 +191,11 @@
   }
   #rx-recent li span.tt { font-family: var(--mono); font-size: 9px; font-style: normal; letter-spacing: 0.15em; color: var(--dimmer); float: right; margin-top: 0.45em; }
 
-  /* ---------- writeup ---------- */
   article p { font-size: 1.18rem; line-height: 1.75; color: var(--dim); margin-bottom: 1.3rem; max-width: 64ch; }
   article p strong { color: var(--off-white); font-weight: 400; }
   article a { color: var(--off-white); text-decoration: underline; text-underline-offset: 3px; }
   article a:hover { color: var(--amber); }
 
-  /* ---------- footer ---------- */
   #back {
     display: block; text-align: center; margin: 1.5rem 0 3.5rem;
     font-family: var(--mono); font-size: 10px;
@@ -188,135 +209,164 @@
     padding-bottom: 1.2rem;
   }
 
-  @media (max-width: 600px) {
-    #hero { padding-top: 11vh; }
-    #translog { height: 118px; }
+  #plist { -webkit-overflow-scrolling: touch; }
+
+  @media (max-width: 560px) {
+    #wmp { width: 96vw; }
+    #wmp-body { padding: 0.7rem; }
+    #toprow { flex-direction: column; }
+    #artbox { width: 100%; height: 190px; }
+    #artbox #art, #artbox #artmod { object-fit: cover; }
+    #eq { height: 36px; margin-top: 0.8rem; }
+    #plist { height: 132px; font-size: 10px; }
+    #transport { flex-wrap: wrap; gap: 0.6rem; }
+    .tbtn { width: 46px; height: 36px; font-size: 14px; }
+    #prog { flex-basis: 100%; order: 5; }
+    #ttime { margin-left: auto; }
+    #vol { width: 92px; }
+    #menubar #vizname { display: none; }
+    #statusbar { font-size: 8px; }
+    #scrollhint { margin-top: 1.6rem; }
+    #rx-row { flex-direction: row; }
+    #rx-art { width: 58px; height: 58px; }
+    #rx-current { font-size: 1.15rem; }
   }
   @media (prefers-reduced-motion: reduce) {
     .fu { animation: none; opacity: 1; }
-    #onair .lamp { animation: none; }
   }
 </style>
 </head>
 <body>
+<canvas id="viz"></canvas>
 <canvas id="grain"></canvas>
 <div id="vignette"></div>
-<div id="scanlines"></div>
 
 <main>
   <section id="hero">
-    <p class="eyebrow fu">an unlicensed frequency &middot; broadcasting from brooklyn</p>
-    <h1 class="fu">scootr.fm</h1>
-    <p class="sub fu">jungle &middot; drum &amp; bass &middot; tracker music &mdash; everyone hears the same moment</p>
-    <div id="dial" class="fu">
-      <div id="freqline"><canvas id="freqcanvas"></canvas></div>
-      <div id="freq-readout">&mdash;&mdash;.&mdash; MHz</div>
-      <div id="freq-label">carrier detected &middot; awaiting power</div>
-      <button id="power">tune in</button>
+    <p class="eyebrow fu">scootr.fm &middot; an unlicensed frequency &middot; broadcasting from brooklyn</p>
+    <div id="wmp" class="fu">
+      <div id="titlebar">
+        <span class="appicon"></span>
+        <span class="ttl">scootr.fm &mdash; media player</span>
+        <span class="winbtns"><span>&#95;</span><span>&#9633;</span><span>&#10005;</span></span>
+      </div>
+      <div id="menubar">
+        <span>file</span><span id="menu-view" title="cycle visualization">view</span><span>play</span><span id="menu-tools" title="sleep timer">tools</span><span>help</span>
+        <span id="vizname">viz: the signal</span>
+      </div>
+      <div id="wmp-body">
+        <div id="toprow">
+          <div id="artbox">
+            <img id="art" alt="" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
+            <canvas id="artmod"></canvas>
+          </div>
+          <div id="npbox">
+            <div id="np-title">scootr.fm</div>
+            <div id="np-artist">press play to tune into the broadcast</div>
+            <div id="np-meta">24/7 &middot; everyone hears the same moment</div>
+            <canvas id="eq"></canvas>
+          </div>
+        </div>
+        <div id="plist"></div>
+        <div id="transport">
+          <button class="tbtn" id="btn-play" title="tune in">&#9654;</button>
+          <button class="tbtn" id="btn-stop" title="tune out" disabled>&#9632;</button>
+          <div id="prog"><div class="fill"></div></div>
+          <span id="ttime">--:-- / --:--</span>
+          <button class="tbtn" id="btn-share" title="share this moment — they'll hear the same second">&#8862;</button>
+          <input type="range" id="vol" min="0" max="100" value="80" title="volume">
+        </div>
+        <div id="statusbar">
+          <span id="status-l">ready &middot; carrier detected</span>
+          <span id="status-r">day &mdash; &middot; <span class="live">&#9679; live</span></span>
+        </div>
+      </div>
     </div>
+    <p id="scrollhint" class="fu">scroll &darr; receiver &amp; notes &middot; dbl-click the sky for cinema &middot; [space] tune &middot; [v] viz</p>
   </section>
 
-  <section id="deck">
-    <div id="onair"><span class="lamp"></span><span id="onair-txt">on air</span></div>
-    <div class="chanrow">
-      <button class="chan active" id="chan-a">freq a &mdash; the broadcast</button>
-      <button class="chan b" id="chan-b">freq b &mdash; the tracker signal</button>
-    </div>
-    <div id="nowplaying">
-      <div id="np-title">tuning&hellip;</div>
-      <div id="np-artist"></div>
-      <div id="np-meta"></div>
-    </div>
-    <canvas id="spectrum"></canvas>
-    <div id="trackpos"><span id="tp-cur">0:00</span><span id="tp-dur">0:00</span></div>
-    <div id="trackerline">ptn -- &middot; row --</div>
-    <div id="controls">
-      <span class="lbl">vol</span>
-      <input type="range" id="vol" min="0" max="100" value="80">
-    </div>
-    <div id="translog"></div>
-  </section>
+  <div id="lower"><div class="inner">
+    <section class="block" id="receiver">
+      <h2>the receiver &mdash; what scott is actually playing</h2>
+      <div id="rx-row">
+        <img id="rx-art" alt="">
+        <div>
+          <div id="rx-current"><span class="who">tuning receiver&hellip;</span></div>
+          <div id="rx-note">last.fm uplink &middot; scrobbled live from spotify</div>
+        </div>
+      </div>
+      <ul id="rx-recent"></ul>
+    </section>
 
-  <section class="block" id="receiver">
-    <h2>the receiver &mdash; what scott is actually playing</h2>
-    <div id="rx-current"><span class="who">signal dark &mdash;</span> receiver awaiting uplink</div>
-    <div id="rx-note">last.fm uplink &middot; scrobbled live from spotify</div>
-    <ul id="rx-recent"></ul>
-  </section>
+    <section class="block">
+      <h2>transmission notes</h2>
+      <article>
+        <p><strong>This is not a playlist. It is a broadcast.</strong> There is no pause and no skip. The station has been playing since its epoch and the page simply computes where the signal is right now &mdash; so every listener, on every continent, hears the same track at the same second. You don't press play; you tune in.</p>
+        <p>The rotation is five and a half hours of jungle, ragga jungle, dub, and drum &amp; bass from the <a href="https://archive.org/details/netlabels" target="_blank" rel="noopener">netlabel underground</a> &mdash; artist-released, Creative Commons&ndash;licensed records from labels that gave their music away on purpose. Woven between them are <strong>tracker interludes</strong>: jungle written as .mod and .xm modules, the file format PlayStation-era game soundtracks grew out of, streamed from <a href="https://modarchive.org" target="_blank" rel="noopener">The Mod Archive</a> and synthesized live in your browser while the status bar shows the pattern and row being executed.</p>
+        <p>The player is an ode to the media players this music was first heard through &mdash; and the visualization behind it is the part of Windows Media Player everyone actually remembers. It flies through a node field that steers, accelerates, and shifts color with the frequencies of whatever the station is playing. Every track credits its source and links back to the original release.</p>
+        <p>The receiver panel is the honest part: a live wire into what I'm personally listening to, scrobbled from Spotify. The broadcast is what I can legally play you; the receiver is what I'd play you if the record industry were a different thing.</p>
+        <p>No backend, no stream server, no framework. One HTML file, a fixed epoch, and arithmetic.</p>
+      </article>
+    </section>
 
-  <section class="block">
-    <h2>transmission notes</h2>
-    <article>
-      <p><strong>This is not a playlist. It is a broadcast.</strong> There is no pause button and no skip. The station has been playing since its epoch and the page simply computes where the signal is right now &mdash; so every listener, on every continent, hears the same track at the same second. You don't press play; you tune in.</p>
-      <p><strong>Freq A</strong> rotates roughly five hours of jungle, ragga jungle, dub, and drum &amp; bass from the <a href="https://archive.org/details/netlabels" target="_blank" rel="noopener">netlabel underground</a> &mdash; artist-released, Creative Commons&ndash;licensed records from labels that gave their music away on purpose. Every track credits its source and links back to the original release.</p>
-      <p><strong>Freq B</strong> is the video-game signal: jungle and breakbeat written as tracker modules &mdash; the .mod and .xm files of the Amiga and demoscene era that PlayStation-generation soundtracks grew out of. The modules stream from <a href="https://modarchive.org" target="_blank" rel="noopener">The Mod Archive</a> and are synthesized live in your browser; the readout under the spectrum shows the pattern and row actually being executed. A new module takes the slot every half hour, on the half hour, for everyone at once.</p>
-      <p>The receiver panel above is the honest part: a live wire into what I'm personally listening to, scrobbled from Spotify. The broadcast is what I can legally play you; the receiver is what I'd play you if the record industry were a different thing.</p>
-      <p>No backend, no stream server, no framework. One HTML file, a fixed epoch, and arithmetic.</p>
-    </article>
-  </section>
-
-  <p id="foot">scootr.fm &middot; pirate transmission &middot; sources: internet archive netlabels &middot; the mod archive &middot; last.fm</p>
-  <a id="back" href="../index.html">&larr; projects</a>
+    <p id="foot">scootr.fm &middot; pirate transmission &middot; sources: internet archive netlabels &middot; the mod archive &middot; last.fm</p>
+    <a id="back" href="../index.html">&larr; projects</a>
+  </div></div>
 </main>
 
 <script type="module">
 'use strict';
 
-/* ---------- config ---------- */
+/* ---------- config & state ---------- */
 const LASTFM_USER = 'scootrm';
 const LASTFM_KEY = '6b7363865dc080ccefc4bd7f43d4d744';
 const CHIPTUNE_CDN = 'https://cdn.jsdelivr.net/npm/chiptune3@0.9.0-r25475/chiptune3.js';
-const MOD_SLOT_S = 1800;          // one module per half hour
-const STATION_FREQ = '101.7';
+
+let powered = false;
+let actx = null, analyser = null, freqData = null, mediaSrc = null, chip = null;
+let curIdx = -1, chipDur = 0, chipLoadedIdx = -1;
+
+const $ = id => document.getElementById(id);
+const mmss = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 
 /* ---------- grain ---------- */
-const g = document.getElementById('grain'), gx = g.getContext('2d');
+const g = $('grain'), gx = g.getContext('2d');
 function drawGrain() {
   g.width = innerWidth; g.height = innerHeight;
   const im = gx.createImageData(g.width, g.height), d = im.data;
   for (let i = 0; i < d.length; i += 4) {
     const v = Math.random() * 22;
-    d[i] = d[i+1] = d[i+2] = v; d[i+3] = 14;
+    d[i] = d[i+1] = d[i+2] = v; d[i+3] = 13;
   }
   gx.putImageData(im, 0, 0);
 }
 drawGrain();
 addEventListener('resize', drawGrain);
 
-/* ---------- helpers ---------- */
-const $ = id => document.getElementById(id);
-const mmss = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
-function mulberry32(a) {
-  return function() {
-    a |= 0; a = a + 0x6D2B79F5 | 0;
-    let t = Math.imul(a ^ a >>> 15, 1 | a);
-    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
-    return ((t ^ t >>> 14) >>> 0) / 4294967296;
-  };
-}
-const logEl = $('translog');
-const logLines = [];
-function tlog(msg, hl) {
-  const now = new Date();
-  const t = `${String(now.getUTCHours()).padStart(2,'0')}${String(now.getUTCMinutes()).padStart(2,'0')}z`;
-  logLines.push(`<div><span class="t">${t}</span><span${hl ? ' class="hl"' : ''}>${msg}</span></div>`);
-  while (logLines.length > 6) logLines.shift();
-  logEl.innerHTML = logLines.join('');
-}
-
 /* ---------- data ---------- */
 const DATA = await fetch('./data/playlist.json').then(r => {
   if (!r.ok) throw new Error('playlist failed');
   return r.json();
 }).catch(err => {
-  $('freq-label').textContent = 'signal lost — refresh to retry';
+  $('status-l').textContent = 'signal lost — refresh to retry';
   throw err;
 });
-const TRACKS = DATA.tracks, MODS = DATA.mods, EPOCH = DATA.epoch;
-const TOTAL = TRACKS.reduce((s, t) => s + t.dur, 0);
+const SCHED = DATA.sched, EPOCH = DATA.epoch;
+const TOTAL = SCHED.reduce((s, t) => s + t.dur, 0);
 
-/* ---------- audio graph ---------- */
-let actx = null, analyser = null, mediaSrc = null, chip = null;
+/* ---------- playlist pane ---------- */
+const plist = $('plist');
+plist.innerHTML = SCHED.map((t, i) => {
+  const nm = t.type === 'mod'
+    ? (t.title || t.file)
+    : `${t.artist ? t.artist + ' — ' : ''}${t.title}`;
+  return `<div class="prow${t.type === 'mod' ? ' mod' : ''}" id="pr${i}">` +
+    `<span class="num">${String(i + 1).padStart(2, '0')}</span>` +
+    `<span class="nm">${nm.toLowerCase()}</span>` +
+    `<span class="du">${mmss(t.dur)}</span></div>`;
+}).join('');
+
+/* ---------- audio ---------- */
 const audio = new Audio();
 audio.crossOrigin = 'anonymous';
 audio.preload = 'auto';
@@ -325,72 +375,25 @@ function initAudio() {
   actx = new (window.AudioContext || window.webkitAudioContext)();
   analyser = actx.createAnalyser();
   analyser.fftSize = 256;
-  analyser.smoothingTimeConstant = 0.82;
+  analyser.smoothingTimeConstant = 0.8;
+  freqData = new Uint8Array(analyser.frequencyBinCount);
   mediaSrc = actx.createMediaElementSource(audio);
   mediaSrc.connect(analyser);
   analyser.connect(actx.destination);
 }
 
-/* static burst between tracks */
-function staticBurst(dur = 0.35) {
-  if (!actx) return;
+function staticBurst(dur = 0.3) {
+  if (!actx || !powered) return;
   const n = actx.sampleRate * dur;
   const buf = actx.createBuffer(1, n, actx.sampleRate);
   const ch = buf.getChannelData(0);
   for (let i = 0; i < n; i++) ch[i] = (Math.random() * 2 - 1) * (1 - i / n);
   const src = actx.createBufferSource(); src.buffer = buf;
   const bp = actx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 2400; bp.Q.value = 0.6;
-  const gn = actx.createGain(); gn.gain.value = 0.045 * (vol.value / 100);
+  const gn = actx.createGain(); gn.gain.value = 0.04 * (volEl.value / 100);
   src.connect(bp); bp.connect(gn); gn.connect(actx.destination);
   src.start();
 }
-
-/* ---------- channel A: the broadcast ---------- */
-let powered = false;
-let channel = 'a';
-let curIdx = -1, curStart = 0;
-
-function schedNow() {
-  let pos = (Date.now() / 1000 - EPOCH) % TOTAL;
-  if (pos < 0) pos += TOTAL;
-  let i = 0;
-  while (pos >= TRACKS[i].dur) { pos -= TRACKS[i].dur; i++; }
-  return { i, off: pos };
-}
-
-function playBroadcast(resync) {
-  const { i, off } = schedNow();
-  if (i === curIdx && !resync) return;
-  curIdx = i;
-  const t = TRACKS[i];
-  audio.src = t.url;
-  audio.currentTime = 0;
-  const seekTo = off > 2 ? off : 0;
-  audio.play().then(() => {
-    if (seekTo > 2) { try { audio.currentTime = seekTo; } catch (e) {} }
-  }).catch(() => {});
-  $('np-title').textContent = t.title.toLowerCase();
-  $('np-artist').textContent = t.artist ? t.artist.toLowerCase() : '';
-  const licTag = (t.lic.match(/licenses\/([a-z\-]+)/) || [,'cc'])[1];
-  $('np-meta').innerHTML =
-    `${licTag} &middot; <a href="https://archive.org/details/${t.item}" target="_blank" rel="noopener">${t.release.toLowerCase()}</a> &middot; internet archive`;
-  tlog(`now playing — ${(t.artist ? t.artist + ' — ' : '') + t.title}`.toLowerCase(), true);
-}
-
-audio.addEventListener('ended', () => {
-  if (channel !== 'a') return;
-  staticBurst();
-  setTimeout(() => playBroadcast(true), 250);
-});
-audio.addEventListener('error', () => {
-  if (channel !== 'a' || !powered) return;
-  tlog('signal dropout — retuning');
-  curIdx = -1;
-  setTimeout(() => playBroadcast(true), 1500);
-});
-
-/* ---------- channel B: the tracker signal ---------- */
-let chipReady = false, curSlot = -1, chipDur = 0;
 
 async function initChip() {
   if (chip) return;
@@ -398,188 +401,576 @@ async function initChip() {
   chip = new mod.ChiptuneJsPlayer({ context: actx, repeatCount: -1 });
   await new Promise(res => chip.onInitialized(res));
   chip.gain.connect(analyser);
-  chip.setVol(vol.value / 100);
+  chip.setVol(volEl.value / 100);
   chip.onMetadata(meta => {
     chipDur = meta.dur || 0;
-    const slotStart = Math.floor(Date.now() / 1000 / MOD_SLOT_S) * MOD_SLOT_S;
-    if (chipDur > 5) chip.setPos((Date.now() / 1000 - slotStart) % chipDur);
+    const e = entryNow();
+    if (chipDur > 5 && e.i === chipLoadedIdx) chip.setPos(e.off % chipDur);
   });
-  chip.onError(() => {
-    tlog('module unreadable — skipping frequency');
-    modSalt++;
-    curSlot = -1;
-    setTimeout(() => { if (channel === 'b') playTracker(); }, 1200);
-  });
-  chipReady = true;
+  chip.onError(() => { $('status-l').textContent = 'module unreadable — waiting for next slot'; });
 }
 
-let modSalt = 0;
-function pickModule(slot) {
-  const r = mulberry32((slot + modSalt) ^ 0x5EED);
-  return MODS[Math.floor(r() * MODS.length)];
+/* ---------- module art tile ---------- */
+const artmod = $('artmod'), amx = artmod.getContext('2d');
+function drawModArt(name) {
+  const s = 316;
+  artmod.width = s; artmod.height = s;
+  amx.fillStyle = '#060806'; amx.fillRect(0, 0, s, s);
+  let seed = 0;
+  for (const c of name) seed = (seed * 31 + c.charCodeAt(0)) >>> 0;
+  const rnd = () => (seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296;
+  amx.font = '13px "Courier Prime", monospace';
+  for (let r = 0; r < 19; r++) {
+    for (let c = 0; c < 8; c++) {
+      const v = rnd();
+      amx.fillStyle = v > 0.82 ? 'rgba(139,224,155,0.9)' : `rgba(139,224,155,${0.08 + v * 0.2})`;
+      const note = 'CDEFGAB'[Math.floor(rnd() * 7)] + (rnd() > 0.5 ? '-' : '#') + Math.ceil(rnd() * 6);
+      amx.fillText(v > 0.3 ? note : '···', 10 + c * 38, 22 + r * 16);
+    }
+  }
+  amx.fillStyle = 'rgba(139,224,155,0.13)';
+  amx.fillRect(0, 22 + 9 * 16 - 12, s, 16);
 }
 
-async function playTracker() {
-  await initChip();
-  const slot = Math.floor(Date.now() / 1000 / MOD_SLOT_S);
-  if (slot === curSlot) return;
-  curSlot = slot;
-  const m = pickModule(slot);
-  chipDur = 0;
-  chip.load(`https://api.modarchive.org/downloads.php?moduleid=${m.id}`);
-  $('np-title').textContent = (m.title || m.file).toLowerCase();
-  $('np-artist').textContent = m.file;
-  $('np-meta').innerHTML =
-    `${m.lic === 'tma' ? 'mod archive dist. license' : 'cc ' + m.lic} &middot; ` +
-    `<a href="https://modarchive.org/index.php?request=view_by_moduleid&query=${m.id}" target="_blank" rel="noopener">the mod archive #${m.id}</a>` +
-    (m.rating ? ` &middot; rated ${m.rating}/10` : '');
-  tlog(`module of the half-hour — ${m.file}`, true);
+/* ---------- schedule ---------- */
+function entryNow() {
+  let pos = (Date.now() / 1000 - EPOCH) % TOTAL;
+  if (pos < 0) pos += TOTAL;
+  let i = 0;
+  while (pos >= SCHED[i].dur) { pos -= SCHED[i].dur; i++; }
+  return { i, off: pos };
 }
 
-/* slot / drift watch */
+function showEntry(t, i) {
+  const isMod = t.type === 'mod';
+  $('np-title').textContent = (t.title || t.file || '').toLowerCase();
+  $('np-artist').textContent = isMod ? 'tracker interlude · synthesized live' : (t.artist || '').toLowerCase();
+  if (isMod) {
+    $('np-meta').innerHTML =
+      `${t.lic === 'tma' ? 'mod archive dist. license' : 'cc ' + t.lic} &middot; ` +
+      `<a href="https://modarchive.org/index.php?request=view_by_moduleid&query=${t.id}" target="_blank" rel="noopener">the mod archive #${t.id}</a>` +
+      (t.rating ? ` &middot; rated ${t.rating}/10` : '');
+    $('art').style.display = 'none';
+    $('artmod').style.display = 'block';
+    drawModArt(t.file);
+    tintHue = 130; /* modules run phosphor green */
+  } else {
+    const licTag = (t.lic.match(/licenses\/([a-z\-]+)/) || [,'cc'])[1];
+    $('np-meta').innerHTML =
+      `${licTag} &middot; <a href="https://archive.org/details/${t.item}" target="_blank" rel="noopener">${t.release.toLowerCase()}</a> &middot; internet archive`;
+    $('artmod').style.display = 'none';
+    $('art').style.display = 'block';
+    $('art').src = t.art;
+  }
+  document.querySelector('#titlebar .ttl').textContent =
+    `${(t.title || t.file || '').toLowerCase()} — scootr.fm`;
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: t.title || t.file || 'scootr.fm',
+      artist: isMod ? 'tracker interlude' : (t.artist || ''),
+      album: 'scootr.fm — pirate transmission',
+      artwork: !isMod && t.art ? [{ src: t.art, sizes: '180x180', type: 'image/jpeg' }] : [],
+    });
+  }
+  document.querySelectorAll('.prow.cur').forEach(el => el.classList.remove('cur'));
+  const row = $('pr' + i);
+  row.classList.add('cur');
+  row.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+}
+
+function playNow(force) {
+  const { i, off } = entryNow();
+  if (i === curIdx && !force) return;
+  const changed = i !== curIdx;
+  curIdx = i;
+  const t = SCHED[i];
+  if (changed && powered) staticBurst();
+
+  if (t.type === 'mod') {
+    audio.pause();
+    chipLoadedIdx = i;
+    chipDur = 0;
+    initChip().then(() => {
+      chip.load(`https://api.modarchive.org/downloads.php?moduleid=${t.id}`);
+    });
+    $('status-l').textContent = 'synthesizing module · libopenmpt';
+  } else {
+    if (chip) chip.stop();
+    audio.src = t.url;
+    const seekTo = off > 2 ? off : 0;
+    audio.play().then(() => {
+      if (seekTo > 2) { try { audio.currentTime = seekTo; } catch (e) {} }
+    }).catch(() => {});
+    $('status-l').textContent = 'streaming · archive.org · 128kbps+';
+  }
+  showEntry(t, i);
+}
+
+audio.addEventListener('error', () => {
+  if (!powered || curIdx < 0 || SCHED[curIdx].type !== 'mp3') return;
+  $('status-l').textContent = 'signal dropout — retuning';
+  setTimeout(() => { if (powered) playNow(true); }, 1500);
+});
+
+/* watchdog: slot changes, drift, stalls */
 setInterval(() => {
   if (!powered) return;
-  if (channel === 'b') playTracker();
-  else if (audio.paused && !audio.error) playBroadcast(true);
+  const { i } = entryNow();
+  if (i !== curIdx) { playNow(); return; }
+  const t = SCHED[curIdx];
+  if (t.type === 'mp3' && audio.paused && !audio.error) playNow(true);
+  if (t.type === 'mod' && chip && chip.currentTime) {
+    $('status-l').textContent =
+      `synthesizing · ptn ${chip.pattern ?? '–'} · row ${String(chip.row ?? '–').padStart(2, '0')} · ord ${chip.order ?? '–'}`;
+  }
+}, 1000);
+
+/* ---------- transport ---------- */
+const volEl = $('vol');
+const btnPlay = $('btn-play'), btnStop = $('btn-stop');
+
+btnPlay.addEventListener('click', async () => {
+  if (powered) return;
+  if (!actx) initAudio();
+  await actx.resume();
+  audio.volume = volEl.value / 100;
+  powered = true;
+  btnPlay.disabled = true;
+  btnStop.disabled = false;
+  const day = Math.floor((Date.now() / 1000 - EPOCH) / 86400) + 1;
+  $('status-r').innerHTML = `day ${day} &middot; <span class="live">&#9679; live</span>`;
+  staticBurst(0.6);
+  playNow(true);
+});
+
+btnStop.addEventListener('click', () => {
+  if (!powered) return;
+  powered = false;
+  audio.pause();
+  if (chip) chip.stop();
+  curIdx = -1;
+  btnPlay.disabled = false;
+  btnStop.disabled = true;
+  $('status-l').textContent = 'tuned out — the broadcast continues without you';
+});
+
+volEl.addEventListener('input', () => {
+  audio.volume = volEl.value / 100;
+  if (chip) chip.setVol(volEl.value / 100);
+});
+
+if ('mediaSession' in navigator) {
+  navigator.mediaSession.setActionHandler('play', () => btnPlay.click());
+  navigator.mediaSession.setActionHandler('pause', () => btnStop.click());
+}
+
+/* ---------- share this moment ---------- */
+$('btn-share').addEventListener('click', async () => {
+  const t = curIdx >= 0 ? SCHED[curIdx] : null;
+  const text = t
+    ? `tuned into scootr.fm — "${(t.title || t.file).toLowerCase()}" is on air right now. open it and you'll hear the exact same second I'm hearing.`
+    : 'scootr.fm — a pirate broadcast where everyone hears the same moment.';
+  const url = location.origin + location.pathname;
+  try {
+    if (navigator.share && MOBILE) await navigator.share({ title: 'scootr.fm', text, url });
+    else {
+      await navigator.clipboard.writeText(url);
+      $('status-l').textContent = 'link copied — they\'ll hear this exact second';
+    }
+  } catch (e) { /* share dismissed */ }
+});
+
+/* ---------- sleep timer (tools) ---------- */
+const SLEEP_OPTS = [null, 15, 30, 60];
+let sleepIdx = 0, sleepAt = null;
+$('menu-tools').addEventListener('click', () => {
+  sleepIdx = (sleepIdx + 1) % SLEEP_OPTS.length;
+  const min = SLEEP_OPTS[sleepIdx];
+  sleepAt = min ? Date.now() + min * 60000 : null;
+  $('status-l').textContent = min ? `sleep timer — signing off in ${min} min` : 'sleep timer off';
+});
+setInterval(() => {
+  if (!sleepAt) return;
+  if (Date.now() >= sleepAt) {
+    sleepAt = null; sleepIdx = 0;
+    if (powered) btnStop.click();
+    $('status-l').textContent = 'sleep timer — signed off. goodnight.';
+  } else if (powered) {
+    const rem = Math.ceil((sleepAt - Date.now()) / 60000);
+    $('status-r').innerHTML =
+      `zzz ${rem}m &middot; day ${Math.floor((Date.now() / 1000 - EPOCH) / 86400) + 1} &middot; <span class="live">&#9679; live</span>`;
+  }
 }, 5000);
 
-/* ---------- channel switching ---------- */
-const chanA = $('chan-a'), chanB = $('chan-b');
-function setChannel(c) {
-  if (c === channel) return;
-  channel = c;
-  chanA.classList.toggle('active', c === 'a');
-  chanB.classList.toggle('active', c === 'b');
-  $('trackerline').style.display = c === 'b' ? 'block' : 'none';
-  staticBurst(0.5);
-  if (c === 'a') {
-    if (chip) chip.stop();
-    curIdx = -1; curSlot = -1;
-    $('freq-readout').textContent = STATION_FREQ + ' MHz';
-    tlog('retuned — freq a · the broadcast');
-    playBroadcast(true);
+/* progress + time */
+setInterval(() => {
+  if (curIdx < 0) return;
+  const t = SCHED[curIdx];
+  let cur = 0;
+  if (t.type === 'mp3') cur = audio.currentTime || 0;
+  else cur = chip ? (chip.currentTime || 0) : 0;
+  const dur = t.type === 'mod' && chipDur ? Math.min(chipDur, t.dur) : t.dur;
+  $('prog').querySelector('.fill').style.width = `${Math.min(100, cur / dur * 100)}%`;
+  $('ttime').textContent = `${mmss(cur)} / ${mmss(t.dur)}`;
+}, 500);
+
+/* ---------- visualization gallery ---------- */
+const viz = $('viz'), vx = viz.getContext('2d');
+const MOBILE = Math.min(innerWidth, innerHeight) < 640;
+const DPR = Math.min(MOBILE ? 1.3 : 2, window.devicePixelRatio || 1);
+function sizeViz() { viz.width = innerWidth * DPR; viz.height = innerHeight * DPR; }
+sizeViz();
+addEventListener('resize', sizeViz);
+
+const VIZ_NAMES = ['the signal', 'bars & waves', 'alchemy', 'phase scope'];
+let vizMode = 0;
+function cycleViz() {
+  vizMode = (vizMode + 1) % VIZ_NAMES.length;
+  $('vizname').textContent = 'viz: ' + VIZ_NAMES[vizMode];
+  vx.fillStyle = '#050506'; vx.fillRect(0, 0, viz.width, viz.height);
+}
+$('menu-view').addEventListener('click', cycleViz);
+
+/* single click on the sky cycles viz; double click enters cinema */
+let skyClickTimer = null;
+$('hero').addEventListener('click', e => {
+  if (e.target !== $('hero')) return;
+  clearTimeout(skyClickTimer);
+  skyClickTimer = setTimeout(cycleViz, 280);
+});
+function toggleCinema() {
+  clearTimeout(skyClickTimer);
+  document.body.classList.toggle('cinema');
+}
+$('hero').addEventListener('dblclick', e => { if (e.target === $('hero')) toggleCinema(); });
+addEventListener('dblclick', e => {
+  if (document.body.classList.contains('cinema')) toggleCinema();
+});
+addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT') return;
+  if (e.key === 'Escape' && document.body.classList.contains('cinema')) toggleCinema();
+  else if (e.key === 'v' || e.key === 'V') cycleViz();
+  else if (e.code === 'Space') {
+    e.preventDefault();
+    (powered ? $('btn-stop') : $('btn-play')).click();
+  }
+});
+
+/* album-art tint — the viz borrows the cover's color, WMP 11 style */
+let tintHue = 30;
+const tintCanvas = document.createElement('canvas');
+function sampleArtHue(img) {
+  try {
+    tintCanvas.width = tintCanvas.height = 24;
+    const tc = tintCanvas.getContext('2d');
+    tc.drawImage(img, 0, 0, 24, 24);
+    const px = tc.getImageData(0, 0, 24, 24).data;
+    const bins = new Array(12).fill(0);
+    for (let i = 0; i < px.length; i += 4) {
+      const r = px[i] / 255, gg = px[i+1] / 255, b = px[i+2] / 255;
+      const mx = Math.max(r, gg, b), mn = Math.min(r, gg, b);
+      const sat = mx === 0 ? 0 : (mx - mn) / mx;
+      if (sat < 0.25 || mx < 0.18) continue;
+      let hue;
+      if (mx === r) hue = ((gg - b) / (mx - mn)) % 6;
+      else if (mx === gg) hue = (b - r) / (mx - mn) + 2;
+      else hue = (r - gg) / (mx - mn) + 4;
+      hue = (hue * 60 + 360) % 360;
+      bins[Math.floor(hue / 30)] += sat * mx;
+    }
+    const best = bins.indexOf(Math.max(...bins));
+    if (bins[best] > 0) tintHue = best * 30 + 15;
+  } catch (e) { tintHue = 30; /* tainted canvas or bad art — stay amber */ }
+}
+$('art').crossOrigin = 'anonymous';
+$('art').addEventListener('load', () => sampleArtHue($('art')));
+
+const NEAR = 0.08, FAR = 3.2, NODE_COUNT = MOBILE ? 55 : 100;
+function spawnNode(band) {
+  const a = Math.random() * Math.PI * 2;
+  const rad = 0.25 + Math.random() * 1.15;
+  return {
+    x: Math.cos(a) * rad, y: Math.sin(a) * rad, z: FAR,
+    band, r: 0.7 + Math.random() * 1.6,
+    hue: 25 + Math.random() * 40,
+  };
+}
+const nodes = [];
+for (let i = 0; i < NODE_COUNT; i++) {
+  const n = spawnNode(Math.floor(Math.random() * 64));
+  n.z = NEAR + Math.random() * (FAR - NEAR);
+  nodes.push(n);
+}
+const stars = Array.from({ length: MOBILE ? 140 : 320 }, () => ({
+  x: Math.random(), y: Math.random(),
+  r: 0.3 + Math.random() * 1.1,
+  ph: Math.random() * Math.PI * 2, sp: 0.01 + Math.random() * 0.02,
+}));
+
+let globalHue = 0, idlePulse = 0, steerT = 0;
+const boost = v => Math.min(1, Math.pow(v, 0.55) * 1.25);
+let timeData = null;
+const peaks = new Array(48).fill(0);
+const blobs = Array.from({ length: 7 }, (_, i) => ({
+  a: (i / 7) * Math.PI * 2, spd: 0.003 + Math.random() * 0.005,
+  rad: 0.18 + Math.random() * 0.22, band: 4 + i * 8,
+  hueOff: i * 34, dir: i % 2 ? 1 : -1,
+}));
+
+function frame() {
+  requestAnimationFrame(frame);
+  const w = viz.width, h = viz.height;
+
+  let bass = 0, mid = 0, treb = 0;
+  const playing = powered && analyser && (
+    (curIdx >= 0 && SCHED[curIdx].type === 'mod') || !audio.paused);
+  if (playing) {
+    analyser.getByteFrequencyData(freqData);
+    if (!timeData) timeData = new Uint8Array(analyser.fftSize);
+    analyser.getByteTimeDomainData(timeData);
+    let bS = 0, mS = 0, tS = 0;
+    for (let i = 0; i < 8; i++) bS += freqData[i];
+    for (let i = 8; i < 32; i++) mS += freqData[i];
+    for (let i = 32; i < 64; i++) tS += freqData[i];
+    bass = boost(bS / (8 * 255)); mid = boost(mS / (24 * 255)); treb = boost(tS / (32 * 255));
   } else {
-    audio.pause();
-    curSlot = -1;
-    $('freq-readout').textContent = '087.9 MHz';
-    tlog('retuned — freq b · the tracker signal');
-    playTracker();
+    idlePulse += 0.013;
+    bass = (Math.sin(idlePulse) + 1) / 2 * 0.22;
+    mid = (Math.sin(idlePulse * 0.7 + 1) + 1) / 2 * 0.13;
+    treb = (Math.sin(idlePulse * 1.3 + 2) + 1) / 2 * 0.09;
+  }
+  globalHue = (globalHue + 0.05 + treb * 1.2) % 360;
+
+  if (vizMode === 1) { drawBars(w, h, bass, mid, treb, playing); return; }
+  if (vizMode === 2) { drawAlchemy(w, h, bass, mid, treb, playing); return; }
+  if (vizMode === 3) { drawScope(w, h, bass, mid, treb, playing); return; }
+
+  /* --- mode 0: the signal --- */
+  vx.fillStyle = 'rgba(4,4,7,0.17)';
+  vx.fillRect(0, 0, w, h);
+
+  /* nebula wash — amber body heat that opens up with the music */
+  const nebHue = (tintHue + globalHue) % 360;
+  let grad = vx.createRadialGradient(w * 0.3, h * 0.35, 0, w * 0.3, h * 0.35, Math.max(w, h) * 0.55);
+  grad.addColorStop(0, `hsla(${nebHue}, 75%, 42%, ${0.03 + bass * 0.04})`);
+  grad.addColorStop(1, 'rgba(0,0,0,0)');
+  vx.fillStyle = grad; vx.fillRect(0, 0, w, h);
+  grad = vx.createRadialGradient(w * 0.74, h * 0.7, 0, w * 0.74, h * 0.7, Math.max(w, h) * 0.5);
+  grad.addColorStop(0, `hsla(${(nebHue + 110) % 360}, 70%, 40%, ${0.02 + treb * 0.035})`);
+  grad.addColorStop(1, 'rgba(0,0,0,0)');
+  vx.fillStyle = grad; vx.fillRect(0, 0, w, h);
+
+  /* starfield */
+  for (const s of stars) {
+    s.ph += s.sp;
+    const tw = (Math.sin(s.ph) + 1) / 2;
+    vx.beginPath();
+    vx.arc(s.x * w, s.y * h, s.r * DPR, 0, Math.PI * 2);
+    vx.fillStyle = `rgba(220,215,200,${0.08 + tw * 0.2})`;
+    vx.fill();
+  }
+
+  steerT += 0.0035;
+  const steerX = Math.sin(steerT) * 0.35, steerY = Math.cos(steerT * 0.7) * 0.25;
+
+  const cx = w / 2, cy = h / 2;
+  const projScale = Math.min(w, h) * 0.85;
+  const flightSpeed = 0.006 + bass * 0.045 + mid * 0.012;
+
+  const projected = nodes.map(n => {
+    n.z -= flightSpeed;
+    if (n.z <= NEAR) {
+      const re = spawnNode(n.band);
+      n.x = re.x; n.y = re.y; n.z = FAR;
+    }
+    const persp = 1 / (0.6 + n.z);
+    return { n, sx: cx + (n.x - steerX) * persp * projScale, sy: cy + (n.y - steerY) * persp * projScale, persp };
+  });
+
+  vx.lineWidth = 1 * DPR;
+  for (let i = 0; i < projected.length; i++) {
+    for (let j = i + 1; j < projected.length; j++) {
+      const a = projected[i], b = projected[j];
+      const dx = a.n.x - b.n.x, dy = a.n.y - b.n.y, dz = a.n.z - b.n.z;
+      const distSq = dx * dx + dy * dy + dz * dz;
+      if (distSq > 0.42) continue;
+      const prox = 1 - Math.sqrt(distSq) / 0.65;
+      const alpha = prox * (0.1 + bass * 0.4) * Math.min(1, (a.persp + b.persp) / 2);
+      vx.strokeStyle = `hsla(${((a.n.hue + b.n.hue) / 2 + globalHue) % 360}, 85%, 64%, ${alpha})`;
+      vx.beginPath(); vx.moveTo(a.sx, a.sy); vx.lineTo(b.sx, b.sy); vx.stroke();
+    }
+  }
+
+  projected.sort((a, b) => a.persp - b.persp);
+  for (const p of projected) {
+    let energy = bass * 0.5;
+    if (playing && freqData) energy = boost(freqData[p.n.band] / 255);
+    const size = (p.n.r + energy * 4) * DPR * p.persp * 1.35;
+    const hue = (p.n.hue + (tintHue - 30) + globalHue + 360) % 360;
+    vx.beginPath();
+    vx.arc(p.sx, p.sy, size, 0, Math.PI * 2);
+    vx.fillStyle = `hsla(${hue}, 88%, 68%, ${Math.min(1, (0.35 + energy * 0.65) * p.persp * 1.25)})`;
+    vx.fill();
+    if (energy > 0.45) {
+      vx.beginPath();
+      vx.arc(p.sx, p.sy, size * 1.6, 0, Math.PI * 2);
+      vx.fillStyle = `hsla(${hue}, 88%, 68%, ${(energy - 0.45) * 0.28})`;
+      vx.fill();
+    }
   }
 }
-chanA.addEventListener('click', () => setChannel('a'));
-chanB.addEventListener('click', () => setChannel('b'));
 
-/* ---------- volume ---------- */
-const vol = $('vol');
-vol.addEventListener('input', () => {
-  audio.volume = vol.value / 100;
-  if (chip) chip.setVol(vol.value / 100);
-});
-
-/* ---------- spectrum + readouts ---------- */
-const spec = $('spectrum'), sx = spec.getContext('2d');
-function drawSpectrum() {
-  requestAnimationFrame(drawSpectrum);
-  if (!analyser) return;
-  const w = spec.clientWidth, h = spec.clientHeight;
-  if (spec.width !== w * 2) { spec.width = w * 2; spec.height = h * 2; }
-  sx.clearRect(0, 0, spec.width, spec.height);
-  const data = new Uint8Array(analyser.frequencyBinCount);
-  analyser.getByteFrequencyData(data);
-  const bars = 56, bw = spec.width / bars;
-  const col = channel === 'a' ? '245,168,60' : '139,224,155';
+/* --- mode 1: bars & waves (the WMP classic) --- */
+function drawBars(w, h, bass, mid, treb, playing) {
+  vx.fillStyle = 'rgba(4,4,6,0.28)';
+  vx.fillRect(0, 0, w, h);
+  const bars = 48, bw = w / bars;
+  const baseHue = (tintHue + globalHue * 0.4) % 360;
   for (let i = 0; i < bars; i++) {
-    const v = data[Math.floor(i * data.length / bars * 0.72)] / 255;
-    const bh = Math.max(2, v * spec.height * 0.92);
-    sx.fillStyle = `rgba(${col},${0.25 + v * 0.65})`;
-    sx.fillRect(i * bw + bw * 0.18, spec.height - bh, bw * 0.64, bh);
+    let v = playing ? freqData[Math.floor(i * freqData.length / bars * 0.72)] / 255
+                    : (Math.sin(idlePulse * 2 + i * 0.4) + 1) / 2 * 0.18;
+    v = boost(v);
+    const bh = v * h * 0.52;
+    const hue = (baseHue + i * 1.6) % 360;
+    const grad = vx.createLinearGradient(0, h - bh, 0, h);
+    grad.addColorStop(0, `hsla(${hue}, 90%, 66%, 0.95)`);
+    grad.addColorStop(1, `hsla(${hue}, 90%, 30%, 0.5)`);
+    vx.fillStyle = grad;
+    vx.fillRect(i * bw + bw * 0.12, h - bh, bw * 0.76, bh);
+    /* falling peak caps */
+    peaks[i] = Math.max(peaks[i] - h * 0.004, bh);
+    vx.fillStyle = `hsla(${hue}, 95%, 80%, 0.9)`;
+    vx.fillRect(i * bw + bw * 0.12, h - peaks[i] - 3 * DPR, bw * 0.76, 3 * DPR);
   }
-  /* positions */
-  if (channel === 'a' && curIdx >= 0) {
-    $('tp-cur').textContent = mmss(audio.currentTime || 0);
-    $('tp-dur').textContent = mmss(TRACKS[curIdx].dur);
-  } else if (channel === 'b' && chip) {
-    $('tp-cur').textContent = mmss(chip.currentTime || 0);
-    $('tp-dur').textContent = chipDur ? mmss(chipDur) : '--:--';
-    $('trackerline').textContent =
-      `ptn ${chip.pattern ?? '--'} · row ${String(chip.row ?? '--').padStart(2, '0')} · ord ${chip.order ?? '--'}`;
+  /* the wave */
+  if (timeData) {
+    vx.lineWidth = 2 * DPR;
+    vx.strokeStyle = `hsla(${(baseHue + 40) % 360}, 85%, 75%, 0.85)`;
+    vx.beginPath();
+    const yMid = h * 0.3;
+    for (let i = 0; i < timeData.length; i += 2) {
+      const x = i / timeData.length * w;
+      const y = yMid + (playing ? (timeData[i] - 128) / 128 : Math.sin(idlePulse * 3 + i * 0.02) * 0.08) * h * 0.16;
+      i === 0 ? vx.moveTo(x, y) : vx.lineTo(x, y);
+    }
+    vx.stroke();
   }
 }
-drawSpectrum();
 
-/* ---------- dial needle animation ---------- */
-const fc = $('freqcanvas'), fcx = fc.getContext('2d');
-let needleT = 0;
-function drawDial() {
-  requestAnimationFrame(drawDial);
-  const w = fc.clientWidth, h = fc.clientHeight;
+/* --- mode 2: alchemy (plasma orbit) --- */
+function drawAlchemy(w, h, bass, mid, treb, playing) {
+  vx.fillStyle = 'rgba(3,3,5,0.09)';
+  vx.fillRect(0, 0, w, h);
+  vx.globalCompositeOperation = 'lighter';
+  const cx = w / 2, cy = h / 2, R = Math.min(w, h);
+  for (const b of blobs) {
+    b.a += b.dir * (b.spd + bass * 0.02 + mid * 0.008);
+    const energy = playing ? boost(freqData[b.band] / 255) : bass;
+    const orbit = R * (b.rad + energy * 0.1 + bass * 0.06);
+    const bx = cx + Math.cos(b.a) * orbit;
+    const by = cy + Math.sin(b.a * 1.3) * orbit * 0.62;
+    const rad = R * (0.05 + energy * 0.13);
+    const hue = (tintHue - 5 + b.hueOff + globalHue + 360) % 360;
+    const grad = vx.createRadialGradient(bx, by, 0, bx, by, rad);
+    grad.addColorStop(0, `hsla(${hue}, 90%, 62%, ${0.16 + energy * 0.22})`);
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    vx.fillStyle = grad;
+    vx.beginPath(); vx.arc(bx, by, rad, 0, Math.PI * 2); vx.fill();
+  }
+  /* breathing core */
+  const core = vx.createRadialGradient(cx, cy, 0, cx, cy, R * (0.06 + bass * 0.12));
+  core.addColorStop(0, `hsla(${(tintHue + globalHue) % 360}, 95%, 70%, ${0.1 + bass * 0.3})`);
+  core.addColorStop(1, 'rgba(0,0,0,0)');
+  vx.fillStyle = core;
+  vx.beginPath(); vx.arc(cx, cy, R * 0.2, 0, Math.PI * 2); vx.fill();
+  vx.globalCompositeOperation = 'source-over';
+}
+
+/* --- mode 3: phase scope --- */
+function drawScope(w, h, bass, mid, treb, playing) {
+  vx.fillStyle = 'rgba(3,4,4,0.13)';
+  vx.fillRect(0, 0, w, h);
+  const yMid = h / 2;
+  const amp = h * 0.24;
+  const hue = (tintHue + 65 + globalHue * 0.3) % 360;
+  /* horizontal trace, drawn twice for glow */
+  for (const [lw, al] of [[6, 0.12], [1.6, 0.9]]) {
+    vx.lineWidth = lw * DPR;
+    vx.strokeStyle = `hsla(${hue}, 80%, 66%, ${al})`;
+    vx.beginPath();
+    const n = timeData ? timeData.length : 256;
+    for (let i = 0; i < n; i += 2) {
+      const x = i / n * w;
+      const v = (playing && timeData) ? (timeData[i] - 128) / 128
+              : Math.sin(idlePulse * 2.2 + i * 0.03) * 0.14;
+      const y = yMid + v * amp * (1 + bass * 0.8);
+      i === 0 ? vx.moveTo(x, y) : vx.lineTo(x, y);
+    }
+    vx.stroke();
+  }
+  /* lissajous ring — phase of the moment */
+  const cx = w / 2, cy = h / 2, R = Math.min(w, h) * (0.16 + bass * 0.1);
+  vx.lineWidth = 1.2 * DPR;
+  vx.strokeStyle = `hsla(${(hue + 180) % 360}, 75%, 62%, 0.35)`;
+  vx.beginPath();
+  for (let i = 0; i <= 128; i++) {
+    const t = i / 128 * Math.PI * 2;
+    const wob = (playing && timeData) ? (timeData[(i * 8) % timeData.length] - 128) / 128 : Math.sin(idlePulse + i * 0.2) * 0.12;
+    const r = R * (1 + wob * 0.5);
+    const x = cx + Math.cos(t) * r, y = cy + Math.sin(t) * r;
+    i === 0 ? vx.moveTo(x, y) : vx.lineTo(x, y);
+  }
+  vx.closePath();
+  vx.stroke();
+}
+frame();
+
+/* ---------- mini EQ in the player ---------- */
+const eq = $('eq'), ex = eq.getContext('2d');
+function drawEq() {
+  requestAnimationFrame(drawEq);
+  const w = eq.clientWidth, h = eq.clientHeight;
   if (!w) return;
-  if (fc.width !== w * 2) { fc.width = w * 2; fc.height = h * 2; }
-  fcx.clearRect(0, 0, fc.width, fc.height);
-  fcx.strokeStyle = 'rgba(138,134,126,0.4)';
-  fcx.lineWidth = 1;
-  for (let i = 0; i <= 40; i++) {
-    const x = (i / 40) * fc.width;
-    const tall = i % 5 === 0 ? 0.55 : 0.3;
-    fcx.beginPath(); fcx.moveTo(x, fc.height); fcx.lineTo(x, fc.height * (1 - tall)); fcx.stroke();
+  if (eq.width !== w * 2) { eq.width = w * 2; eq.height = h * 2; }
+  ex.clearRect(0, 0, eq.width, eq.height);
+  if (!analyser) return;
+  const isMod = curIdx >= 0 && SCHED[curIdx].type === 'mod';
+  const col = isMod ? '139,224,155' : '245,168,60';
+  const data = freqData;
+  if (powered) analyser.getByteFrequencyData(data);
+  const bars = 36, bw = eq.width / bars;
+  for (let i = 0; i < bars; i++) {
+    const v = powered ? data[Math.floor(i * data.length / bars * 0.72)] / 255 : 0;
+    const bh = Math.max(2, v * eq.height * 0.95);
+    ex.fillStyle = `rgba(${col},${0.3 + v * 0.6})`;
+    ex.fillRect(i * bw + bw * 0.15, eq.height - bh, bw * 0.7, bh);
   }
-  needleT += powered ? 0.002 : 0.011;
-  const nx = fc.width * (powered
-    ? (channel === 'a' ? 0.62 : 0.31) + Math.sin(needleT * 3) * 0.004
-    : 0.5 + Math.sin(needleT) * 0.42);
-  fcx.strokeStyle = '#f5a83c';
-  fcx.lineWidth = 3;
-  fcx.shadowColor = 'rgba(245,168,60,0.8)'; fcx.shadowBlur = 12;
-  fcx.beginPath(); fcx.moveTo(nx, 0); fcx.lineTo(nx, fc.height); fcx.stroke();
-  fcx.shadowBlur = 0;
 }
-drawDial();
-
-/* ---------- power on ---------- */
-$('power').addEventListener('click', async () => {
-  if (powered) return;
-  const btn = $('power');
-  btn.disabled = true;
-  btn.textContent = 'locking signal…';
-  initAudio();
-  await actx.resume();
-  audio.volume = vol.value / 100;
-  powered = true;
-  staticBurst(0.7);
-  const day = Math.floor((Date.now() / 1000 - EPOCH) / 86400) + 1;
-  $('freq-readout').textContent = STATION_FREQ + ' MHz';
-  $('freq-label').textContent = `signal locked · broadcast day ${day}`;
-  btn.style.display = 'none';
-  $('deck').classList.add('on');
-  tlog('receiver powered — searching for carrier');
-  tlog(`carrier locked · ${STATION_FREQ} mhz · broadcast day ${day}`, true);
-  playBroadcast(true);
-  pollLastfm();
-});
+drawEq();
 
 /* ---------- last.fm receiver ---------- */
 async function pollLastfm() {
-  if (!LASTFM_KEY) {
-    $('rx-current').innerHTML = '<span class="who">receiver dark —</span> uplink key not yet installed';
-    return;
-  }
   try {
     const r = await fetch(`https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${LASTFM_USER}&api_key=${LASTFM_KEY}&format=json&limit=6`);
     const d = await r.json();
     const list = d.recenttracks.track || [];
-    if (!list.length) return;
-    const cur = list[0];
-    const live = cur['@attr'] && cur['@attr'].nowplaying;
-    $('rx-current').innerHTML =
-      `<span class="who">${live ? 'scott is playing —' : 'scott last played —'}</span> ` +
-      `${cur.name} · ${cur.artist['#text']}`;
-    $('rx-note').textContent = live ? 'live · scrobbling now' : 'last.fm uplink · recent signal';
-    $('rx-recent').innerHTML = list.slice(1, 6).map(t =>
-      `<li>${t.name} — ${t.artist['#text']}<span class="tt">${t.date ? t.date['#text'] : ''}</span></li>`
-    ).join('');
+    if (list.length) {
+      const cur = list[0];
+      const live = cur['@attr'] && cur['@attr'].nowplaying;
+      $('rx-current').innerHTML =
+        `<span class="who">${live ? 'scott is playing —' : 'scott last played —'}</span> ` +
+        `${cur.name} · ${cur.artist['#text']}`;
+      $('rx-note').textContent = live ? 'live · scrobbling now' : 'last.fm uplink · recent signal';
+      const img = (cur.image || []).find(i => i.size === 'large');
+      if (img && img['#text']) { $('rx-art').src = img['#text']; $('rx-art').style.display = 'block'; }
+      $('rx-recent').innerHTML = list.slice(1, 6).map(t =>
+        `<li>${t.name} — ${t.artist['#text']}<span class="tt">${t.date ? t.date['#text'] : ''}</span></li>`
+      ).join('');
+    }
   } catch (e) { /* receiver stays quiet */ }
   setTimeout(pollLastfm, 45000);
 }
+pollLastfm();
 </script>
 </body>
 </html>
