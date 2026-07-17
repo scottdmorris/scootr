@@ -56,11 +56,14 @@
   /* ---------- the player window ---------- */
   #wmp {
     width: min(94vw, 700px);
-    background: rgba(8, 8, 8, 0.88);
+    background: rgba(8, 8, 8, 0.9);
     border: 1px solid #3a3a38;
+    border-top-color: #4c4c49;
+    border-radius: 3px;
     box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 0 1px #000;
     animation-delay: 0.3s;
-    backdrop-filter: blur(3px);
+    backdrop-filter: blur(4px);
+    overflow: hidden;
   }
   #titlebar {
     display: flex; align-items: center; gap: 0.6rem;
@@ -95,7 +98,16 @@
   body.cinema main { opacity: 0; pointer-events: none; }
   body.cinema { overflow: hidden; }
   main { transition: opacity 0.6s; }
-  #menubar #vizname { margin-left: auto; color: #3d3b36; letter-spacing: 0.14em; }
+  #menubar #vizsel { margin-left: auto; display: flex; align-items: center; gap: 0.7rem; }
+  #menubar #vizname { color: #4a4740; letter-spacing: 0.14em; }
+  #vizdots { display: flex; gap: 6px; align-items: center; }
+  .vdot {
+    width: 7px; height: 7px; border-radius: 50%;
+    border: 1px solid #4a4842; background: transparent;
+    cursor: pointer; transition: all 0.25s; padding: 0;
+  }
+  .vdot:hover { border-color: var(--dim); }
+  .vdot.on { background: var(--amber); border-color: var(--amber); box-shadow: 0 0 7px rgba(245,168,60,0.7); }
 
   #wmp-body { padding: 0.9rem; }
   #toprow { display: flex; gap: 0.9rem; margin-bottom: 0.9rem; }
@@ -149,8 +161,14 @@
     font-size: 12px; transition: all 0.25s;
   }
   .tbtn:hover { border-color: var(--amber); color: var(--amber); }
+  .tbtn:active { transform: translateY(1px); }
   .tbtn[disabled] { opacity: 0.35; cursor: default; }
   .tbtn.wide { width: auto; padding: 0 0.8rem; font-family: var(--mono); font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; }
+  .tbtn, .vdot { border-radius: 2px; }
+  .vdot { border-radius: 50%; }
+  button:focus-visible { outline: 1px solid var(--amber); outline-offset: 2px; }
+  .prow { transition: background 0.2s; }
+  .prow:hover { background: rgba(255,255,255,0.025); }
   @keyframes tunepulse {
     0%, 100% { box-shadow: 0 0 0 rgba(245,168,60,0); border-color: #3a3a38; }
     50% { box-shadow: 0 0 18px rgba(245,168,60,0.5); border-color: var(--amber); color: var(--amber); }
@@ -218,6 +236,10 @@
   }
 
   #plist { -webkit-overflow-scrolling: touch; }
+  #plegend {
+    font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: #45423c; margin-top: 0.45rem;
+  }
 
   @media (max-width: 560px) {
     #wmp { width: 96vw; }
@@ -232,7 +254,7 @@
     #prog { flex-basis: 100%; order: 5; }
     #ttime { margin-left: auto; }
     #vol { width: 92px; }
-    #menubar #vizname { display: none; }
+    #menubar #vizname { display: none; } /* dots stay on mobile */
     #statusbar { font-size: 8px; }
     #scrollhint { margin-top: 1.6rem; }
     #rx-row { flex-direction: row; }
@@ -260,7 +282,7 @@
       </div>
       <div id="menubar">
         <span>file</span><span id="menu-view" title="cycle visualization">view</span><span>play</span><span id="menu-tools" title="sleep timer">tools</span><span>help</span>
-        <span id="vizname">viz: the signal</span>
+        <span id="vizsel"><span id="vizdots"></span><span id="vizname">the yard</span></span>
       </div>
       <div id="wmp-body">
         <div id="toprow">
@@ -276,6 +298,7 @@
           </div>
         </div>
         <div id="plist"></div>
+        <div id="plegend"><span style="color:var(--phosphor)">&#9626;</span> tracker interlude &mdash; synthesized live in your browser &middot; times shown are when each record airs, your clock</div>
         <div id="transport">
           <button class="tbtn pulse" id="btn-play" title="tune into the live broadcast">&#9654;</button>
           <button class="tbtn" id="btn-stop" title="tune out" disabled>&#9632;</button>
@@ -310,7 +333,7 @@
       <h2>transmission notes</h2>
       <article>
         <p><strong>This is not a playlist. It is a broadcast.</strong> There is no pause and no skip. The station has been playing since its epoch and the page simply computes where the signal is right now &mdash; so every listener, on every continent, hears the same track at the same second. You don't press play; you tune in.</p>
-        <p>The rotation is five and a half hours of jungle, ragga jungle, dub, and drum &amp; bass from the <a href="https://archive.org/details/netlabels" target="_blank" rel="noopener">netlabel underground</a> &mdash; artist-released, Creative Commons&ndash;licensed records from labels that gave their music away on purpose. Woven between them are <strong>tracker interludes</strong>: jungle written as .mod and .xm modules, the file format PlayStation-era game soundtracks grew out of, streamed from <a href="https://modarchive.org" target="_blank" rel="noopener">The Mod Archive</a> and synthesized live in your browser while the status bar shows the pattern and row being executed.</p>
+        <p>The crate is <strong>eleven hours of jungle, ragga jungle, dub, and drum &amp; bass</strong> from twenty-one releases across the <a href="https://archive.org/details/netlabels" target="_blank" rel="noopener">netlabel underground</a> &mdash; artist-released, Creative Commons&ndash;licensed records from labels that gave their music away on purpose. And it never plays the same show twice: every cycle the rotation <strong>reshuffles itself deterministically</strong>, so the order is always new but every listener still computes the identical sequence &mdash; the playlist shows the actual clock time each record will air where you are. Woven between them are <strong>tracker interludes</strong>: jungle written as .mod and .xm modules, the file format PlayStation-era game soundtracks grew out of, streamed from <a href="https://modarchive.org" target="_blank" rel="noopener">The Mod Archive</a> and synthesized live in your browser while the status bar shows the pattern and row being executed.</p>
         <p>The player is an ode to the media players this music was first heard through &mdash; and the visualization behind it is the part of Windows Media Player everyone actually remembers. It flies through a node field that steers, accelerates, and shifts color with the frequencies of whatever the station is playing. Every track credits its source and links back to the original release.</p>
         <p>The receiver panel is the honest part: a live wire into what I'm personally listening to, scrobbled from Spotify. The broadcast is what I can legally play you; the receiver is what I'd play you if the record industry were a different thing.</p>
         <p>No backend, no stream server, no framework. One HTML file, a fixed epoch, and arithmetic.</p>
@@ -364,35 +387,64 @@ const TOTAL = SCHED.reduce((s, t) => s + t.dur, 0);
 
 /* ---------- playlist pane ---------- */
 const plist = $('plist');
-const PREFIX = [];
-{ let acc = 0; for (const t of SCHED) { PREFIX.push(acc); acc += t.dur; } }
-plist.innerHTML = SCHED.map((t, i) => {
-  const nm = t.type === 'mod'
-    ? (t.title || t.file)
-    : `${t.artist ? t.artist + ' — ' : ''}${t.title}`;
-  return `<div class="prow${t.type === 'mod' ? ' mod' : ''}" id="pr${i}">` +
-    `<span class="num">${String(i + 1).padStart(2, '0')}</span>` +
-    `<span class="nm">${nm.toLowerCase()}</span>` +
-    `<span class="at" id="at${i}"></span>` +
-    `<span class="du">${mmss(t.dur)}</span></div>`;
-}).join('');
 
-/* air times — when each entry will actually be on air, in the viewer's clock */
-function refreshAirTimes() {
-  const now = Date.now() / 1000;
-  let pos = (now - EPOCH) % TOTAL;
-  if (pos < 0) pos += TOTAL;
-  const loopStart = now - pos;
-  for (let i = 0; i < SCHED.length; i++) {
-    let at = loopStart + PREFIX[i];
-    if (at + SCHED[i].dur < now) at += TOTAL; /* already aired — show next loop */
-    const d = new Date(at * 1000);
-    const onAir = at <= now && now < at + SCHED[i].dur;
-    $('at' + i).textContent = onAir ? '· on air ·'
-      : `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
-  }
+function mulberry32(a) {
+  return function() {
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
 }
-refreshAirTimes();
+
+/* every ~5.6h cycle the rotation reshuffles itself — deterministically,
+   so every listener still computes the identical order for cycle n */
+let curLoop = null, ORDER = [], OPREFIX = [];
+function seededOrder(n) {
+  const idx = SCHED.map((_, i) => i);
+  const r = mulberry32(((n % 100000) + 7) * 0x9E37 + 11);
+  for (let i = idx.length - 1; i > 0; i--) {
+    const j = Math.floor(r() * (i + 1));
+    [idx[i], idx[j]] = [idx[j], idx[i]];
+  }
+  return idx;
+}
+function setLoop(n) {
+  curLoop = n;
+  ORDER = seededOrder(n);
+  OPREFIX = [];
+  let acc = 0;
+  for (const k of ORDER) { OPREFIX.push(acc); acc += SCHED[k].dur; }
+  plist.innerHTML = ORDER.map((k, oi) => {
+    const t = SCHED[k];
+    const nm = t.type === 'mod'
+      ? (t.title || t.file)
+      : `${t.artist ? t.artist + ' — ' : ''}${t.title}`;
+    return `<div class="prow${t.type === 'mod' ? ' mod' : ''}" id="pr${k}">` +
+      `<span class="num">${String(oi + 1).padStart(2, '0')}</span>` +
+      `<span class="nm">${nm.toLowerCase()}</span>` +
+      `<span class="at" id="at${k}"></span>` +
+      `<span class="du">${mmss(t.dur)}</span></div>`;
+  }).join('');
+  refreshAirTimes();
+}
+
+/* air times — when each entry airs this cycle, in the viewer's own clock */
+function refreshAirTimes() {
+  if (curLoop === null) return;
+  const now = Date.now() / 1000;
+  const loopStart = EPOCH + curLoop * TOTAL;
+  ORDER.forEach((k, oi) => {
+    const el = $('at' + k);
+    if (!el) return;
+    const at = loopStart + OPREFIX[oi];
+    const d = new Date(at * 1000);
+    const onAir = at <= now && now < at + SCHED[k].dur;
+    el.textContent = onAir ? '· on air ·'
+      : `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+  });
+}
+setLoop(Math.floor((Date.now() / 1000 - EPOCH) / TOTAL));
 setInterval(refreshAirTimes, 30000);
 
 /* ---------- audio ---------- */
@@ -463,11 +515,14 @@ function drawModArt(name) {
 
 /* ---------- schedule ---------- */
 function entryNow() {
-  let pos = (Date.now() / 1000 - EPOCH) % TOTAL;
+  const el = Date.now() / 1000 - EPOCH;
+  const n = Math.floor(el / TOTAL);
+  if (n !== curLoop) setLoop(n);
+  let pos = el % TOTAL;
   if (pos < 0) pos += TOTAL;
-  let i = 0;
-  while (pos >= SCHED[i].dur) { pos -= SCHED[i].dur; i++; }
-  return { i, off: pos };
+  let oi = 0;
+  while (pos >= SCHED[ORDER[oi]].dur) { pos -= SCHED[ORDER[oi]].dur; oi++; }
+  return { i: ORDER[oi], off: pos };
 }
 
 function showEntry(t, i) {
@@ -654,13 +709,23 @@ function sizeViz() { viz.width = innerWidth * DPR; viz.height = innerHeight * DP
 sizeViz();
 addEventListener('resize', sizeViz);
 
-const VIZ_NAMES = ['the signal', 'bars & waves', 'alchemy', 'phase scope', 'the grid'];
+const VIZ_NAMES = ['the yard', 'the signal', 'bars & waves', 'alchemy', 'phase scope', 'the grid'];
 let vizMode = 0;
-function cycleViz() {
-  vizMode = (vizMode + 1) % VIZ_NAMES.length;
-  $('vizname').textContent = 'viz: ' + VIZ_NAMES[vizMode];
+const vizDots = VIZ_NAMES.map((name, m) => {
+  const b = document.createElement('button');
+  b.className = 'vdot' + (m === 0 ? ' on' : '');
+  b.title = name;
+  b.addEventListener('click', () => setViz(m));
+  $('vizdots').appendChild(b);
+  return b;
+});
+function setViz(m) {
+  vizMode = m;
+  vizDots.forEach((d, i) => d.classList.toggle('on', i === m));
+  $('vizname').textContent = VIZ_NAMES[m];
   vx.fillStyle = '#050506'; vx.fillRect(0, 0, viz.width, viz.height);
 }
+function cycleViz() { setViz((vizMode + 1) % VIZ_NAMES.length); }
 $('menu-view').addEventListener('click', cycleViz);
 
 /* single click on the sky cycles viz; double click enters cinema */
@@ -814,12 +879,13 @@ function frame() {
     appIcon.style.transform = `scale(${1 + beat * 0.5})`;
   }
 
-  if (vizMode === 1) { drawBars(w, h, bass, mid, treb, playing); return; }
-  if (vizMode === 2) { drawAlchemy(w, h, bass, mid, treb, playing); return; }
-  if (vizMode === 3) { drawScope(w, h, bass, mid, treb, playing); return; }
-  if (vizMode === 4) { drawGrid(w, h, bass, mid, treb, playing); return; }
+  if (vizMode === 0) { drawYard(w, h, bass, mid, treb, playing); return; }
+  if (vizMode === 2) { drawBars(w, h, bass, mid, treb, playing); return; }
+  if (vizMode === 3) { drawAlchemy(w, h, bass, mid, treb, playing); return; }
+  if (vizMode === 4) { drawScope(w, h, bass, mid, treb, playing); return; }
+  if (vizMode === 5) { drawGrid(w, h, bass, mid, treb, playing); return; }
 
-  /* --- mode 0: the signal --- */
+  /* --- mode 1: the signal --- */
   vx.fillStyle = 'rgba(4,4,7,0.17)';
   vx.fillRect(0, 0, w, h);
 
@@ -1004,7 +1070,184 @@ function drawScope(w, h, bass, mid, treb, playing) {
   vx.stroke();
 }
 
-/* --- mode 4: the grid (perspective floor that surges on the kick) --- */
+/* --- mode 0: the yard — dusk over the yard, soundsystem breathing --- */
+const yardRnd = mulberry32(1997);
+const yardBuildings = Array.from({ length: 15 }, (_, i) => ({
+  x: i / 15 + yardRnd() * 0.03, w: 0.045 + yardRnd() * 0.055,
+  h: 0.06 + yardRnd() * 0.16, tank: yardRnd() > 0.72, ant: yardRnd() > 0.8,
+  win: yardRnd(),
+}));
+const yardClouds = Array.from({ length: 4 }, () => ({
+  x: yardRnd(), y: 0.1 + yardRnd() * 0.24, r: 0.1 + yardRnd() * 0.14, sp: 0.00006 + yardRnd() * 0.00012,
+}));
+let yardT = 0;
+
+function palm(gx, gy, s, flip, sway) {
+  vx.strokeStyle = '#060604'; vx.fillStyle = '#060604';
+  vx.lineWidth = 5 * DPR * s;
+  vx.beginPath();
+  vx.moveTo(gx, gy);
+  const topX = gx + flip * 26 * DPR * s + sway * 10 * DPR;
+  const topY = gy - 120 * DPR * s;
+  vx.quadraticCurveTo(gx + flip * 4 * DPR * s, gy - 70 * DPR * s, topX, topY);
+  vx.stroke();
+  for (let i = 0; i < 9; i++) {
+    const a = -Math.PI / 2 + (i - 4) * 0.36 + sway * 0.12;
+    const len = (46 + (i % 3) * 12) * DPR * s;
+    const ex = topX + Math.cos(a) * len, ey = topY + Math.sin(a) * len + len * 0.34;
+    vx.lineWidth = 2.6 * DPR * s;
+    vx.beginPath();
+    vx.moveTo(topX, topY);
+    vx.quadraticCurveTo(topX + Math.cos(a) * len * 0.6, topY + Math.sin(a) * len * 0.52, ex, ey);
+    vx.stroke();
+  }
+}
+
+function drawYard(w, h, bass, mid, treb, playing) {
+  yardT += 0.016;
+  const ground = h * 0.66;
+  const hue = (tintHue + 10) % 360;
+
+  /* dusk sky — tinted by the cover on air */
+  const sky = vx.createLinearGradient(0, 0, 0, ground);
+  sky.addColorStop(0, '#07070f');
+  sky.addColorStop(0.55, `hsla(${(hue + 230) % 360}, 30%, 11%, 1)`);
+  sky.addColorStop(0.88, `hsla(${hue}, 45%, 22%, 1)`);
+  sky.addColorStop(1, `hsla(${hue}, 60%, 30%, 1)`);
+  vx.fillStyle = sky;
+  vx.fillRect(0, 0, w, ground);
+
+  /* stars */
+  for (const s of stars) {
+    const sy = s.y * ground * 0.85;
+    s.ph += s.sp;
+    vx.beginPath();
+    vx.arc(s.x * w, sy, s.r * DPR * 0.8, 0, Math.PI * 2);
+    vx.fillStyle = `rgba(225,220,205,${0.05 + (Math.sin(s.ph) + 1) / 2 * 0.16})`;
+    vx.fill();
+  }
+
+  /* moon */
+  const mx = w * 0.78, my = h * 0.16, mr = Math.min(w, h) * 0.035;
+  const mg = vx.createRadialGradient(mx, my, 0, mx, my, mr * 5);
+  mg.addColorStop(0, 'rgba(235,230,215,0.35)');
+  mg.addColorStop(0.25, 'rgba(235,230,215,0.08)');
+  mg.addColorStop(1, 'rgba(0,0,0,0)');
+  vx.fillStyle = mg; vx.fillRect(mx - mr * 5, my - mr * 5, mr * 10, mr * 10);
+  vx.beginPath(); vx.arc(mx, my, mr, 0, Math.PI * 2);
+  vx.fillStyle = 'rgba(235,230,218,0.9)'; vx.fill();
+
+  /* drifting clouds */
+  for (const c of yardClouds) {
+    c.x = (c.x + c.sp) % 1.3;
+    const cg = vx.createRadialGradient(c.x * w, c.y * h, 0, c.x * w, c.y * h, c.r * w);
+    cg.addColorStop(0, 'rgba(16,16,26,0.55)');
+    cg.addColorStop(1, 'rgba(0,0,0,0)');
+    vx.fillStyle = cg;
+    vx.fillRect(0, 0, w, ground);
+  }
+
+  /* skyline silhouette */
+  vx.fillStyle = '#08080a';
+  for (const b of yardBuildings) {
+    const bx = b.x * w, bw2 = b.w * w, bh = b.h * h;
+    vx.fillRect(bx, ground - bh, bw2, bh);
+    if (b.tank) { /* brooklyn water tank */
+      vx.fillRect(bx + bw2 * 0.25, ground - bh - h * 0.03, bw2 * 0.3, h * 0.03);
+      vx.beginPath();
+      vx.moveTo(bx + bw2 * 0.22, ground - bh - h * 0.03);
+      vx.lineTo(bx + bw2 * 0.4, ground - bh - h * 0.052);
+      vx.lineTo(bx + bw2 * 0.58, ground - bh - h * 0.03);
+      vx.fill();
+    }
+    if (b.ant) { /* pirate aerial */
+      vx.strokeStyle = '#08080a'; vx.lineWidth = 1.6 * DPR;
+      vx.beginPath();
+      vx.moveTo(bx + bw2 * 0.7, ground - bh);
+      vx.lineTo(bx + bw2 * 0.7, ground - bh - h * 0.07);
+      vx.stroke();
+      /* blinking transmitter light */
+      if (Math.sin(yardT * 1.4 + b.x * 20) > 0.55) {
+        vx.beginPath();
+        vx.arc(bx + bw2 * 0.7, ground - bh - h * 0.07, 2.2 * DPR, 0, Math.PI * 2);
+        vx.fillStyle = 'rgba(255,80,60,0.9)'; vx.fill();
+        vx.fillStyle = '#08080a';
+      }
+    }
+    /* a few lit windows */
+    if (b.win > 0.35) {
+      const rows = Math.floor(b.h * 26), cols = 3;
+      const wr = mulberry32(Math.floor(b.x * 1000));
+      vx.fillStyle = `hsla(${hue}, 60%, 55%, 0.5)`;
+      for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+        if (wr() > 0.86) vx.fillRect(bx + bw2 * (0.2 + c * 0.28), ground - bh + (r + 0.4) * (bh / rows), 2.4 * DPR, 3 * DPR);
+      }
+      vx.fillStyle = '#08080a';
+    }
+  }
+
+  /* ground */
+  const gg2 = vx.createLinearGradient(0, ground, 0, h);
+  gg2.addColorStop(0, '#0a0a08');
+  gg2.addColorStop(1, '#040403');
+  vx.fillStyle = gg2;
+  vx.fillRect(0, ground, w, h - ground);
+
+  /* string lights swinging gently, flickering with the highs */
+  const p1x = w * 0.13, p1y = ground - h * 0.19, p2x = w * 0.55, p2y = ground - h * 0.1;
+  vx.strokeStyle = 'rgba(10,10,8,0.9)'; vx.lineWidth = 1.2 * DPR;
+  vx.beginPath();
+  vx.moveTo(p1x, p1y);
+  vx.quadraticCurveTo((p1x + p2x) / 2, p1y + h * 0.07 + Math.sin(yardT * 0.7) * 3 * DPR, p2x, p2y);
+  vx.stroke();
+  for (let i = 1; i < 9; i++) {
+    const t = i / 9;
+    const lx = (1 - t) * (1 - t) * p1x + 2 * (1 - t) * t * ((p1x + p2x) / 2) + t * t * p2x;
+    const ly = (1 - t) * (1 - t) * p1y + 2 * (1 - t) * t * (p1y + h * 0.07 + Math.sin(yardT * 0.7) * 3 * DPR) + t * t * p2y;
+    const fl = 0.45 + treb * 0.5 + Math.sin(yardT * 2 + i * 2.2) * 0.14;
+    vx.beginPath(); vx.arc(lx, ly + 3 * DPR, 2 * DPR, 0, Math.PI * 2);
+    vx.fillStyle = `hsla(${(hue + i * 8) % 360}, 85%, 62%, ${Math.max(0.15, fl)})`;
+    vx.fill();
+  }
+
+  /* palms swaying with the mids */
+  const sway = Math.sin(yardT * 0.6) * 0.4 + mid * 0.9;
+  const ps = Math.min(w, h) / (900 * DPR);
+  palm(w * 0.13, ground + 2, ps * 1.25, 1, sway);
+  palm(w * 0.92, ground + 2, ps * 1.05, -1, sway * 0.8 + 0.1);
+
+  /* the soundsystem — a speaker stack that actually plays */
+  const sx0 = w * 0.72, sy0 = ground - 4 * DPR;
+  const bs = Math.min(w, h) * 0.075;
+  for (let i = 0; i < 2; i++) {
+    const bx = sx0, by = sy0 - bs * (i + 1) - i * 3 * DPR;
+    vx.fillStyle = '#0b0b09';
+    vx.fillRect(bx, by, bs * 1.45, bs);
+    vx.strokeStyle = 'rgba(60,56,48,0.8)'; vx.lineWidth = 1 * DPR;
+    vx.strokeRect(bx, by, bs * 1.45, bs);
+    /* woofer */
+    const cr = bs * 0.3 * (1 + bass * 0.14 + beat * 0.22);
+    vx.beginPath(); vx.arc(bx + bs * 0.45, by + bs * 0.5, cr, 0, Math.PI * 2);
+    vx.fillStyle = '#050504'; vx.fill();
+    vx.strokeStyle = `hsla(${hue}, 70%, 55%, ${0.25 + beat * 0.6})`;
+    vx.lineWidth = 1.6 * DPR; vx.stroke();
+    /* tweeter */
+    vx.beginPath(); vx.arc(bx + bs * 1.1, by + bs * 0.5, bs * 0.13 * (1 + treb * 0.3), 0, Math.PI * 2);
+    vx.fillStyle = '#050504'; vx.fill();
+    vx.strokeStyle = `hsla(${hue}, 70%, 60%, ${0.2 + treb * 0.5})`;
+    vx.lineWidth = 1.2 * DPR; vx.stroke();
+  }
+  /* bass shockwave rolling off the stack */
+  if (beat > 0.3) {
+    vx.beginPath();
+    vx.arc(sx0 + bs * 0.7, sy0 - bs, bs * (1.3 + (1 - beat) * 2.2), 0, Math.PI * 2);
+    vx.strokeStyle = `hsla(${hue}, 80%, 60%, ${beat * 0.25})`;
+    vx.lineWidth = 2 * DPR;
+    vx.stroke();
+  }
+}
+
+/* --- mode 5: the grid (perspective floor that surges on the kick) --- */
 let gridScroll = 0;
 function drawGrid(w, h, bass, mid, treb, playing) {
   vx.fillStyle = 'rgba(3,3,6,0.35)';
