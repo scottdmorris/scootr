@@ -1255,7 +1255,7 @@ function drawInkblot(w, h, bass, mid, treb, playing) {
   vx.fillStyle = '#020203';
   vx.fillRect(0, 0, w, h);
   vx.save();
-  vx.globalAlpha = 0.975;
+  vx.globalAlpha = 0.96;
   vx.translate(cx, cy);
   const iz = 1.02 + bass * 0.032 + beat * 0.012;
   vx.scale(iz, iz);
@@ -1297,14 +1297,15 @@ function drawInkblot(w, h, bass, mid, treb, playing) {
     vx.fillStyle = dg;
     vx.beginPath(); vx.arc(dx, dy, dr, 0, Math.PI * 2); vx.fill();
   }
-  /* mirror the whole accumulated field across the spine */
+  vx.globalCompositeOperation = 'source-over';
+  /* mirror by blending, not adding — symmetric without blowing out */
   fbx.drawImage(viz, 0, 0);
   vx.save();
-  vx.globalAlpha = 0.75;
+  vx.globalAlpha = 0.5;
   vx.translate(w, 0); vx.scale(-1, 1);
   vx.drawImage(fbc, 0, 0);
   vx.restore();
-  vx.globalCompositeOperation = 'source-over';
+  vx.globalAlpha = 1;
 }
 
 /* --- mode 3: battery — 8-way kaleidoscope spectrum shards --- */
