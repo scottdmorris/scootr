@@ -18,12 +18,15 @@ Then open `http://localhost:8000/index.html` (or `/about/index.html`, `/projects
 
 ## Structure
 
-- `index.html` — homepage ("scootr's laboratory"), nav links to About, Projects, Elysium, Signal.
+- `index.html` — homepage ("scootr's laboratory"), nav links to About, Projects, Elysium, scootr.fm; shows a live "on air" ticker computed from the radio playlist.
 - `about/index.html` — bio / resume-style "dossier" page (experience, education, skills, contact links).
 - `projects/index.html` — project index, links out to individual project subdirectories:
   - `projects/racial-bias/` — ML fairness project (FairFace/Grad-CAM), includes static JSON data files and generated image assets under `img/`.
   - `projects/leads/` — Lead Intelligence System write-up.
   - `projects/retail-dashboard/` — multi-brand ops dashboard demo write-up.
+  - `projects/311/` — The Grievance Atlas, NYC 311 complaint map (static JSON under `data/`, live Socrata fetch).
+  - `projects/vigil/` — The Vigil, live worldwide crisis map (USGS/EONET/WHO live feeds + baked GDACS snapshot under `data/`).
+  - `projects/radio/` — scootr.fm, 24/7 clock-synced pirate radio (playlist under `data/`, streams from archive.org + Mod Archive; homepage on-air ticker reads its `data/playlist.json`).
 - `elysium/index.html`, `signal/index.html` — standalone creative/experimental pages, linked from the homepage nav but not part of the "Projects" listing.
 
 Each top-level section lives in its own directory with its own `index.html`; there is no shared layout, template, or component system — new pages are built by copying an existing page and editing in place.
