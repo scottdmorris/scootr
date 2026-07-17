@@ -1255,41 +1255,56 @@ function drawInkblot(w, h, bass, mid, treb, playing) {
   vx.fillStyle = '#020203';
   vx.fillRect(0, 0, w, h);
   vx.save();
-  vx.globalAlpha = 0.955;
+  vx.globalAlpha = 0.975;
   vx.translate(cx, cy);
-  vx.scale(1.011 + bass * 0.02, 1.011 + bass * 0.02);
-  vx.rotate((treb - 0.08) * 0.006);
+  const iz = 1.02 + bass * 0.032 + beat * 0.012;
+  vx.scale(iz, iz);
+  vx.rotate((treb - 0.08) * 0.008);
   vx.translate(-cx, -cy);
   vx.drawImage(fbc, 0, 0);
   vx.restore();
-  /* source: a waveform ribbon drawn on the left wing only */
+  /* source: layered waveform ribbons sweeping the whole left wing —
+     drawn far enough out to live beyond the player window */
   const hue = (tintHue + globalHue) % 360;
-  vx.lineWidth = (2 + bass * 4 + beat * 3) * DPR;
-  vx.strokeStyle = `hsla(${hue}, 90%, ${56 + beat * 20}%, 0.85)`;
-  vx.beginPath();
-  const N = 80, span = h * 0.55;
-  for (let i = 0; i <= N; i++) {
-    const y = cy - span / 2 + i / N * span;
-    const v = (playing && timeData)
-      ? (timeData[(i * 7) % timeData.length] - 128) / 128
-      : Math.sin(idlePulse * 2 + i * 0.25) * 0.2;
-    const x = cx - Math.abs(v) * w * (0.16 + bass * 0.12) - w * 0.012;
-    i === 0 ? vx.moveTo(x, y) : vx.lineTo(x, y);
+  vx.globalCompositeOperation = 'lighter';
+  const N = 90, span = h * 0.8;
+  for (let layer = 0; layer < 3; layer++) {
+    const amp = w * (0.16 + layer * 0.09 + bass * 0.14);
+    const base = w * (0.045 + layer * 0.02);
+    for (const [lw, al] of [[9, 0.14], [2.6, 0.95]]) {
+      vx.lineWidth = (lw + beat * 4) * DPR;
+      vx.strokeStyle = `hsla(${(hue + layer * 26) % 360}, 92%, ${58 + beat * 18}%, ${al})`;
+      vx.beginPath();
+      for (let i = 0; i <= N; i++) {
+        const y = cy - span / 2 + i / N * span;
+        const v = (playing && timeData)
+          ? (timeData[(i * 5 + layer * 43) % timeData.length] - 128) / 128
+          : Math.sin(idlePulse * 2 + i * 0.22 + layer * 1.8) * 0.25;
+        const x = cx - base - Math.abs(v) * amp;
+        i === 0 ? vx.moveTo(x, y) : vx.lineTo(x, y);
+      }
+      vx.stroke();
+    }
   }
-  vx.stroke();
+  /* ink drops on the kick — bright blots that echo outward */
+  if (beatFired) {
+    const dy = cy + (Math.random() - 0.5) * h * 0.5;
+    const dx = cx - w * (0.12 + Math.random() * 0.2);
+    const dr = (14 + bass * 30) * DPR;
+    const dg = vx.createRadialGradient(dx, dy, 0, dx, dy, dr);
+    dg.addColorStop(0, `hsla(${(hue + 40) % 360}, 95%, 70%, 0.95)`);
+    dg.addColorStop(1, 'rgba(0,0,0,0)');
+    vx.fillStyle = dg;
+    vx.beginPath(); vx.arc(dx, dy, dr, 0, Math.PI * 2); vx.fill();
+  }
   /* mirror the whole accumulated field across the spine */
   fbx.drawImage(viz, 0, 0);
   vx.save();
-  vx.globalCompositeOperation = 'lighter';
-  vx.globalAlpha = 0.5;
+  vx.globalAlpha = 0.75;
   vx.translate(w, 0); vx.scale(-1, 1);
   vx.drawImage(fbc, 0, 0);
   vx.restore();
   vx.globalCompositeOperation = 'source-over';
-  /* the spine */
-  vx.lineWidth = 1 * DPR;
-  vx.strokeStyle = `hsla(${hue}, 60%, 60%, ${0.1 + beat * 0.25})`;
-  vx.beginPath(); vx.moveTo(cx, cy - h * 0.32); vx.lineTo(cx, cy + h * 0.32); vx.stroke();
 }
 
 /* --- mode 3: battery — 8-way kaleidoscope spectrum shards --- */
