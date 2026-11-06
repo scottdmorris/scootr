@@ -7,6 +7,10 @@ Dates are commit dates.
 ## 2026-11-05
 
 ### Added
+- **Ops dashboard demo:** new Overview tab (fictional data) with today's route
+  progress per technician, next-day route-plan checks, receivables aging, low-stock
+  alerts and a "needs attention" feed that links into each brand view, plus an
+  "About this build" panel with the architecture flow and build stats.
 - **About:** current employer named (Luften) and a Resume download in the contact
   row (`about/Scott_Morris_Resume.pdf`).
 - **Every page:** favicon cut from `earth-loop.mp4` — a 16-frame spin that animates

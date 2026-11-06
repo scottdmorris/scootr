@@ -325,6 +325,39 @@
     .metrics.cols-5, .metrics.cols-4 { grid-template-columns: repeat(2, 1fr); }
     .grid-2 { grid-template-columns: 1fr; }
   }
+
+  /* ---------- overview + about panels ---------- */
+  .ov-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 1.2rem; }
+  .ov-note { font-size: 11.5px; color: var(--dim); margin-top: 0.7rem; }
+  .check-row { display: flex; align-items: center; gap: 0.6rem; padding: 0.4rem 0; font-size: 12.5px; color: var(--dim); }
+  .check-row i { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; display: inline-block; }
+  .check-row.pass i { background: var(--green); }
+  .check-row.warn i { background: var(--amber); }
+  .check-row.fail i { background: var(--red); }
+  .check-head { font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); margin: 1rem 0 0.2rem; }
+  .attn-row { display: flex; gap: 0.8rem; align-items: flex-start; padding: 0.7rem 0; border-top: 1px solid var(--border); font-size: 12.5px; cursor: pointer; }
+  .attn-row:first-of-type { border-top: none; }
+  .attn-tag { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; padding: 0.1rem 0.45rem; border-radius: 4px; background: var(--panel-2); color: var(--dim); white-space: nowrap; }
+  .attn-open { margin-left: auto; color: var(--dim); font-size: 11.5px; white-space: nowrap; }
+  .attn-row:hover .attn-open { color: var(--accent); }
+  .stock-row { display: flex; justify-content: space-between; gap: 1rem; padding: 0.5rem 0; font-size: 12.5px; border-top: 1px solid var(--border); }
+  .stock-row:first-of-type { border-top: none; }
+  .stock-row span:last-child { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; }
+  .stock-row .out { color: var(--red); }
+  .stock-row .low { color: var(--amber); }
+  .arch { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: stretch; margin: 1rem 0; }
+  .arch-box { flex: 1 1 130px; background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; padding: 0.7rem 0.8rem; font-size: 11.5px; color: var(--dim); }
+  .arch-box b { display: block; color: var(--text); font-size: 12px; margin-bottom: 0.2rem; }
+  .arch-arrow { align-self: center; color: var(--dimmer); }
+  .build-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-top: 1rem; }
+  .build-stats div { background: var(--panel); padding: 0.8rem 1rem; }
+  .build-stats b { display: block; font-family: 'JetBrains Mono', monospace; font-size: 1.05rem; color: var(--text); }
+  .build-stats span { font-size: 11px; color: var(--dim); }
+  @media (max-width: 760px) {
+    .ov-grid { grid-template-columns: 1fr; }
+    .build-stats { grid-template-columns: repeat(2, 1fr); }
+    .arch-arrow { display: none; }
+  }
 </style>
 </head>
 <body>
@@ -333,7 +366,8 @@
   <p class="demo-banner">Portfolio demo <span>&middot;</span> fictional brands &amp; sample data</p>
 
   <div class="brandtabs">
-    <button class="active" data-brand="a" onclick="setBrand('a')">Northbound</button>
+    <button class="active" data-brand="o" onclick="setBrand('o')">Overview</button>
+    <button data-brand="a" onclick="setBrand('a')">Northbound</button>
     <button data-brand="b" onclick="setBrand('b')">Fernhall</button>
     <button data-brand="c" onclick="setBrand('c')">Driftcare</button>
   </div>
@@ -476,6 +510,13 @@
 
   // ---------- brand data ----------
   const BRANDS = {
+    o: {
+      accent: '#4cc9f0', type: 'overview',
+      logo: 'ALL', title: 'Business Overview', sub: 'Thursday, June 25, 2026',
+      sync: 'Store synced 2h ago · Field service synced 4m ago · Wholesale synced 2h ago',
+      datePill: 'Today',
+      source: 'A live version of the Monday digest email · Every item opens the view behind it',
+    },
     a: {
       accent: '#8b80f9', type: 'retail',
       logo: 'NORTHB', title: 'Northbound — Weekly Sales', sub: 'Week of Jun 21 – Jun 25, 2026',
@@ -620,7 +661,7 @@
         ? `<div class="period-toggle"><button class="active">Weekly</button><button>Monthly</button></div>`
         : `<div class="period-toggle"><button>Weekly</button><button class="active">Monthly</button></div>`)
       : '';
-    const datePill = `<div class="date-pill">${b.period === 'weekly' ? 'Jun 14 - Jun 20, 2026' : 'June 2026'}</div>`;
+    const datePill = `<div class="date-pill">${b.datePill || (b.period === 'weekly' ? 'Jun 14 - Jun 20, 2026' : 'June 2026')}</div>`;
     return `
       <div class="topbar">
         <div class="topbar-left">
@@ -840,6 +881,141 @@
     `;
   }
 
+  // ---------- overview (all values fictional) ----------
+  const OVERVIEW = {
+    routes: [
+      { name: 'Ari', done: 8, total: 8, color: 'var(--green)' },
+      { name: 'Bex', done: 7, total: 8, color: 'var(--accent)' },
+      { name: 'Cal', done: 6, total: 8, color: 'var(--accent)' },
+      { name: 'Dee', done: 6, total: 8, color: 'var(--accent)' },
+    ],
+    planChecks: [
+      { state: 'pass', text: 'All 34 stops assigned to a technician' },
+      { state: 'pass', text: 'No technician scheduled over 8 hours' },
+      { state: 'pass', text: 'Drive time per technician under the daily cap' },
+      { state: 'warn', text: '1 stop falls outside its customer service window' },
+    ],
+    aging: [
+      { label: '0–30 days', value: 41200, color: 'var(--green)' },
+      { label: '31–60 days', value: 22800, color: 'var(--amber)' },
+      { label: '61–90 days', value: 11400, color: '#e08a4e' },
+      { label: 'Over 90 days', value: 18600, color: 'var(--red)' },
+    ],
+    openInvoices: 212,
+    metrics: [
+      { label: 'Net sales last week', val: '$14.8k', delta: 'Northbound + Fernhall', up: true },
+      { label: 'Invoiced this month', val: '$18.4k', delta: '31% of $60k target at 33% of month', up: false },
+      { label: 'Missed visits', val: '2', delta: '2 to reschedule', up: false },
+      { label: 'Low stock', val: '3', delta: 'Cedar & Sage Candle 8oz + 2 more', up: false },
+    ],
+    stock: [
+      { name: 'Cedar & Sage Candle 8oz', note: 'Out of stock', cls: 'out' },
+      { name: 'Linen Room Spray 100ml', note: '~1 day left · 10 on hand', cls: 'low' },
+      { name: 'Harbor Mist Diffuser', note: '~6 days left · 2 on hand', cls: 'low' },
+    ],
+    attention: [
+      { tag: 'Fernhall', brand: 'b', text: '3 unfulfilled orders this week — review before the next pull' },
+      { tag: 'Fernhall', brand: 'b', text: 'Refund rate up 2.6 pts vs last week' },
+      { tag: 'Driftcare', brand: 'c', text: 'Checklist completion 62% is below the 90% floor: 19 visits closed without it (Cal 0 of 11, Dee 0 of 8)' },
+      { tag: 'Inventory', brand: 'a', text: 'Cedar & Sage Candle 8oz is out of stock' },
+      { tag: 'Inventory', brand: 'a', text: 'Linen Room Spray 100ml has about 1 day of stock left' },
+    ],
+  };
+
+  function renderOverview() {
+    const o = OVERVIEW;
+    const stops = o.routes.reduce((a, r) => a + r.done, 0);
+    const totalStops = o.routes.reduce((a, r) => a + r.total, 0);
+
+    const routeRows = o.routes.map(r => `
+      <div class="tech-row">
+        <span class="tech-name">${r.name}</span>
+        <span class="tech-bar-track"><span class="tech-bar-fill" style="display:block;width:${(r.done / r.total) * 100}%;background:${r.color};"></span></span>
+        <span class="mono" style="font-size:11.5px;color:var(--dim);width:42px;text-align:right;">${r.done}/${r.total}</span>
+      </div>`).join('');
+
+    const checks = o.planChecks.map(c => `<div class="check-row ${c.state}"><i></i><span>${c.text}</span></div>`).join('');
+
+    const agingTotal = o.aging.reduce((a, s) => a + s.value, 0);
+    const fmtK = v => '$' + (v / 1000).toFixed(1) + 'k';
+    const agingBar = o.aging.map(s => `<div style="width:${(s.value / agingTotal) * 100}%;background:${s.color};"></div>`).join('');
+    const agingLegend = o.aging.map(s => `<span><i style="background:${s.color};"></i>${s.label} ${fmtK(s.value)}</span>`).join('');
+    const over60 = o.aging[2].value + o.aging[3].value;
+
+    const metrics = o.metrics.map(m => `
+      <div class="metric">
+        <div class="mlabel">${m.label}</div>
+        <div class="mval">${m.val}</div>
+        <div class="mdelta" style="color:var(--dim);">${m.delta}</div>
+      </div>`).join('');
+
+    const stock = o.stock.map(s => `<div class="stock-row"><span>${s.name}</span><span class="${s.cls}">${s.note}</span></div>`).join('');
+
+    const attention = o.attention.map(a => `
+      <div class="attn-row" onclick="setBrand('${a.brand}')">
+        <span class="attn-tag">${a.tag}</span>
+        <span>${a.text}</span>
+        <span class="attn-open">Open &rarr;</span>
+      </div>`).join('');
+
+    return `
+      <div class="section-label">Today</div>
+      <div class="ov-grid">
+        <div class="panel">
+          <h3>Routes today <small>${stops} of ${totalStops} stops done</small></h3>
+          ${routeRows}
+          <div class="check-head">Tomorrow's plan checks</div>
+          ${checks}
+        </div>
+        <div class="panel">
+          <h3>Unpaid invoices <small>${fmtK(agingTotal)} across ${o.openInvoices} open invoices</small></h3>
+          <div class="status-bar">${agingBar}</div>
+          <div class="status-line"><div class="dots">${agingLegend}</div></div>
+          <p class="ov-note">${Math.round((over60 / agingTotal) * 100)}% of the balance is on invoices older than 60 days.</p>
+        </div>
+      </div>
+
+      <div class="section-label">This week</div>
+      <div class="metrics cols-4">${metrics}</div>
+
+      <div class="ov-grid" style="margin-top:1.2rem;">
+        <div class="panel">
+          <h3>Needs attention <small>${o.attention.length} items</small></h3>
+          ${attention}
+        </div>
+        <div class="panel">
+          <h3>Low stock <small>days of stock left</small></h3>
+          ${stock}
+        </div>
+      </div>
+
+      <div class="section-label">About this build</div>
+      <div class="panel" style="border:1px solid var(--border);border-radius:10px;">
+        <h3>How it works <small>the production version runs the same way</small></h3>
+        <div class="arch">
+          <div class="arch-box"><b>Sources</b>E-commerce, wholesale, field-service and inventory systems</div>
+          <span class="arch-arrow">&rarr;</span>
+          <div class="arch-box"><b>Scheduled pipelines</b>13 jobs on GitHub Actions and cron</div>
+          <span class="arch-arrow">&rarr;</span>
+          <div class="arch-box"><b>Data store</b>Cleaned, tested revenue and visit records</div>
+          <span class="arch-arrow">&rarr;</span>
+          <div class="arch-box"><b>Worker app</b>Cloudflare Workers behind Google login</div>
+          <span class="arch-arrow">&rarr;</span>
+          <div class="arch-box"><b>Views + digest</b>Dashboards, CSV export, weekly leadership email</div>
+        </div>
+        <div class="build-stats">
+          <div><b>119</b><span>automated tests run in CI</span></div>
+          <div><b>30 min &rarr; 40 s</b><span>field-service sync, after fixing an API bottleneck</span></div>
+          <div><b>5 managers</b><span>replaced manual reporting</span></div>
+          <div><b>13</b><span>scheduled pipelines</span></div>
+        </div>
+        <p class="ov-note">The production dashboard is private because it holds employer data. This demo is rebuilt from scratch with fictional brands and generated numbers, and nothing on this page comes from the real system.</p>
+      </div>
+
+      <footer class="dash-footer">${BRANDS.o.source} &middot; Built by Scott Morris</footer>
+    `;
+  }
+
   function toggleTheme() {
     const isLight = document.documentElement.getAttribute('data-theme') === 'light';
     document.documentElement.setAttribute('data-theme', isLight ? 'dark' : 'light');
@@ -855,7 +1031,9 @@
       btn.classList.toggle('active', btn.dataset.brand === key);
     });
     document.getElementById('topbar-slot').innerHTML = renderTopbar(b);
-    document.getElementById('panel-slot').innerHTML = b.type === 'retail' ? renderRetail(b) : renderService(b);
+    document.getElementById('panel-slot').innerHTML =
+      b.type === 'overview' ? renderOverview(b) : b.type === 'retail' ? renderRetail(b) : renderService(b);
+    window.scrollTo({ top: 0 });
   }
 
   function filterOrders(q) {
@@ -865,7 +1043,7 @@
     });
   }
 
-  setBrand('a');
+  setBrand('o');
 </script>
 
 </body>
