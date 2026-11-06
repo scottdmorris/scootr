@@ -1,0 +1,12 @@
+# Claude Code: local permission settings stay out of the repo
+# (.claude/launch.json is a shareable preview config, so it is not ignored)
+.claude/settings.local.json
+
+# Python (projects/radio/tools)
+__pycache__/
+*.pyc
+
+# OS cruft
+.DS_Store
+Thumbs.db
+desktop.ini

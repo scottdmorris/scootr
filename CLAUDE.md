@@ -43,6 +43,10 @@ Every page reimplements the same visual language independently — there is no s
 
 When editing the visual style (colors, effects, fonts), check whether the change should be mirrored across `index.html`, `about/index.html`, `elysium/index.html`, `projects/index.html`, and `signal/index.html` — they are not derived from a common source.
 
+## Changelog
+
+`CHANGELOG.md` records notable user-facing changes, newest first, grouped by date. Add an entry when you ship something visible (new page or feature, behavior change, notable fix); skip pure refactors and copy tweaks.
+
 ## Content notes
 
 - The About page names the current employer (Luften) in the Service Record and links a downloadable resume PDF (`about/Scott_Morris_Resume.pdf`) — when Scott shares an updated resume, replace that file and keep the filename.
