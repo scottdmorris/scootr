@@ -22,7 +22,6 @@ Then open `http://localhost:8000/index.html` (or `/about/index.html`, `/projects
 - `about/index.html` — bio / resume-style "dossier" page (experience, education, skills, contact links).
 - `projects/index.html` — project index, links out to individual project subdirectories:
   - `projects/racial-bias/` — ML fairness project (FairFace/Grad-CAM), includes static JSON data files and generated image assets under `img/`.
-  - `projects/leads/` — Lead Intelligence System write-up.
   - `projects/retail-dashboard/` — multi-brand ops dashboard demo write-up.
   - `projects/311/` — The Grievance Atlas, NYC 311 complaint map (static JSON under `data/`, live Socrata fetch).
   - `projects/vigil/` — The Vigil, live worldwide crisis map (USGS/EONET/WHO live feeds + baked GDACS snapshot under `data/`).

@@ -14,8 +14,12 @@ Dates are commit dates.
 - **Homepage:** name and role shown under the title.
 
 ### Changed
-- **Projects:** professional work (ops dashboard, lead intelligence, 311 atlas) now
-  listed before the creative pieces; dashboard blurb mentions the new views.
+- **Projects:** professional work (ops dashboard, 311 atlas) now listed before the
+  creative pieces; dashboard blurb mentions the new views.
+
+### Removed
+- **Projects:** Lead Intelligence System page (`projects/leads/`) — the tool was
+  scrapped.
 
 ## 2026-11-05
 
