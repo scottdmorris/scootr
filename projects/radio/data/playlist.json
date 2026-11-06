@@ -1,1 +1,1830 @@
-{"epoch": 1752624000, "sched": [{"title": "Australian Wasteland", "artist": "Eva Shlegel", "dur": 444, "type": "mp3", "url": "https://archive.org/download/SCL-TM004/07_-_Eva_Shlegel_-_Australian_Wasteland.mp3", "item": "SCL-TM004", "release": "[SCL-TM004] VA \u2014 The Light Side Of The Blue", "lic": "http://creativecommons.org/licenses/by-nc-sa/4.0/", "art": "https://archive.org/download/SCL-TM004/cover_01_front.jpg"}, {"title": "Roads", "artist": "Martsman", "dur": 403, "type": "mp3", "url": "https://archive.org/download/xgn028_-_martsman/a-martsman_-_roads.mp3", "item": "xgn028_-_martsman", "release": "[xgn028] Martsman", "lic": "http://creativecommons.org/licenses/by-nc-nd/2.5/", "art": "https://archive.org/download/xgn028_-_martsman/xgn028.jpg"}, {"title": "1-11 D'espoir!", "artist": "Vektordrum", "dur": 467, "type": "mp3", "url": "https://archive.org/download/s27-027Sectioned/1-11Despoir.mp3", "item": "s27-027Sectioned", "release": "[S27-027] Sectioned", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/s27-027Sectioned/s27-027.jpg"}, {"title": "The Storm", "artist": "Blok One", "dur": 327, "type": "mp3", "url": "https://archive.org/download/tkep017/tkep017-b2-blokone-the_storm.mp3", "item": "tkep017", "release": "TKEP017 - The Expedition", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/tkep017/folder.jpg"}, {"title": "Old Feelings", "artist": "Beckett", "dur": 361, "type": "mp3", "url": "https://archive.org/download/xgn031_-_beckett/a-beckett_-_old_feelings.mp3", "item": "xgn031_-_beckett", "release": "[xgn031] Beckett", "lic": "http://creativecommons.org/licenses/by-nc-nd/2.5/", "art": "https://archive.org/download/xgn031_-_beckett/xgn031-beckett-hi-res.jpg"}, {"title": "Back To You", "artist": "neon", "dur": 461, "type": "mp3", "url": "https://archive.org/download/mstk014/11_-_neon_-_Back_To_You.mp3", "item": "mstk014", "release": "Candle Light Therapy LP [mstk014]", "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/", "art": "https://archive.org/download/mstk014/mstk014.jpg"}, {"title": "Moussakka", "artist": "Otist-Reading", "dur": 260, "type": "mp3", "url": "https://archive.org/download/36FeetUnder/30OtistReading-Moussakka.mp3", "item": "36FeetUnder", "release": "36 Feet Under", "lic": "http://creativecommons.org/licenses/by-nc-nd/2.0/fr/", "art": "https://archive.org/download/36FeetUnder/P36-036.jpg"}, {"title": "tobogan", "artist": "detonador", "dur": 262, "type": "mp3", "url": "https://archive.org/download/tkep011/tkep011-b-detonador-tobogan.mp3", "item": "tkep011", "release": "TKEP011 - Acelerador EP", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/tkep011/tkep011.jpg"}, {"type": "mod", "id": 186321, "title": "Liberation of Tine", "file": "bacter_vs_saga_musix_-_liberation_of_tine.it", "dur": 240, "lic": "by-nc-sa", "rating": 10}, {"title": "Sonya", "artist": "nikol_D", "dur": 265, "type": "mp3", "url": "https://archive.org/download/mstk001/01-nikol_D_-_Sonya.mp3", "item": "mstk001", "release": "Deepness EP [mstk001]", "lic": "http://creativecommons.org/licenses/by-nc-sa/2.5/", "art": "https://archive.org/download/mstk001/mstk001.jpg"}, {"title": "Brother Bear", "artist": "El Zool\u00f3gico", "dur": 246, "type": "mp3", "url": "https://archive.org/download/petitejolie002/pj002a_-_El_Zoologico_-_The_Jungle_-_06_-_Brother_Bear.mp3", "item": "petitejolie002", "release": "The Jungle & The Aquarium", "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/", "art": "https://archive.org/download/petitejolie002/cover.jpg"}, {"title": "Rain_V", "artist": "Dialekte", "dur": 314, "type": "mp3", "url": "https://archive.org/download/36FeetUnder/05Dialekte-RainV.mp3", "item": "36FeetUnder", "release": "36 Feet Under", "lic": "http://creativecommons.org/licenses/by-nc-nd/2.0/fr/", "art": "https://archive.org/download/36FeetUnder/P36-036.jpg"}, {"title": "Contour", "artist": "Case", "dur": 300, "type": "mp3", "url": "https://archive.org/download/mstk014/10_-_Case_-_Contour.mp3", "item": "mstk014", "release": "Candle Light Therapy LP [mstk014]", "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/", "art": "https://archive.org/download/mstk014/mstk014.jpg"}, {"title": "1-02 Fracture D\u00e9sordre", "artist": "Mayhem Perception", "dur": 368, "type": "mp3", "url": "https://archive.org/download/s27-043WeAreOne-Section27Netlabel/1-02FractureDsordre.mp3", "item": "s27-043WeAreOne-Section27Netlabel", "release": "[S27-043] We Are One - Section 27 Netlabel", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/s27-043WeAreOne-Section27Netlabel/s27-043Cover.jpg"}, {"title": "2-09 Nothing", "artist": "The Oxy_Gens", "dur": 441, "type": "mp3", "url": "https://archive.org/download/s27-027Sectioned/2-09Nothing.mp3", "item": "s27-027Sectioned", "release": "[S27-027] Sectioned", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/s27-027Sectioned/s27-027.jpg"}, {"title": "Dublin Crew", "artist": "Ricky Force", "dur": 355, "type": "mp3", "url": "https://archive.org/download/xgn030_-_ricky_force_-_the_aerial_ep/b2-ricky_force_-_dublin_crew.mp3", "item": "xgn030_-_ricky_force_-_the_aerial_ep", "release": "[xgn030] Ricky Force - The Aerial EP", "lic": "http://creativecommons.org/licenses/by-nc-nd/2.5/", "art": "https://archive.org/download/xgn030_-_ricky_force_-_the_aerial_ep/xgn030.jpg"}, {"title": "1-13 10 Tonnes Darker", "artist": "Ventolyn & Becotyde", "dur": 286, "type": "mp3", "url": "https://archive.org/download/s27-027Sectioned/1-1310TonnesDarker.mp3", "item": "s27-027Sectioned", "release": "[S27-027] Sectioned", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/s27-027Sectioned/s27-027.jpg"}, {"type": "mod", "id": 209356, "title": "amalgam (cover)", "file": "cs127_and_frost_-_ut_amalgam_cover.it", "dur": 240, "lic": "by-nc-sa", "rating": 9}, {"title": "Dimenzije Vremena", "artist": "Okee", "dur": 379, "type": "mp3", "url": "https://archive.org/download/mstk014/08_-_Okee_-_Dimenzije_Vremena.mp3", "item": "mstk014", "release": "Candle Light Therapy LP [mstk014]", "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/", "art": "https://archive.org/download/mstk014/mstk014.jpg"}, {"title": "2-13 Sobre Mesa", "artist": "M\u00f6sh", "dur": 264, "type": "mp3", "url": "https://archive.org/download/s27-027Sectioned/2-13SobreMesa.mp3", "item": "s27-027Sectioned", "release": "[S27-027] Sectioned", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/s27-027Sectioned/s27-027.jpg"}, {"title": "Sparrows (lost-radio Reshape)", "artist": "SandSpace", "dur": 345, "type": "mp3", "url": "https://archive.org/download/SCL-TM004/08_-_Sandspace_-_Sparrows_lost-radio_Reshape.mp3", "item": "SCL-TM004", "release": "[SCL-TM004] VA \u2014 The Light Side Of The Blue", "lic": "http://creativecommons.org/licenses/by-nc-sa/4.0/", "art": "https://archive.org/download/SCL-TM004/cover_01_front.jpg"}, {"title": "Urban Atmospheres", "artist": "Omega Dub Experience", "dur": 469, "type": "mp3", "url": "https://archive.org/download/siro614OmegaDubExperience-TheBankruptcyJazz/02-OmegaDubExperience-UrbanAtmospheres.mp3", "item": "siro614OmegaDubExperience-TheBankruptcyJazz", "release": "[Siro614] Omega Dub Experience - The Bankruptcy Jazz", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/siro614OmegaDubExperience-TheBankruptcyJazz/A-Cover.jpg"}, {"title": "Jellyfish", "artist": "El Zool\u00f3gico", "dur": 190, "type": "mp3", "url": "https://archive.org/download/petitejolie002/pj002b_-_El_Zoologico_-_The_Aquarium_-_05_-_Jellyfish.mp3", "item": "petitejolie002", "release": "The Jungle & The Aquarium", "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/", "art": "https://archive.org/download/petitejolie002/cover.jpg"}, {"title": "Resonance", "artist": "Omega Dub Experience", "dur": 429, "type": "mp3", "url": "https://archive.org/download/siro614OmegaDubExperience-TheBankruptcyJazz/01-OmegaDubExperience-Resonance.mp3", "item": "siro614OmegaDubExperience-TheBankruptcyJazz", "release": "[Siro614] Omega Dub Experience - The Bankruptcy Jazz", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/siro614OmegaDubExperience-TheBankruptcyJazz/A-Cover.jpg"}, {"title": "Far Away", "artist": "Lost Radiance", "dur": 643, "type": "mp3", "url": "https://archive.org/download/SCL-TM004/03_-_Los\u0435_Radiance%20-%20Far%20Away.mp3", "item": "SCL-TM004", "release": "[SCL-TM004] VA \u2014 The Light Side Of The Blue", "lic": "http://creativecommons.org/licenses/by-nc-sa/4.0/", "art": "https://archive.org/download/SCL-TM004/cover_01_front.jpg"}, {"title": "Antarctica", "artist": "Omega Dub Experience", "dur": 313, "type": "mp3", "url": "https://archive.org/download/siro614OmegaDubExperience-TheBankruptcyJazz/06-OmegaDubExperience-Antarctica.mp3", "item": "siro614OmegaDubExperience-TheBankruptcyJazz", "release": "[Siro614] Omega Dub Experience - The Bankruptcy Jazz", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/siro614OmegaDubExperience-TheBankruptcyJazz/A-Cover.jpg"}, {"type": "mod", "id": 185675, "title": "vebjokb^fnb", "file": "vebjokb.mptm", "dur": 240, "lic": "by-nc-sa", "rating": 10}, {"title": "Stamina", "artist": "Prince Kong", "dur": 188, "type": "mp3", "url": "https://archive.org/download/ACP058_Prince_Kong_-_Dub_War/01-Stamina.mp3", "item": "ACP058_Prince_Kong_-_Dub_War", "release": "ACP058 Prince Kong - Dub War", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/ACP058_Prince_Kong_-_Dub_War/PRINCE-KONG-DUB-WAR.jpg"}, {"title": "To Wait For Something", "artist": "KaLGaN", "dur": 487, "type": "mp3", "url": "https://archive.org/download/mstk006/a-KaLGaN_-_To_Wait_For_Something.mp3", "item": "mstk006", "release": "To Wait For Something/Eternity [mstk006]", "lic": "http://creativecommons.org/licenses/by-nc-sa/2.5/", "art": "https://archive.org/download/mstk006/mstk006.jpg"}, {"title": "2-14 Boonk - Nuevas Noticias (Ysik remix)", "artist": "YsiK", "dur": 303, "type": "mp3", "url": "https://archive.org/download/s27-027Sectioned/2-14Boonk-NuevasNoticiasysikRemix.mp3", "item": "s27-027Sectioned", "release": "[S27-027] Sectioned", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/s27-027Sectioned/s27-027.jpg"}, {"title": "1-15 District", "artist": "The Suffering", "dur": 292, "type": "mp3", "url": "https://archive.org/download/s27-043WeAreOne-Section27Netlabel/1-15District.mp3", "item": "s27-043WeAreOne-Section27Netlabel", "release": "[S27-043] We Are One - Section 27 Netlabel", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/s27-043WeAreOne-Section27Netlabel/s27-043Cover.jpg"}, {"title": "Sonic Movement", "artist": "Wantai", "dur": 235, "type": "mp3", "url": "https://archive.org/download/rfr003/rfr003-a1-wantai_-_sonic_movement.mp3", "item": "rfr003", "release": "[RFR003] Wantai - Sonic Movement EP", "lic": "http://creativecommons.org/licenses/by-nc-nd/2.5/", "art": "https://archive.org/download/rfr003/rfr003-wantai-sonic_movement.jpg"}, {"title": "Crazy", "artist": "Prince Kong", "dur": 221, "type": "mp3", "url": "https://archive.org/download/ACP058_Prince_Kong_-_Dub_War/05-Crazy.mp3", "item": "ACP058_Prince_Kong_-_Dub_War", "release": "ACP058 Prince Kong - Dub War", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/ACP058_Prince_Kong_-_Dub_War/PRINCE-KONG-DUB-WAR.jpg"}, {"title": "2-03 Will He Ever Learn", "artist": "Ginkobaloba", "dur": 330, "type": "mp3", "url": "https://archive.org/download/s27-027Sectioned/2-03WillHeEverLearn.mp3", "item": "s27-027Sectioned", "release": "[S27-027] Sectioned", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/s27-027Sectioned/s27-027.jpg"}, {"title": "Pigs", "artist": "Sam Pleater", "dur": 347, "type": "mp3", "url": "https://archive.org/download/36FeetUnder/31SamPleater-Pigs.mp3", "item": "36FeetUnder", "release": "36 Feet Under", "lic": "http://creativecommons.org/licenses/by-nc-nd/2.0/fr/", "art": "https://archive.org/download/36FeetUnder/P36-036.jpg"}, {"type": "mod", "id": 211212, "title": "Do The Dow", "file": "bacter_jeenio_and_saga_musix_-_do_the_dow.it", "dur": 240, "lic": "by-nc-sa", "rating": 10}, {"title": "Aftertouch (Rifhes rmx)", "artist": "substance", "dur": 322, "type": "mp3", "url": "https://archive.org/download/tkep002/tkep002-b-substance-aftertouch--rifhes_rmx.mp3", "item": "tkep002", "release": "TKEP002 | Pasajes de la tarde EP", "lic": "http://creativecommons.org/licenses/by-nc-nd/2.5/", "art": "https://archive.org/download/tkep002/folder.jpg"}, {"title": "Siriuslove", "artist": "Parhelia", "dur": 540, "type": "mp3", "url": "https://archive.org/download/mstk014/07_-_Parhelia_-_Siriuslove.mp3", "item": "mstk014", "release": "Candle Light Therapy LP [mstk014]", "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/", "art": "https://archive.org/download/mstk014/mstk014.jpg"}, {"title": "Don't Hang Around", "artist": "Dino Felipe", "dur": 223, "type": "mp3", "url": "https://archive.org/download/36FeetUnder/13DinoFelipe-DontHangAround.mp3", "item": "36FeetUnder", "release": "36 Feet Under", "lic": "http://creativecommons.org/licenses/by-nc-nd/2.0/fr/", "art": "https://archive.org/download/36FeetUnder/P36-036.jpg"}, {"title": "3-06 Rand 6", "artist": "Vektordrum", "dur": 273, "type": "mp3", "url": "https://archive.org/download/s27-043WeAreOne-Section27Netlabel/3-06Rand6.mp3", "item": "s27-043WeAreOne-Section27Netlabel", "release": "[S27-043] We Are One - Section 27 Netlabel", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/s27-043WeAreOne-Section27Netlabel/s27-043Cover.jpg"}, {"title": "The Painter Cat", "artist": "Dissolved", "dur": 364, "type": "mp3", "url": "https://archive.org/download/36FeetUnder/17Dissolved-ThePainterCat.mp3", "item": "36FeetUnder", "release": "36 Feet Under", "lic": "http://creativecommons.org/licenses/by-nc-nd/2.0/fr/", "art": "https://archive.org/download/36FeetUnder/P36-036.jpg"}, {"title": "Feel The Sorrow (Of Tomorrow)", "artist": "Pk Jazz Collective", "dur": 269, "type": "mp3", "url": "https://archive.org/download/SCL-TM004/02_-_Pk_Jazz%20Collective_-_Feel_The_Sorrow_Of%20Tomorrow.mp3", "item": "SCL-TM004", "release": "[SCL-TM004] VA \u2014 The Light Side Of The Blue", "lic": "http://creativecommons.org/licenses/by-nc-sa/4.0/", "art": "https://archive.org/download/SCL-TM004/cover_01_front.jpg"}, {"title": "Mr. Frog", "artist": "El Zool\u00f3gico", "dur": 145, "type": "mp3", "url": "https://archive.org/download/petitejolie002/pj002a_-_El_Zoologico_-_The_Jungle_-_03_-_Mr._Frog.mp3", "item": "petitejolie002", "release": "The Jungle & The Aquarium", "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/", "art": "https://archive.org/download/petitejolie002/cover.jpg"}, {"title": "acelerador", "artist": "detonador", "dur": 244, "type": "mp3", "url": "https://archive.org/download/tkep011/tkep011-a-detonador-acelerador.mp3", "item": "tkep011", "release": "TKEP011 - Acelerador EP", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/tkep011/tkep011.jpg"}, {"type": "mod", "id": 178743, "title": "new.xm", "file": "new.xm", "dur": 240, "lic": "by", "rating": 9}, {"title": "Pasajes de la tarde", "artist": "linga", "dur": 489, "type": "mp3", "url": "https://archive.org/download/tkep002/tkep002-a-linga-pasajes_de_la_tarde.mp3", "item": "tkep002", "release": "TKEP002 | Pasajes de la tarde EP", "lic": "http://creativecommons.org/licenses/by-nc-nd/2.5/", "art": "https://archive.org/download/tkep002/folder.jpg"}, {"title": "2-11 Slow Death", "artist": "Recycle The Sound", "dur": 184, "type": "mp3", "url": "https://archive.org/download/s27-027Sectioned/2-11SlowDeath.mp3", "item": "s27-027Sectioned", "release": "[S27-027] Sectioned", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/s27-027Sectioned/s27-027.jpg"}, {"title": "Slick and slim (Rifhes rmx)", "artist": "paul keeley", "dur": 515, "type": "mp3", "url": "https://archive.org/download/tkep012/tkep012-b-paul_keeley-slick_n_slim-rifhes_rmx.mp3", "item": "tkep012", "release": "TKEP012 - Warp factory EP", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/tkep012/folder.jpg"}, {"title": "Dub War", "artist": "Prince Kong", "dur": 211, "type": "mp3", "url": "https://archive.org/download/ACP058_Prince_Kong_-_Dub_War/07-Dub_War.mp3", "item": "ACP058_Prince_Kong_-_Dub_War", "release": "ACP058 Prince Kong - Dub War", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/ACP058_Prince_Kong_-_Dub_War/PRINCE-KONG-DUB-WAR.jpg"}, {"title": "Tougher", "artist": "Ricky Force", "dur": 325, "type": "mp3", "url": "https://archive.org/download/xgn030_-_ricky_force_-_the_aerial_ep/b1-ricky_force_-_tougher.mp3", "item": "xgn030_-_ricky_force_-_the_aerial_ep", "release": "[xgn030] Ricky Force - The Aerial EP", "lic": "http://creativecommons.org/licenses/by-nc-nd/2.5/", "art": "https://archive.org/download/xgn030_-_ricky_force_-_the_aerial_ep/xgn030.jpg"}, {"title": "Hippo", "artist": "El Zool\u00f3gico", "dur": 157, "type": "mp3", "url": "https://archive.org/download/petitejolie002/pj002a_-_El_Zoologico_-_The_Jungle_-_02_-_Hippo.mp3", "item": "petitejolie002", "release": "The Jungle & The Aquarium", "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/", "art": "https://archive.org/download/petitejolie002/cover.jpg"}, {"title": "The Memory Is Fading", "artist": "Blok One & Rainforest", "dur": 388, "type": "mp3", "url": "https://archive.org/download/mstk014/09_-_Blok_One_Rainforest_-_The_Memory_Is_Fading.mp3", "item": "mstk014", "release": "Candle Light Therapy LP [mstk014]", "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/", "art": "https://archive.org/download/mstk014/mstk014.jpg"}, {"title": "Make Ya Move", "artist": "Ricky Force", "dur": 402, "type": "mp3", "url": "https://archive.org/download/xgn030_-_ricky_force_-_the_aerial_ep/a2-ricky_force_-_make_ya_move.mp3", "item": "xgn030_-_ricky_force_-_the_aerial_ep", "release": "[xgn030] Ricky Force - The Aerial EP", "lic": "http://creativecommons.org/licenses/by-nc-nd/2.5/", "art": "https://archive.org/download/xgn030_-_ricky_force_-_the_aerial_ep/xgn030.jpg"}, {"type": "mod", "id": 200446, "title": "junglemix_part", "file": "c20g_-_jmix_part.xm", "dur": 240, "lic": "tma", "rating": 10}, {"title": "Stronger v2", "artist": "Prince Kong", "dur": 232, "type": "mp3", "url": "https://archive.org/download/ACP058_Prince_Kong_-_Dub_War/02-Stronger_v2.mp3", "item": "ACP058_Prince_Kong_-_Dub_War", "release": "ACP058 Prince Kong - Dub War", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/ACP058_Prince_Kong_-_Dub_War/PRINCE-KONG-DUB-WAR.jpg"}, {"title": "This Generation Is Dead", "artist": "D-lity feat. Amaranth", "dur": 185, "type": "mp3", "url": "https://archive.org/download/SCL-TM004/09_-_D-lity_feat_%20Amaranth_-_This_Generation_Is_Dead.mp3", "item": "SCL-TM004", "release": "[SCL-TM004] VA \u2014 The Light Side Of The Blue", "lic": "http://creativecommons.org/licenses/by-nc-sa/4.0/", "art": "https://archive.org/download/SCL-TM004/cover_01_front.jpg"}, {"title": "Snake", "artist": "El Zool\u00f3gico", "dur": 188, "type": "mp3", "url": "https://archive.org/download/petitejolie002/pj002a_-_El_Zoologico_-_The_Jungle_-_04_-_Snake.mp3", "item": "petitejolie002", "release": "The Jungle & The Aquarium", "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/", "art": "https://archive.org/download/petitejolie002/cover.jpg"}, {"title": "2-04 Shining Sundays", "artist": "Swin Deorin", "dur": 206, "type": "mp3", "url": "https://archive.org/download/s27-027Sectioned/2-04ShiningSundays.mp3", "item": "s27-027Sectioned", "release": "[S27-027] Sectioned", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/s27-027Sectioned/s27-027.jpg"}, {"title": "Cha-Cha Moderne", "artist": "Doc Colibri", "dur": 252, "type": "mp3", "url": "https://archive.org/download/36FeetUnder/25DocColibri-ChaChaModerne.mp3", "item": "36FeetUnder", "release": "36 Feet Under", "lic": "http://creativecommons.org/licenses/by-nc-nd/2.0/fr/", "art": "https://archive.org/download/36FeetUnder/P36-036.jpg"}, {"title": "Aqua", "artist": "R.FX", "dur": 273, "type": "mp3", "url": "https://archive.org/download/mstk014/02_-_R.FX_-_Aqua.mp3", "item": "mstk014", "release": "Candle Light Therapy LP [mstk014]", "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/", "art": "https://archive.org/download/mstk014/mstk014.jpg"}, {"title": "1-12 With My Little Eye", "artist": "junior85", "dur": 130, "type": "mp3", "url": "https://archive.org/download/s27-027Sectioned/1-12WithMyLittleEye.mp3", "item": "s27-027Sectioned", "release": "[S27-027] Sectioned", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/s27-027Sectioned/s27-027.jpg"}, {"title": "3-08 Raymond Scott", "artist": "junior85", "dur": 199, "type": "mp3", "url": "https://archive.org/download/s27-043WeAreOne-Section27Netlabel/3-08RaymondScott.mp3", "item": "s27-043WeAreOne-Section27Netlabel", "release": "[S27-043] We Are One - Section 27 Netlabel", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/s27-043WeAreOne-Section27Netlabel/s27-043Cover.jpg"}, {"type": "mod", "id": 207207, "title": "tango-prjct1 rtrck", "file": "tango-prjct1_rtrck.mod", "dur": 240, "lic": "tma", "rating": 10}, {"title": "Robot Bingo", "artist": "UrbanKiss", "dur": 248, "type": "mp3", "url": "https://archive.org/download/36FeetUnder/29UrbanKiss-RobotBingo.mp3", "item": "36FeetUnder", "release": "36 Feet Under", "lic": "http://creativecommons.org/licenses/by-nc-nd/2.0/fr/", "art": "https://archive.org/download/36FeetUnder/P36-036.jpg"}, {"title": "3-11 Face", "artist": "exportion", "dur": 794, "type": "mp3", "url": "https://archive.org/download/s27-043WeAreOne-Section27Netlabel/3-11Face.mp3", "item": "s27-043WeAreOne-Section27Netlabel", "release": "[S27-043] We Are One - Section 27 Netlabel", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/s27-043WeAreOne-Section27Netlabel/s27-043Cover.jpg"}, {"title": "Sonic Movement 2", "artist": "Wantai", "dur": 237, "type": "mp3", "url": "https://archive.org/download/rfr003/rfr003-b1-wantai_-_sonic_movement_2.mp3", "item": "rfr003", "release": "[RFR003] Wantai - Sonic Movement EP", "lic": "http://creativecommons.org/licenses/by-nc-nd/2.5/", "art": "https://archive.org/download/rfr003/rfr003-wantai-sonic_movement.jpg"}, {"title": "Seahorse and Starfish", "artist": "El Zool\u00f3gico", "dur": 229, "type": "mp3", "url": "https://archive.org/download/petitejolie002/pj002b_-_El_Zoologico_-_The_Aquarium_-_04_-_Seahorse_and_Starfish.mp3", "item": "petitejolie002", "release": "The Jungle & The Aquarium", "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/", "art": "https://archive.org/download/petitejolie002/cover.jpg"}, {"title": "Sundown", "artist": "Woodtekr", "dur": 269, "type": "mp3", "url": "https://archive.org/download/mstk014/12_-_Woodtekr_-_Sundown.mp3", "item": "mstk014", "release": "Candle Light Therapy LP [mstk014]", "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/", "art": "https://archive.org/download/mstk014/mstk014.jpg"}, {"title": "J-Rhodes", "artist": "Sobrio", "dur": 372, "type": "mp3", "url": "https://archive.org/download/SCL-TM004/06_-_Sobrio_-_J-Rhodes.mp3", "item": "SCL-TM004", "release": "[SCL-TM004] VA \u2014 The Light Side Of The Blue", "lic": "http://creativecommons.org/licenses/by-nc-sa/4.0/", "art": "https://archive.org/download/SCL-TM004/cover_01_front.jpg"}, {"title": "Nada", "artist": "El Zool\u00f3gico", "dur": 101, "type": "mp3", "url": "https://archive.org/download/petitejolie002/pj002b_-_El_Zoologico_-_The_Aquarium_-_01_-_Nada.mp3", "item": "petitejolie002", "release": "The Jungle & The Aquarium", "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/", "art": "https://archive.org/download/petitejolie002/cover.jpg"}, {"title": "Chambers", "artist": "Synthamesk", "dur": 294, "type": "mp3", "url": "https://archive.org/download/36FeetUnder/20Synthamesk-Chambers.mp3", "item": "36FeetUnder", "release": "36 Feet Under", "lic": "http://creativecommons.org/licenses/by-nc-nd/2.0/fr/", "art": "https://archive.org/download/36FeetUnder/P36-036.jpg"}, {"type": "mod", "id": 131231, "title": "subtropical", "file": "subtropical.mod", "dur": 240, "lic": "tma", "rating": 10}, {"title": "We Are Flying Home", "artist": "Meanone", "dur": 374, "type": "mp3", "url": "https://archive.org/download/mstk014/04_-_Meanone_-_We_Are_Flying_Home.mp3", "item": "mstk014", "release": "Candle Light Therapy LP [mstk014]", "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/", "art": "https://archive.org/download/mstk014/mstk014.jpg"}, {"title": "Living death (Isaac Maya rmx)", "artist": "bandulu dub", "dur": 281, "type": "mp3", "url": "https://archive.org/download/tkep010/tkep010-b-bandulu_dub-living_death-isaac_maya_rmx.mp3", "item": "tkep010", "release": "TKEP010 - There are days EP", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/tkep010/tkep010.jpg"}, {"title": "Monkey", "artist": "El Zool\u00f3gico", "dur": 107, "type": "mp3", "url": "https://archive.org/download/petitejolie002/pj002a_-_El_Zoologico_-_The_Jungle_-_05_-_Monkey.mp3", "item": "petitejolie002", "release": "The Jungle & The Aquarium", "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/", "art": "https://archive.org/download/petitejolie002/cover.jpg"}, {"title": "Ghosts For A Lifetime", "artist": "Blok One", "dur": 425, "type": "mp3", "url": "https://archive.org/download/tkep017/tkep017-b1-blokone-ghosts_for_a_lifetime.mp3", "item": "tkep017", "release": "TKEP017 - The Expedition", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/tkep017/folder.jpg"}, {"title": "2-01 Jupiter Final v3", "artist": "Pay-per-frog", "dur": 250, "type": "mp3", "url": "https://archive.org/download/s27-043WeAreOne-Section27Netlabel/2-01JupiterFinalV3.mp3", "item": "s27-043WeAreOne-Section27Netlabel", "release": "[S27-043] We Are One - Section 27 Netlabel", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/s27-043WeAreOne-Section27Netlabel/s27-043Cover.jpg"}, {"title": "Oldvision 2006", "artist": "neon", "dur": 480, "type": "mp3", "url": "https://archive.org/download/mstk001/02-neon_-_Oldvision_2006.mp3", "item": "mstk001", "release": "Deepness EP [mstk001]", "lic": "http://creativecommons.org/licenses/by-nc-sa/2.5/", "art": "https://archive.org/download/mstk001/mstk001.jpg"}, {"title": "Penguin and Sealion", "artist": "El Zool\u00f3gico", "dur": 120, "type": "mp3", "url": "https://archive.org/download/petitejolie002/pj002b_-_El_Zoologico_-_The_Aquarium_-_03_-_Penguin_and_Sealion.mp3", "item": "petitejolie002", "release": "The Jungle & The Aquarium", "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/", "art": "https://archive.org/download/petitejolie002/cover.jpg"}, {"title": "Gio Bleue", "artist": "Blok One", "dur": 480, "type": "mp3", "url": "https://archive.org/download/tkep017/tkep017-a1-blokone-gio_bleue.mp3", "item": "tkep017", "release": "TKEP017 - The Expedition", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/tkep017/folder.jpg"}, {"type": "mod", "id": 199248, "title": "jazzy!", "file": "xrtd_-_jazzy.xm", "dur": 240, "lic": "tma", "rating": 10}, {"title": "Warp factory", "artist": "d-fender + rifhes", "dur": 432, "type": "mp3", "url": "https://archive.org/download/tkep012/tkep012-a-d_fender_and_rifhes-warp_factory.mp3", "item": "tkep012", "release": "TKEP012 - Warp factory EP", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/tkep012/folder.jpg"}, {"title": "2-12 Cruel Joke (Not From This World)", "artist": "Masochistic Values", "dur": 371, "type": "mp3", "url": "https://archive.org/download/s27-043WeAreOne-Section27Netlabel/2-12CruelJokenotFromThisWorld.mp3", "item": "s27-043WeAreOne-Section27Netlabel", "release": "[S27-043] We Are One - Section 27 Netlabel", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/s27-043WeAreOne-Section27Netlabel/s27-043Cover.jpg"}, {"title": "On S'Emmerde \u00c0 Corte", "artist": "PierrotheMoon", "dur": 280, "type": "mp3", "url": "https://archive.org/download/36FeetUnder/34PierrotheMoon-OnSEmmerdeACorte.mp3", "item": "36FeetUnder", "release": "36 Feet Under", "lic": "http://creativecommons.org/licenses/by-nc-nd/2.0/fr/", "art": "https://archive.org/download/36FeetUnder/P36-036.jpg"}, {"title": "Eternity", "artist": "tHiNk", "dur": 582, "type": "mp3", "url": "https://archive.org/download/mstk006/b-tHiNk_-_Eternity.mp3", "item": "mstk006", "release": "To Wait For Something/Eternity [mstk006]", "lic": "http://creativecommons.org/licenses/by-nc-sa/2.5/", "art": "https://archive.org/download/mstk006/mstk006.jpg"}, {"title": "Whale", "artist": "El Zool\u00f3gico", "dur": 153, "type": "mp3", "url": "https://archive.org/download/petitejolie002/pj002b_-_El_Zoologico_-_The_Aquarium_-_06_-_Whale.mp3", "item": "petitejolie002", "release": "The Jungle & The Aquarium", "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/", "art": "https://archive.org/download/petitejolie002/cover.jpg"}, {"title": "Sound Of The Waterfall", "artist": "Omega Dub Experience", "dur": 272, "type": "mp3", "url": "https://archive.org/download/siro614OmegaDubExperience-TheBankruptcyJazz/03-OmegaDubExperience-SoundOfTheWaterfall.mp3", "item": "siro614OmegaDubExperience-TheBankruptcyJazz", "release": "[Siro614] Omega Dub Experience - The Bankruptcy Jazz", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/siro614OmegaDubExperience-TheBankruptcyJazz/A-Cover.jpg"}, {"title": "2-06 San Lucia", "artist": "Soni Jimm", "dur": 308, "type": "mp3", "url": "https://archive.org/download/s27-027Sectioned/2-06SanLucia.mp3", "item": "s27-027Sectioned", "release": "[S27-027] Sectioned", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/s27-027Sectioned/s27-027.jpg"}, {"title": "Illusions", "artist": "Omega Dub Experience", "dur": 523, "type": "mp3", "url": "https://archive.org/download/siro614OmegaDubExperience-TheBankruptcyJazz/04-OmegaDubExperience-Illusions.mp3", "item": "siro614OmegaDubExperience-TheBankruptcyJazz", "release": "[Siro614] Omega Dub Experience - The Bankruptcy Jazz", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/siro614OmegaDubExperience-TheBankruptcyJazz/A-Cover.jpg"}, {"type": "mod", "id": 203751, "title": "automated", "file": "automated.it", "dur": 240, "lic": "tma", "rating": 10}, {"title": "Japanese Airlines", "artist": "Olympic Smoker", "dur": 195, "type": "mp3", "url": "https://archive.org/download/36FeetUnder/04OlympicSmoker-JapaneseAirlines.mp3", "item": "36FeetUnder", "release": "36 Feet Under", "lic": "http://creativecommons.org/licenses/by-nc-nd/2.0/fr/", "art": "https://archive.org/download/36FeetUnder/P36-036.jpg"}, {"title": "\u0414\u043e\u043c \u0423\u043b\u0438\u0442\u043a\u0438. \u041f\u0440\u043e\u0433\u0443\u043b\u043a\u0430 \u0441 \u041c\u0438\u0448\u0435\u043b\u0435\u043c \u0413\u043e\u043d\u0434\u0440\u0438 \u0438 \u041f\u044c\u0435\u0440\u043e\u043c \u0420\u0438\u0448\u0430\u0440\u043e\u043c", "artist": "\u041c\u0443\u0442\u0430\u0444\u043e\u0440\u0438\u044f \u041b\u0438\u043b\u0438", "dur": 183, "type": "mp3", "url": "https://archive.org/download/SCL-TM004/01_-_Mutaforija_Lili_-_Dom_Ulitki_Progulka_s_Mishelem_Gondri_i_Perom_Risharom.mp3", "item": "SCL-TM004", "release": "[SCL-TM004] VA \u2014 The Light Side Of The Blue", "lic": "http://creativecommons.org/licenses/by-nc-sa/4.0/", "art": "https://archive.org/download/SCL-TM004/cover_01_front.jpg"}, {"title": "Supergravity", "artist": "Z-Arc", "dur": 238, "type": "mp3", "url": "https://archive.org/download/36FeetUnder/15ZArc-Supergravity.mp3", "item": "36FeetUnder", "release": "36 Feet Under", "lic": "http://creativecommons.org/licenses/by-nc-nd/2.0/fr/", "art": "https://archive.org/download/36FeetUnder/P36-036.jpg"}, {"title": "Blood War", "artist": "Prince Kong", "dur": 211, "type": "mp3", "url": "https://archive.org/download/ACP058_Prince_Kong_-_Dub_War/03-Blood_War.mp3", "item": "ACP058_Prince_Kong_-_Dub_War", "release": "ACP058 Prince Kong - Dub War", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/ACP058_Prince_Kong_-_Dub_War/PRINCE-KONG-DUB-WAR.jpg"}, {"title": "Camina", "artist": "El Zool\u00f3gico", "dur": 142, "type": "mp3", "url": "https://archive.org/download/petitejolie002/pj002a_-_El_Zoologico_-_The_Jungle_-_01_-_Camina.mp3", "item": "petitejolie002", "release": "The Jungle & The Aquarium", "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/", "art": "https://archive.org/download/petitejolie002/cover.jpg"}, {"title": "Life By The Sea", "artist": "Beckett", "dur": 355, "type": "mp3", "url": "https://archive.org/download/xgn031_-_beckett/b-beckett_-_life_by_the_sea.mp3", "item": "xgn031_-_beckett", "release": "[xgn031] Beckett", "lic": "http://creativecommons.org/licenses/by-nc-nd/2.5/", "art": "https://archive.org/download/xgn031_-_beckett/xgn031-beckett-hi-res.jpg"}, {"title": "Leuviah", "artist": "Blok One", "dur": 523, "type": "mp3", "url": "https://archive.org/download/tkep017/tkep017-a2-blokone-leuviah.mp3", "item": "tkep017", "release": "TKEP017 - The Expedition", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/tkep017/folder.jpg"}, {"title": "1-02 Sy Te Kalter", "artist": "Nick R 61", "dur": 166, "type": "mp3", "url": "https://archive.org/download/s27-027Sectioned/1-02SyTeKalter.mp3", "item": "s27-027Sectioned", "release": "[S27-027] Sectioned", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/s27-027Sectioned/s27-027.jpg"}, {"type": "mod", "id": 194052, "title": "dreadtracka_takeitback.xm", "file": "dreadtracka_takeitback.xm", "dur": 240, "lic": "tma", "rating": 10}, {"title": "Call On Dub", "artist": "Prince Kong", "dur": 292, "type": "mp3", "url": "https://archive.org/download/ACP058_Prince_Kong_-_Dub_War/08-Call_On_Dub.mp3", "item": "ACP058_Prince_Kong_-_Dub_War", "release": "ACP058 Prince Kong - Dub War", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/ACP058_Prince_Kong_-_Dub_War/PRINCE-KONG-DUB-WAR.jpg"}, {"title": "Blue Moon", "artist": "Omega Dub Experience", "dur": 338, "type": "mp3", "url": "https://archive.org/download/siro614OmegaDubExperience-TheBankruptcyJazz/07-OmegaDubExperience-BlueMoon.mp3", "item": "siro614OmegaDubExperience-TheBankruptcyJazz", "release": "[Siro614] Omega Dub Experience - The Bankruptcy Jazz", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/siro614OmegaDubExperience-TheBankruptcyJazz/A-Cover.jpg"}, {"title": "3-04 Magnetism", "artist": "J.CNNR", "dur": 257, "type": "mp3", "url": "https://archive.org/download/s27-043WeAreOne-Section27Netlabel/3-04Magnetism.mp3", "item": "s27-043WeAreOne-Section27Netlabel", "release": "[S27-043] We Are One - Section 27 Netlabel", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/s27-043WeAreOne-Section27Netlabel/s27-043Cover.jpg"}, {"title": "Take Me Into The Space (Hank Hobson Edit)", "artist": "Sexyalien", "dur": 224, "type": "mp3", "url": "https://archive.org/download/SCL-TM004/04_-_Sexyalien_-_Take_Me_Into_The_Space_Hank_Hobson_Edit.mp3", "item": "SCL-TM004", "release": "[SCL-TM004] VA \u2014 The Light Side Of The Blue", "lic": "http://creativecommons.org/licenses/by-nc-sa/4.0/", "art": "https://archive.org/download/SCL-TM004/cover_01_front.jpg"}, {"title": "Waiting Of Present", "artist": "Nothing", "dur": 521, "type": "mp3", "url": "https://archive.org/download/mstk014/06_-_Nothing_-_Waiting_Of_Present.mp3", "item": "mstk014", "release": "Candle Light Therapy LP [mstk014]", "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/", "art": "https://archive.org/download/mstk014/mstk014.jpg"}, {"title": "Respawn", "artist": "Hobotek", "dur": 297, "type": "mp3", "url": "https://archive.org/download/SCL-TM004/05_-_Hobotek_-_Respawn.mp3", "item": "SCL-TM004", "release": "[SCL-TM004] VA \u2014 The Light Side Of The Blue", "lic": "http://creativecommons.org/licenses/by-nc-sa/4.0/", "art": "https://archive.org/download/SCL-TM004/cover_01_front.jpg"}, {"title": "Pure Wave", "artist": "Enjoy Life", "dur": 360, "type": "mp3", "url": "https://archive.org/download/mstk014/01_-_Enjoy_Life_-_Pure_Wave.mp3", "item": "mstk014", "release": "Candle Light Therapy LP [mstk014]", "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/", "art": "https://archive.org/download/mstk014/mstk014.jpg"}, {"title": "4 Now", "artist": "Ricky Force", "dur": 347, "type": "mp3", "url": "https://archive.org/download/xgn030_-_ricky_force_-_the_aerial_ep/a1-ricky_force_-_4_now.mp3", "item": "xgn030_-_ricky_force_-_the_aerial_ep", "release": "[xgn030] Ricky Force - The Aerial EP", "lic": "http://creativecommons.org/licenses/by-nc-nd/2.5/", "art": "https://archive.org/download/xgn030_-_ricky_force_-_the_aerial_ep/xgn030.jpg"}, {"type": "mod", "id": 143232, "title": "aint_talkin_bout_dub.xm", "file": "aint_talkin_bout_dub.xm", "dur": 240, "lic": "tma", "rating": 10}, {"title": "Snowflowers", "artist": "Omega Dub Experience", "dur": 492, "type": "mp3", "url": "https://archive.org/download/siro614OmegaDubExperience-TheBankruptcyJazz/05-OmegaDubExperience-Snowflowers.mp3", "item": "siro614OmegaDubExperience-TheBankruptcyJazz", "release": "[Siro614] Omega Dub Experience - The Bankruptcy Jazz", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/siro614OmegaDubExperience-TheBankruptcyJazz/A-Cover.jpg"}, {"title": "Le 36\u00e8me Dessous", "artist": "Syndr\u00f4m", "dur": 295, "type": "mp3", "url": "https://archive.org/download/36FeetUnder/28Syndrom-Le36emeDessous.mp3", "item": "36FeetUnder", "release": "36 Feet Under", "lic": "http://creativecommons.org/licenses/by-nc-nd/2.0/fr/", "art": "https://archive.org/download/36FeetUnder/P36-036.jpg"}, {"title": "1-11 Panalog", "artist": "Pornophonik PK", "dur": 140, "type": "mp3", "url": "https://archive.org/download/s27-043WeAreOne-Section27Netlabel/1-11Panalog.mp3", "item": "s27-043WeAreOne-Section27Netlabel", "release": "[S27-043] We Are One - Section 27 Netlabel", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/s27-043WeAreOne-Section27Netlabel/s27-043Cover.jpg"}, {"title": "Creyestals", "artist": "kosmonaut", "dur": 335, "type": "mp3", "url": "https://archive.org/download/mstk014/03_-_kosmonaut_-_Creyestals.mp3", "item": "mstk014", "release": "Candle Light Therapy LP [mstk014]", "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/", "art": "https://archive.org/download/mstk014/mstk014.jpg"}, {"title": "Between The Past And Future", "artist": "Widestream", "dur": 418, "type": "mp3", "url": "https://archive.org/download/mstk001/04-Widestream_-_Between_The_Past_And_Future.mp3", "item": "mstk001", "release": "Deepness EP [mstk001]", "lic": "http://creativecommons.org/licenses/by-nc-sa/2.5/", "art": "https://archive.org/download/mstk001/mstk001.jpg"}, {"title": "Call On Jah", "artist": "Prince Kong", "dur": 273, "type": "mp3", "url": "https://archive.org/download/ACP058_Prince_Kong_-_Dub_War/04-Call_On_Jah.mp3", "item": "ACP058_Prince_Kong_-_Dub_War", "release": "ACP058 Prince Kong - Dub War", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/ACP058_Prince_Kong_-_Dub_War/PRINCE-KONG-DUB-WAR.jpg"}, {"title": "El exorcista", "artist": "d fender", "dur": 448, "type": "mp3", "url": "https://archive.org/download/tkep009/tkep009-a-d_fender-el_exorcista.mp3", "item": "tkep009", "release": "TKEP009 - El exorcista EP", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/tkep009/tkep009.jpg"}, {"title": "2-01 Love Scum", "artist": "Adviruz", "dur": 250, "type": "mp3", "url": "https://archive.org/download/s27-027Sectioned/2-01LoveScum.mp3", "item": "s27-027Sectioned", "release": "[S27-027] Sectioned", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/s27-027Sectioned/s27-027.jpg"}, {"type": "mod", "id": 194766, "title": " twotwo", "file": "ylkyl_1.it", "dur": 240, "lic": "tma", "rating": 10}, {"title": "Blob", "artist": "Martsman", "dur": 312, "type": "mp3", "url": "https://archive.org/download/xgn028_-_martsman/b-martsman_-_blob.mp3", "item": "xgn028_-_martsman", "release": "[xgn028] Martsman", "lic": "http://creativecommons.org/licenses/by-nc-nd/2.5/", "art": "https://archive.org/download/xgn028_-_martsman/xgn028.jpg"}, {"title": "Stamina Dub", "artist": "Prince Kong", "dur": 190, "type": "mp3", "url": "https://archive.org/download/ACP058_Prince_Kong_-_Dub_War/06-Stamina_Dub.mp3", "item": "ACP058_Prince_Kong_-_Dub_War", "release": "ACP058 Prince Kong - Dub War", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/ACP058_Prince_Kong_-_Dub_War/PRINCE-KONG-DUB-WAR.jpg"}, {"title": "Awakening", "artist": "Mineral", "dur": 393, "type": "mp3", "url": "https://archive.org/download/mstk014/05_-_Mineral_-_Awakening.mp3", "item": "mstk014", "release": "Candle Light Therapy LP [mstk014]", "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/", "art": "https://archive.org/download/mstk014/mstk014.jpg"}, {"title": "Mess", "artist": "d fender", "dur": 472, "type": "mp3", "url": "https://archive.org/download/tkep009/tkep009-a-d_fender_-_mess.mp3", "item": "tkep009", "release": "TKEP009 - El exorcista EP", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/tkep009/tkep009.jpg"}, {"title": "Summer Rain", "artist": "Wantai", "dur": 262, "type": "mp3", "url": "https://archive.org/download/rfr003/rfr003-b2-wantai_-_summer_rain.mp3", "item": "rfr003", "release": "[RFR003] Wantai - Sonic Movement EP", "lic": "http://creativecommons.org/licenses/by-nc-nd/2.5/", "art": "https://archive.org/download/rfr003/rfr003-wantai-sonic_movement.jpg"}, {"title": "Octopus", "artist": "El Zool\u00f3gico", "dur": 140, "type": "mp3", "url": "https://archive.org/download/petitejolie002/pj002b_-_El_Zoologico_-_The_Aquarium_-_02_-_Octopus.mp3", "item": "petitejolie002", "release": "The Jungle & The Aquarium", "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/", "art": "https://archive.org/download/petitejolie002/cover.jpg"}, {"title": "1-19 Anyway Get Better", "artist": "Doc Deem", "dur": 227, "type": "mp3", "url": "https://archive.org/download/s27-043WeAreOne-Section27Netlabel/1-19AnywayGetBetter.mp3", "item": "s27-043WeAreOne-Section27Netlabel", "release": "[S27-043] We Are One - Section 27 Netlabel", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/s27-043WeAreOne-Section27Netlabel/s27-043Cover.jpg"}, {"title": "Waiting For The Rain", "artist": "Omega Dub Experience", "dur": 362, "type": "mp3", "url": "https://archive.org/download/siro614OmegaDubExperience-TheBankruptcyJazz/08-OmegaDubExperience-WaitingForTheRain.mp3", "item": "siro614OmegaDubExperience-TheBankruptcyJazz", "release": "[Siro614] Omega Dub Experience - The Bankruptcy Jazz", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/siro614OmegaDubExperience-TheBankruptcyJazz/A-Cover.jpg"}, {"type": "mod", "id": 194770, "title": "metsaserla", "file": "ylkyl_5.it", "dur": 240, "lic": "tma", "rating": 10}, {"title": "There are days", "artist": "cubicle", "dur": 486, "type": "mp3", "url": "https://archive.org/download/tkep010/tkep010-a-cubicle-there_are_days.mp3", "item": "tkep010", "release": "TKEP010 - There are days EP", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/tkep010/tkep010.jpg"}, {"title": "1-14 Built For Love", "artist": "Soni Jimm", "dur": 293, "type": "mp3", "url": "https://archive.org/download/s27-043WeAreOne-Section27Netlabel/1-14BuiltForLove.mp3", "item": "s27-043WeAreOne-Section27Netlabel", "release": "[S27-043] We Are One - Section 27 Netlabel", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/s27-043WeAreOne-Section27Netlabel/s27-043Cover.jpg"}, {"title": "Ethik", "artist": "KaLGaN", "dur": 342, "type": "mp3", "url": "https://archive.org/download/mstk001/03-KaLGaN_-_Ethik.mp3", "item": "mstk001", "release": "Deepness EP [mstk001]", "lic": "http://creativecommons.org/licenses/by-nc-sa/2.5/", "art": "https://archive.org/download/mstk001/mstk001.jpg"}, {"title": "2-11 The Most Powerful Of All Numbers", "artist": "Min-Y-Llan", "dur": 318, "type": "mp3", "url": "https://archive.org/download/s27-043WeAreOne-Section27Netlabel/2-11TheMostPowerfulOfAllNumbers.mp3", "item": "s27-043WeAreOne-Section27Netlabel", "release": "[S27-043] We Are One - Section 27 Netlabel", "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/", "art": "https://archive.org/download/s27-043WeAreOne-Section27Netlabel/s27-043Cover.jpg"}]}
+{
+ "epoch": 1752624000,
+ "sched": [
+  {
+   "title": "Sonya",
+   "artist": "nikol_D",
+   "dur": 265,
+   "url": "https://archive.org/download/mstk001/01-nikol_D_-_Sonya.mp3",
+   "item": "mstk001",
+   "release": "Deepness EP [mstk001]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/2.5/",
+   "art": "https://archive.org/download/mstk001/mstk001.jpg"
+  },
+  {
+   "title": "Oldvision 2006",
+   "artist": "neon",
+   "dur": 480,
+   "url": "https://archive.org/download/mstk001/02-neon_-_Oldvision_2006.mp3",
+   "item": "mstk001",
+   "release": "Deepness EP [mstk001]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/2.5/",
+   "art": "https://archive.org/download/mstk001/mstk001.jpg"
+  },
+  {
+   "title": "Ethik",
+   "artist": "KaLGaN",
+   "dur": 342,
+   "url": "https://archive.org/download/mstk001/03-KaLGaN_-_Ethik.mp3",
+   "item": "mstk001",
+   "release": "Deepness EP [mstk001]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/2.5/",
+   "art": "https://archive.org/download/mstk001/mstk001.jpg"
+  },
+  {
+   "title": "Between The Past And Future",
+   "artist": "Widestream",
+   "dur": 418,
+   "url": "https://archive.org/download/mstk001/04-Widestream_-_Between_The_Past_And_Future.mp3",
+   "item": "mstk001",
+   "release": "Deepness EP [mstk001]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/2.5/",
+   "art": "https://archive.org/download/mstk001/mstk001.jpg"
+  },
+  {
+   "title": "Lifehighforms",
+   "artist": "MCP",
+   "dur": 291,
+   "url": "https://archive.org/download/mstk003/a-MCP_-_Lifehighforms.mp3",
+   "item": "mstk003",
+   "release": "Lifehighforms/Soul [mstk003]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/2.5/",
+   "art": "https://archive.org/download/mstk003/mstk003.jpg"
+  },
+  {
+   "title": "Soul",
+   "artist": "MCP",
+   "dur": 267,
+   "url": "https://archive.org/download/mstk003/b-MCP_-_Soul.mp3",
+   "item": "mstk003",
+   "release": "Lifehighforms/Soul [mstk003]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/2.5/",
+   "art": "https://archive.org/download/mstk003/mstk003.jpg"
+  },
+  {
+   "title": "One Love",
+   "artist": "Widestream",
+   "dur": 458,
+   "url": "https://archive.org/download/mstk004/a-Widestream_-_One_love.mp3",
+   "item": "mstk004",
+   "release": "One Love/Pianology [mstk004]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/2.5/",
+   "art": "https://archive.org/download/mstk004/mstk004-160.jpg"
+  },
+  {
+   "title": "Pianology (Widestream Remix)",
+   "artist": "Sounds Of Infinity",
+   "dur": 500,
+   "url": "https://archive.org/download/mstk004/b-Sounds_Of_Infinity_-_Pianology_Widestream_Remix.mp3",
+   "item": "mstk004",
+   "release": "One Love/Pianology [mstk004]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/2.5/",
+   "art": "https://archive.org/download/mstk004/mstk004-160.jpg"
+  },
+  {
+   "title": "Walking Together In The Dark Blue Darkness",
+   "artist": "Infuzoria & Sad",
+   "dur": 491,
+   "url": "https://archive.org/download/mstk005/a-Infuzoria_And_Sad_-_Walking_Together_In_The_Dark_Blue_Darkness.mp3",
+   "item": "mstk005",
+   "release": "Auroral Storm EP [mstk005]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/2.5/",
+   "art": "https://archive.org/download/mstk005/mstk005.jpg"
+  },
+  {
+   "title": "Io",
+   "artist": "Infuzoria",
+   "dur": 373,
+   "url": "https://archive.org/download/mstk005/b-Infuzoria_-_Io.mp3",
+   "item": "mstk005",
+   "release": "Auroral Storm EP [mstk005]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/2.5/",
+   "art": "https://archive.org/download/mstk005/mstk005.jpg"
+  },
+  {
+   "title": "Auroral Storm",
+   "artist": "Infuzoria",
+   "dur": 453,
+   "url": "https://archive.org/download/mstk005/c-Infuzoria_-_Auroral_Storm.mp3",
+   "item": "mstk005",
+   "release": "Auroral Storm EP [mstk005]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/2.5/",
+   "art": "https://archive.org/download/mstk005/mstk005.jpg"
+  },
+  {
+   "title": "Silhouettes",
+   "artist": "Infuzoria",
+   "dur": 462,
+   "url": "https://archive.org/download/mstk005/d-Infuzoria_-_Silhouettes.mp3",
+   "item": "mstk005",
+   "release": "Auroral Storm EP [mstk005]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/2.5/",
+   "art": "https://archive.org/download/mstk005/mstk005.jpg"
+  },
+  {
+   "title": "To Wait For Something",
+   "artist": "KaLGaN",
+   "dur": 487,
+   "url": "https://archive.org/download/mstk006/a-KaLGaN_-_To_Wait_For_Something.mp3",
+   "item": "mstk006",
+   "release": "To Wait For Something/Eternity [mstk006]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/2.5/",
+   "art": "https://archive.org/download/mstk006/mstk006.jpg"
+  },
+  {
+   "title": "Eternity",
+   "artist": "tHiNk",
+   "dur": 582,
+   "url": "https://archive.org/download/mstk006/b-tHiNk_-_Eternity.mp3",
+   "item": "mstk006",
+   "release": "To Wait For Something/Eternity [mstk006]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/2.5/",
+   "art": "https://archive.org/download/mstk006/mstk006.jpg"
+  },
+  {
+   "title": "Sweet Threat",
+   "artist": "Crypton",
+   "dur": 384,
+   "url": "https://archive.org/download/mstk007/a-Crypton_-_Sweet_Threat.mp3",
+   "item": "mstk007",
+   "release": "Waking Life EP [mstk007]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/2.5/",
+   "art": "https://archive.org/download/mstk007/mstk007.jpg"
+  },
+  {
+   "title": "Waking Life",
+   "artist": "Crypton",
+   "dur": 412,
+   "url": "https://archive.org/download/mstk007/b-Crypton_-_Waking_Life.mp3",
+   "item": "mstk007",
+   "release": "Waking Life EP [mstk007]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/2.5/",
+   "art": "https://archive.org/download/mstk007/mstk007.jpg"
+  },
+  {
+   "title": "Free Clouds",
+   "artist": "Crypton",
+   "dur": 416,
+   "url": "https://archive.org/download/mstk007/c-Crypton_-_Free_Clouds.mp3",
+   "item": "mstk007",
+   "release": "Waking Life EP [mstk007]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/2.5/",
+   "art": "https://archive.org/download/mstk007/mstk007.jpg"
+  },
+  {
+   "title": "In The Search",
+   "artist": "Crypton",
+   "dur": 385,
+   "url": "https://archive.org/download/mstk007/d-Crypton_-_In_The_Search.mp3",
+   "item": "mstk007",
+   "release": "Waking Life EP [mstk007]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/2.5/",
+   "art": "https://archive.org/download/mstk007/mstk007.jpg"
+  },
+  {
+   "title": "Lightness",
+   "artist": "Crypton",
+   "dur": 397,
+   "url": "https://archive.org/download/mstk007/e-Crypton_-_Lightness.mp3",
+   "item": "mstk007",
+   "release": "Waking Life EP [mstk007]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/2.5/",
+   "art": "https://archive.org/download/mstk007/mstk007.jpg"
+  },
+  {
+   "title": "New Life",
+   "artist": "Fishy",
+   "dur": 487,
+   "url": "https://archive.org/download/mstk008/01_-_Fishy_-_New_Life.mp3",
+   "item": "mstk008",
+   "release": "Fishy - New Life EP [mstk008]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk008/mstk008.jpg"
+  },
+  {
+   "title": "Ion",
+   "artist": "Fishy",
+   "dur": 275,
+   "url": "https://archive.org/download/mstk008/02_-_Fishy_-_Ion.mp3",
+   "item": "mstk008",
+   "release": "Fishy - New Life EP [mstk008]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk008/mstk008.jpg"
+  },
+  {
+   "title": "Moving Through Dreams",
+   "artist": "Fishy",
+   "dur": 343,
+   "url": "https://archive.org/download/mstk008/03_-_Fishy_-_Moving_Through_Dreams.mp3",
+   "item": "mstk008",
+   "release": "Fishy - New Life EP [mstk008]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk008/mstk008.jpg"
+  },
+  {
+   "title": "Sunlight Mist",
+   "artist": "Fishy",
+   "dur": 419,
+   "url": "https://archive.org/download/mstk008/04_-_Fishy_-_Sunlight_Mist.mp3",
+   "item": "mstk008",
+   "release": "Fishy - New Life EP [mstk008]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk008/mstk008.jpg"
+  },
+  {
+   "title": "Moving Through Dreams (Psyolopher Remix)",
+   "artist": "Fishy",
+   "dur": 384,
+   "url": "https://archive.org/download/mstk008/05_-_Fishy_-_Moving_Through_Dreams_Psyolopher_Remix.mp3",
+   "item": "mstk008",
+   "release": "Fishy - New Life EP [mstk008]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk008/mstk008.jpg"
+  },
+  {
+   "title": "Planetscape",
+   "artist": "neon",
+   "dur": 428,
+   "url": "https://archive.org/download/mstk009/01_-_neon_-_Planetscape.mp3",
+   "item": "mstk009",
+   "release": "Planet Warming [mstk009]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk009/mstk009.jpg"
+  },
+  {
+   "title": "Autumn Warming",
+   "artist": "neon",
+   "dur": 423,
+   "url": "https://archive.org/download/mstk009/02_-_neon_-_Autumn_Warming.mp3",
+   "item": "mstk009",
+   "release": "Planet Warming [mstk009]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk009/mstk009.jpg"
+  },
+  {
+   "title": "Still Waiting",
+   "artist": "Mineral",
+   "dur": 514,
+   "url": "https://archive.org/download/mstk010/01_-_Mineral_-_Still_Waiting.mp3",
+   "item": "mstk010",
+   "release": "Mineral - Still Waiting / Everytime You Are Near [mstk010]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk010/mstk010.jpg"
+  },
+  {
+   "title": "Everytime You Are Near",
+   "artist": "Mineral",
+   "dur": 383,
+   "url": "https://archive.org/download/mstk010/02_-_Mineral_-_Everytime_You_Are_Near.mp3",
+   "item": "mstk010",
+   "release": "Mineral - Still Waiting / Everytime You Are Near [mstk010]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk010/mstk010.jpg"
+  },
+  {
+   "title": "Colour City",
+   "artist": "Beyond Frequency",
+   "dur": 304,
+   "url": "https://archive.org/download/mstk011/01_-_Beyond_Frequency_-_Colour_City.mp3",
+   "item": "mstk011",
+   "release": "Beyond Frequency - Beyond Frequency [mstk011]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk011/mstk011.jpg"
+  },
+  {
+   "title": "Genetic World",
+   "artist": "Beyond Frequency",
+   "dur": 356,
+   "url": "https://archive.org/download/mstk011/02_-_Beyond_Frequency_-_Genetic_World.mp3",
+   "item": "mstk011",
+   "release": "Beyond Frequency - Beyond Frequency [mstk011]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk011/mstk011.jpg"
+  },
+  {
+   "title": "Butterfly",
+   "artist": "Beyond Frequency",
+   "dur": 384,
+   "url": "https://archive.org/download/mstk011/03_-_Beyond_Frequency_-_Butterfly.mp3",
+   "item": "mstk011",
+   "release": "Beyond Frequency - Beyond Frequency [mstk011]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk011/mstk011.jpg"
+  },
+  {
+   "title": "Perfect Harmony",
+   "artist": "Beyond Frequency",
+   "dur": 423,
+   "url": "https://archive.org/download/mstk011/04_-_Beyond_Frequency_-_Perfect_Harmony.mp3",
+   "item": "mstk011",
+   "release": "Beyond Frequency - Beyond Frequency [mstk011]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk011/mstk011.jpg"
+  },
+  {
+   "title": "Stand By Me",
+   "artist": "Beyond Frequency",
+   "dur": 308,
+   "url": "https://archive.org/download/mstk011/05_-_Beyond_Frequency_-_Stand_By_Me.mp3",
+   "item": "mstk011",
+   "release": "Beyond Frequency - Beyond Frequency [mstk011]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk011/mstk011.jpg"
+  },
+  {
+   "title": "Big Bright Sky",
+   "artist": "Beyond Frequency",
+   "dur": 534,
+   "url": "https://archive.org/download/mstk011/06_-_Beyond_Frequency_-_Big_Bright_Sky.mp3",
+   "item": "mstk011",
+   "release": "Beyond Frequency - Beyond Frequency [mstk011]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk011/mstk011.jpg"
+  },
+  {
+   "title": "Cloud Stairway",
+   "artist": "kosmonaut",
+   "dur": 368,
+   "url": "https://archive.org/download/mstk012/01_-_kosmonaut_-_Cloud_Stairway.mp3",
+   "item": "mstk012",
+   "release": "kosmonaut - Astral Equations EP [mstk012]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk012/mstk012.jpg"
+  },
+  {
+   "title": "In Berlin",
+   "artist": "kosmonaut",
+   "dur": 373,
+   "url": "https://archive.org/download/mstk012/02_-_kosmonaut_-_In_Berlin.mp3",
+   "item": "mstk012",
+   "release": "kosmonaut - Astral Equations EP [mstk012]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk012/mstk012.jpg"
+  },
+  {
+   "title": "Whyse",
+   "artist": "kosmonaut",
+   "dur": 247,
+   "url": "https://archive.org/download/mstk012/03_-_kosmonaut_-_Whyse.mp3",
+   "item": "mstk012",
+   "release": "kosmonaut - Astral Equations EP [mstk012]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk012/mstk012.jpg"
+  },
+  {
+   "title": "Lookin Bright",
+   "artist": "kosmonaut",
+   "dur": 264,
+   "url": "https://archive.org/download/mstk012/04_-_kosmonaut_-_Lookin_Bright.mp3",
+   "item": "mstk012",
+   "release": "kosmonaut - Astral Equations EP [mstk012]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk012/mstk012.jpg"
+  },
+  {
+   "title": "Upon Reflection",
+   "artist": "Dan Guidance",
+   "dur": 367,
+   "url": "https://archive.org/download/mstk013/01_-_Dan_Guidance_-_Upon_Reflection.mp3",
+   "item": "mstk013",
+   "release": "Dan Guidance - Upon Reflection / Feel Free [mstk013]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk013/mstk013.jpg"
+  },
+  {
+   "title": "Feel Free",
+   "artist": "Dan Guidance",
+   "dur": 314,
+   "url": "https://archive.org/download/mstk013/02_-_Dan_Guidance_-_Feel_Free.mp3",
+   "item": "mstk013",
+   "release": "Dan Guidance - Upon Reflection / Feel Free [mstk013]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk013/mstk013.jpg"
+  },
+  {
+   "title": "Pure Wave",
+   "artist": "Enjoy Life",
+   "dur": 360,
+   "url": "https://archive.org/download/mstk014/01_-_Enjoy_Life_-_Pure_Wave.mp3",
+   "item": "mstk014",
+   "release": "Candle Light Therapy LP [mstk014]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk014/mstk014.jpg"
+  },
+  {
+   "title": "Aqua",
+   "artist": "R.FX",
+   "dur": 273,
+   "url": "https://archive.org/download/mstk014/02_-_R.FX_-_Aqua.mp3",
+   "item": "mstk014",
+   "release": "Candle Light Therapy LP [mstk014]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk014/mstk014.jpg"
+  },
+  {
+   "title": "Creyestals",
+   "artist": "kosmonaut",
+   "dur": 335,
+   "url": "https://archive.org/download/mstk014/03_-_kosmonaut_-_Creyestals.mp3",
+   "item": "mstk014",
+   "release": "Candle Light Therapy LP [mstk014]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk014/mstk014.jpg"
+  },
+  {
+   "title": "We Are Flying Home",
+   "artist": "Meanone",
+   "dur": 374,
+   "url": "https://archive.org/download/mstk014/04_-_Meanone_-_We_Are_Flying_Home.mp3",
+   "item": "mstk014",
+   "release": "Candle Light Therapy LP [mstk014]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk014/mstk014.jpg"
+  },
+  {
+   "title": "Awakening",
+   "artist": "Mineral",
+   "dur": 393,
+   "url": "https://archive.org/download/mstk014/05_-_Mineral_-_Awakening.mp3",
+   "item": "mstk014",
+   "release": "Candle Light Therapy LP [mstk014]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk014/mstk014.jpg"
+  },
+  {
+   "title": "Waiting Of Present",
+   "artist": "Nothing",
+   "dur": 521,
+   "url": "https://archive.org/download/mstk014/06_-_Nothing_-_Waiting_Of_Present.mp3",
+   "item": "mstk014",
+   "release": "Candle Light Therapy LP [mstk014]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk014/mstk014.jpg"
+  },
+  {
+   "title": "Siriuslove",
+   "artist": "Parhelia",
+   "dur": 540,
+   "url": "https://archive.org/download/mstk014/07_-_Parhelia_-_Siriuslove.mp3",
+   "item": "mstk014",
+   "release": "Candle Light Therapy LP [mstk014]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk014/mstk014.jpg",
+   "apple": "https://music.apple.com/us/album/siriuslove/1650622363"
+  },
+  {
+   "title": "Dimenzije Vremena",
+   "artist": "Okee",
+   "dur": 379,
+   "url": "https://archive.org/download/mstk014/08_-_Okee_-_Dimenzije_Vremena.mp3",
+   "item": "mstk014",
+   "release": "Candle Light Therapy LP [mstk014]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk014/mstk014.jpg"
+  },
+  {
+   "title": "The Memory Is Fading",
+   "artist": "Blok One & Rainforest",
+   "dur": 388,
+   "url": "https://archive.org/download/mstk014/09_-_Blok_One_Rainforest_-_The_Memory_Is_Fading.mp3",
+   "item": "mstk014",
+   "release": "Candle Light Therapy LP [mstk014]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk014/mstk014.jpg"
+  },
+  {
+   "title": "Contour",
+   "artist": "Case",
+   "dur": 300,
+   "url": "https://archive.org/download/mstk014/10_-_Case_-_Contour.mp3",
+   "item": "mstk014",
+   "release": "Candle Light Therapy LP [mstk014]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk014/mstk014.jpg"
+  },
+  {
+   "title": "Back To You",
+   "artist": "neon",
+   "dur": 461,
+   "url": "https://archive.org/download/mstk014/11_-_neon_-_Back_To_You.mp3",
+   "item": "mstk014",
+   "release": "Candle Light Therapy LP [mstk014]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk014/mstk014.jpg"
+  },
+  {
+   "title": "Sundown",
+   "artist": "Woodtekr",
+   "dur": 269,
+   "url": "https://archive.org/download/mstk014/12_-_Woodtekr_-_Sundown.mp3",
+   "item": "mstk014",
+   "release": "Candle Light Therapy LP [mstk014]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk014/mstk014.jpg"
+  },
+  {
+   "title": "Night Music",
+   "artist": "Deephno",
+   "dur": 438,
+   "url": "https://archive.org/download/mstk015/01_-_Deephno_-_Night_Music.mp3",
+   "item": "mstk015",
+   "release": "Deephno - Night Music / Inure Mind [mstk015]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk015/mstk015.jpg"
+  },
+  {
+   "title": "Inure Mind",
+   "artist": "Deephno",
+   "dur": 416,
+   "url": "https://archive.org/download/mstk015/02_-_Deephno_-_Inure_Mind.mp3",
+   "item": "mstk015",
+   "release": "Deephno - Night Music / Inure Mind [mstk015]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/mstk015/mstk015.jpg"
+  },
+  {
+   "title": "Break Revolution",
+   "artist": "Eternal Sunset",
+   "dur": 374,
+   "url": "https://archive.org/download/towards-the-dawn/01.%20Break%20Revolution.mp3",
+   "item": "towards-the-dawn",
+   "release": "Towards the Dawn",
+   "lic": "https://creativecommons.org/licenses/by-nc/4.0/",
+   "art": "https://archive.org/download/towards-the-dawn/Cover.jpg"
+  },
+  {
+   "title": "We are made of star stuff",
+   "artist": "Eternal Sunset",
+   "dur": 321,
+   "url": "https://archive.org/download/towards-the-dawn/03.%20We%20are%20made%20of%20star%20stuff.mp3",
+   "item": "towards-the-dawn",
+   "release": "Towards the Dawn",
+   "lic": "https://creativecommons.org/licenses/by-nc/4.0/",
+   "art": "https://archive.org/download/towards-the-dawn/Cover.jpg"
+  },
+  {
+   "title": "Escapism",
+   "artist": "Eternal Sunset",
+   "dur": 252,
+   "url": "https://archive.org/download/towards-the-dawn/05.%20Escapism.mp3",
+   "item": "towards-the-dawn",
+   "release": "Towards the Dawn",
+   "lic": "https://creativecommons.org/licenses/by-nc/4.0/",
+   "art": "https://archive.org/download/towards-the-dawn/Cover.jpg"
+  },
+  {
+   "title": "60 microns",
+   "artist": "Eternal Sunset",
+   "dur": 295,
+   "url": "https://archive.org/download/towards-the-dawn/07.%2060%20microns.mp3",
+   "item": "towards-the-dawn",
+   "release": "Towards the Dawn",
+   "lic": "https://creativecommons.org/licenses/by-nc/4.0/",
+   "art": "https://archive.org/download/towards-the-dawn/Cover.jpg"
+  },
+  {
+   "title": "Beautiful things (feat GuitARBEn)",
+   "artist": "Eternal Sunset",
+   "dur": 246,
+   "url": "https://archive.org/download/towards-the-dawn/09.%20Beautiful%20things%20%28feat%20GuitARBEn%29.mp3",
+   "item": "towards-the-dawn",
+   "release": "Towards the Dawn",
+   "lic": "https://creativecommons.org/licenses/by-nc/4.0/",
+   "art": "https://archive.org/download/towards-the-dawn/Cover.jpg"
+  },
+  {
+   "title": "First Snowfall",
+   "artist": "Eternal Sunset",
+   "dur": 216,
+   "url": "https://archive.org/download/towards-the-dawn/11.%20First%20Snowfall.mp3",
+   "item": "towards-the-dawn",
+   "release": "Towards the Dawn",
+   "lic": "https://creativecommons.org/licenses/by-nc/4.0/",
+   "art": "https://archive.org/download/towards-the-dawn/Cover.jpg"
+  },
+  {
+   "title": "Permafrost",
+   "artist": "Eternal Sunset",
+   "dur": 252,
+   "url": "https://archive.org/download/towards-the-dawn/13.%20Permafrost.mp3",
+   "item": "towards-the-dawn",
+   "release": "Towards the Dawn",
+   "lic": "https://creativecommons.org/licenses/by-nc/4.0/",
+   "art": "https://archive.org/download/towards-the-dawn/Cover.jpg"
+  },
+  {
+   "title": "Static motion illusion",
+   "artist": "Eternal Sunset",
+   "dur": 377,
+   "url": "https://archive.org/download/towards-the-dawn/15.%20Static%20motion%20illusion.mp3",
+   "item": "towards-the-dawn",
+   "release": "Towards the Dawn",
+   "lic": "https://creativecommons.org/licenses/by-nc/4.0/",
+   "art": "https://archive.org/download/towards-the-dawn/Cover.jpg"
+  },
+  {
+   "title": "Bass Explosion",
+   "artist": "Eternal Sunset",
+   "dur": 269,
+   "url": "https://archive.org/download/towards-the-dawn/17.%20Bass%20Explosion.mp3",
+   "item": "towards-the-dawn",
+   "release": "Towards the Dawn",
+   "lic": "https://creativecommons.org/licenses/by-nc/4.0/",
+   "art": "https://archive.org/download/towards-the-dawn/Cover.jpg"
+  },
+  {
+   "title": "Conversation with Silence",
+   "artist": "Eternal Sunset",
+   "dur": 375,
+   "url": "https://archive.org/download/symmetry_2025/01.%20Conversation%20with%20Silence.mp3",
+   "item": "symmetry_2025",
+   "release": "Symmetry",
+   "lic": "https://creativecommons.org/licenses/by-nc/4.0/",
+   "art": "https://archive.org/download/symmetry_2025/Cover.jpg"
+  },
+  {
+   "title": "Misty Landscape",
+   "artist": "Eternal Sunset",
+   "dur": 283,
+   "url": "https://archive.org/download/symmetry_2025/03.%20Misty%20Landscape.mp3",
+   "item": "symmetry_2025",
+   "release": "Symmetry",
+   "lic": "https://creativecommons.org/licenses/by-nc/4.0/",
+   "art": "https://archive.org/download/symmetry_2025/Cover.jpg"
+  },
+  {
+   "title": "Whisper of Nature",
+   "artist": "Eternal Sunset",
+   "dur": 376,
+   "url": "https://archive.org/download/symmetry_2025/04.%20Whisper%20of%20Nature.mp3",
+   "item": "symmetry_2025",
+   "release": "Symmetry",
+   "lic": "https://creativecommons.org/licenses/by-nc/4.0/",
+   "art": "https://archive.org/download/symmetry_2025/Cover.jpg"
+  },
+  {
+   "title": "Scent of Memories",
+   "artist": "Eternal Sunset",
+   "dur": 399,
+   "url": "https://archive.org/download/symmetry_2025/06.%20Scent%20of%20Memories.mp3",
+   "item": "symmetry_2025",
+   "release": "Symmetry",
+   "lic": "https://creativecommons.org/licenses/by-nc/4.0/",
+   "art": "https://archive.org/download/symmetry_2025/Cover.jpg"
+  },
+  {
+   "title": "Under the Stars",
+   "artist": "Eternal Sunset",
+   "dur": 289,
+   "url": "https://archive.org/download/symmetry_2025/07.%20Under%20the%20Stars.mp3",
+   "item": "symmetry_2025",
+   "release": "Symmetry",
+   "lic": "https://creativecommons.org/licenses/by-nc/4.0/",
+   "art": "https://archive.org/download/symmetry_2025/Cover.jpg"
+  },
+  {
+   "title": "Waves of Calm",
+   "artist": "Eternal Sunset",
+   "dur": 362,
+   "url": "https://archive.org/download/symmetry_2025/10.%20Waves%20of%20Calm.mp3",
+   "item": "symmetry_2025",
+   "release": "Symmetry",
+   "lic": "https://creativecommons.org/licenses/by-nc/4.0/",
+   "art": "https://archive.org/download/symmetry_2025/Cover.jpg"
+  },
+  {
+   "title": "Daydream",
+   "artist": "Eternal Sunset",
+   "dur": 320,
+   "url": "https://archive.org/download/flowers_and_charms_of_the_chinese-garden/01.%20Daydream.mp3",
+   "item": "flowers_and_charms_of_the_chinese-garden",
+   "release": "Flowers and Charms of the Chinese Garden",
+   "lic": "https://creativecommons.org/licenses/by-nc/4.0/",
+   "art": "https://archive.org/download/flowers_and_charms_of_the_chinese-garden/Cover.jpg"
+  },
+  {
+   "title": "Song about flowers",
+   "artist": "Eternal Sunset",
+   "dur": 332,
+   "url": "https://archive.org/download/flowers_and_charms_of_the_chinese-garden/03.%20Song%20about%20flowers.mp3",
+   "item": "flowers_and_charms_of_the_chinese-garden",
+   "release": "Flowers and Charms of the Chinese Garden",
+   "lic": "https://creativecommons.org/licenses/by-nc/4.0/",
+   "art": "https://archive.org/download/flowers_and_charms_of_the_chinese-garden/Cover.jpg"
+  },
+  {
+   "title": "Summer Breeze",
+   "artist": "Eternal Sunset",
+   "dur": 294,
+   "url": "https://archive.org/download/flowers_and_charms_of_the_chinese-garden/05.%20Summer%20Breeze.mp3",
+   "item": "flowers_and_charms_of_the_chinese-garden",
+   "release": "Flowers and Charms of the Chinese Garden",
+   "lic": "https://creativecommons.org/licenses/by-nc/4.0/",
+   "art": "https://archive.org/download/flowers_and_charms_of_the_chinese-garden/Cover.jpg"
+  },
+  {
+   "title": "Sunny Afternoon",
+   "artist": "Eternal Sunset",
+   "dur": 290,
+   "url": "https://archive.org/download/flowers_and_charms_of_the_chinese-garden/06.%20Sunny%20Afternoon.mp3",
+   "item": "flowers_and_charms_of_the_chinese-garden",
+   "release": "Flowers and Charms of the Chinese Garden",
+   "lic": "https://creativecommons.org/licenses/by-nc/4.0/",
+   "art": "https://archive.org/download/flowers_and_charms_of_the_chinese-garden/Cover.jpg"
+  },
+  {
+   "title": "Botanic garden",
+   "artist": "Eternal Sunset",
+   "dur": 303,
+   "url": "https://archive.org/download/flowers_and_charms_of_the_chinese-garden/08.%20Botanic%20garden.mp3",
+   "item": "flowers_and_charms_of_the_chinese-garden",
+   "release": "Flowers and Charms of the Chinese Garden",
+   "lic": "https://creativecommons.org/licenses/by-nc/4.0/",
+   "art": "https://archive.org/download/flowers_and_charms_of_the_chinese-garden/Cover.jpg"
+  },
+  {
+   "title": "New Plan",
+   "artist": "Eternal Sunset",
+   "dur": 303,
+   "url": "https://archive.org/download/fogs_of_forgetfulness_202409/01.%20New%20Plan.mp3",
+   "item": "fogs_of_forgetfulness_202409",
+   "release": "Fogs of Forgetfulness",
+   "lic": "https://creativecommons.org/licenses/by-nc/4.0/",
+   "art": "https://archive.org/download/fogs_of_forgetfulness_202409/cover.jpg"
+  },
+  {
+   "title": "Lost Hope",
+   "artist": "Eternal Sunset",
+   "dur": 340,
+   "url": "https://archive.org/download/fogs_of_forgetfulness_202409/04.%20Lost%20Hope.mp3",
+   "item": "fogs_of_forgetfulness_202409",
+   "release": "Fogs of Forgetfulness",
+   "lic": "https://creativecommons.org/licenses/by-nc/4.0/",
+   "art": "https://archive.org/download/fogs_of_forgetfulness_202409/cover.jpg"
+  },
+  {
+   "title": "Silent Memories",
+   "artist": "Eternal Sunset",
+   "dur": 366,
+   "url": "https://archive.org/download/fogs_of_forgetfulness_202409/07.%20Silent%20Memories.mp3",
+   "item": "fogs_of_forgetfulness_202409",
+   "release": "Fogs of Forgetfulness",
+   "lic": "https://creativecommons.org/licenses/by-nc/4.0/",
+   "art": "https://archive.org/download/fogs_of_forgetfulness_202409/cover.jpg"
+  },
+  {
+   "title": "When Dreams Die",
+   "artist": "Eternal Sunset",
+   "dur": 287,
+   "url": "https://archive.org/download/fogs_of_forgetfulness_202409/11.%20When%20Dreams%20Die.mp3",
+   "item": "fogs_of_forgetfulness_202409",
+   "release": "Fogs of Forgetfulness",
+   "lic": "https://creativecommons.org/licenses/by-nc/4.0/",
+   "art": "https://archive.org/download/fogs_of_forgetfulness_202409/cover.jpg"
+  },
+  {
+   "title": "Endless Echoes",
+   "artist": "Eternal Sunset",
+   "dur": 315,
+   "url": "https://archive.org/download/fogs_of_forgetfulness_202409/14.%20Endless%20Echoes.mp3",
+   "item": "fogs_of_forgetfulness_202409",
+   "release": "Fogs of Forgetfulness",
+   "lic": "https://creativecommons.org/licenses/by-nc/4.0/",
+   "art": "https://archive.org/download/fogs_of_forgetfulness_202409/cover.jpg"
+  },
+  {
+   "title": "No turning back",
+   "artist": "Eternal Sunset",
+   "dur": 267,
+   "url": "https://archive.org/download/eternal-wasteland/01.%20No%20turning%20back.mp3",
+   "item": "eternal-wasteland",
+   "release": "Wasteland",
+   "lic": "https://creativecommons.org/licenses/by-nc/4.0/",
+   "art": "https://archive.org/download/eternal-wasteland/08.%20Discover%20Me%20in%20Silence.png"
+  },
+  {
+   "title": "Starlit Journey",
+   "artist": "Eternal Sunset",
+   "dur": 251,
+   "url": "https://archive.org/download/eternal-wasteland/04.%20Starlit%20Journey.mp3",
+   "item": "eternal-wasteland",
+   "release": "Wasteland",
+   "lic": "https://creativecommons.org/licenses/by-nc/4.0/",
+   "art": "https://archive.org/download/eternal-wasteland/08.%20Discover%20Me%20in%20Silence.png"
+  },
+  {
+   "title": "Guitar in the Cyber Realm",
+   "artist": "Eternal Sunset",
+   "dur": 348,
+   "url": "https://archive.org/download/eternal-wasteland/07.%20Guitar%20in%20the%20Cyber%20Realm.mp3",
+   "item": "eternal-wasteland",
+   "release": "Wasteland",
+   "lic": "https://creativecommons.org/licenses/by-nc/4.0/",
+   "art": "https://archive.org/download/eternal-wasteland/08.%20Discover%20Me%20in%20Silence.png"
+  },
+  {
+   "title": "Final Dawn on the Wasteland",
+   "artist": "Eternal Sunset",
+   "dur": 241,
+   "url": "https://archive.org/download/eternal-wasteland/11.%20Final%20Dawn%20on%20the%20Wasteland.mp3",
+   "item": "eternal-wasteland",
+   "release": "Wasteland",
+   "lic": "https://creativecommons.org/licenses/by-nc/4.0/",
+   "art": "https://archive.org/download/eternal-wasteland/08.%20Discover%20Me%20in%20Silence.png"
+  },
+  {
+   "title": "Cape Canaveral",
+   "artist": "Eternal Sunset",
+   "dur": 260,
+   "url": "https://archive.org/download/Nagai_yume_LP/02_Cape_Canaveral.mp3",
+   "item": "Nagai_yume_LP",
+   "release": "ELF_NET046_Nagai_yume_LP",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/Nagai_yume_LP/01_Let_s_go.png"
+  },
+  {
+   "title": "Rain Melancholy",
+   "artist": "Eternal Sunset",
+   "dur": 254,
+   "url": "https://archive.org/download/Nagai_yume_LP/04_Rain_Melancholy.mp3",
+   "item": "Nagai_yume_LP",
+   "release": "ELF_NET046_Nagai_yume_LP",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/Nagai_yume_LP/01_Let_s_go.png"
+  },
+  {
+   "title": "A Sky Full Of Stars",
+   "artist": "Eternal Sunset",
+   "dur": 279,
+   "url": "https://archive.org/download/Nagai_yume_LP/07_A_Sky_Full_Of_Stars.mp3",
+   "item": "Nagai_yume_LP",
+   "release": "ELF_NET046_Nagai_yume_LP",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/Nagai_yume_LP/01_Let_s_go.png"
+  },
+  {
+   "title": "Astral travel",
+   "artist": "Eternal Sunset",
+   "dur": 188,
+   "url": "https://archive.org/download/Nagai_yume_LP/18_Astral_travel.mp3",
+   "item": "Nagai_yume_LP",
+   "release": "ELF_NET046_Nagai_yume_LP",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/Nagai_yume_LP/01_Let_s_go.png"
+  },
+  {
+   "title": "Rain forest",
+   "artist": "Eternal Sunset",
+   "dur": 240,
+   "url": "https://archive.org/download/10InTheDarkOfNight/06_Rain_forest.mp3",
+   "item": "10InTheDarkOfNight",
+   "release": "ELF_NET_037_Music_from_green_planet",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/10InTheDarkOfNight/Cover.jpg"
+  },
+  {
+   "title": "Glacier",
+   "artist": "Eternal Sunset",
+   "dur": 223,
+   "url": "https://archive.org/download/10InTheDarkOfNight/08_Glacier.mp3",
+   "item": "10InTheDarkOfNight",
+   "release": "ELF_NET_037_Music_from_green_planet",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/10InTheDarkOfNight/Cover.jpg"
+  },
+  {
+   "title": "Oceania",
+   "artist": "Eternal Sunset",
+   "dur": 235,
+   "url": "https://archive.org/download/10InTheDarkOfNight/13_Oceania.mp3",
+   "item": "10InTheDarkOfNight",
+   "release": "ELF_NET_037_Music_from_green_planet",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/10InTheDarkOfNight/Cover.jpg"
+  },
+  {
+   "title": "Starlight",
+   "artist": "Eternal Sunset",
+   "dur": 312,
+   "url": "https://archive.org/download/made-for-night-listening/02.%20Starlight.mp3",
+   "item": "made-for-night-listening",
+   "release": "Made for night listening",
+   "lic": "https://creativecommons.org/licenses/by-nc/4.0/",
+   "art": "https://archive.org/download/made-for-night-listening/Cover.png"
+  },
+  {
+   "title": "Water Drops on a Car Window",
+   "artist": "Eternal Sunset",
+   "dur": 383,
+   "url": "https://archive.org/download/made-for-night-listening/06.%20Water%20Drops%20on%20a%20Car%20Window.mp3",
+   "item": "made-for-night-listening",
+   "release": "Made for night listening",
+   "lic": "https://creativecommons.org/licenses/by-nc/4.0/",
+   "art": "https://archive.org/download/made-for-night-listening/Cover.png"
+  },
+  {
+   "title": "Night train",
+   "artist": "Eternal Sunset",
+   "dur": 291,
+   "url": "https://archive.org/download/made-for-night-listening/10.%20Night%20train.mp3",
+   "item": "made-for-night-listening",
+   "release": "Made for night listening",
+   "lic": "https://creativecommons.org/licenses/by-nc/4.0/",
+   "art": "https://archive.org/download/made-for-night-listening/Cover.png"
+  },
+  {
+   "title": "Resonance",
+   "artist": "Omega Dub Experience",
+   "dur": 429,
+   "url": "https://archive.org/download/siro614OmegaDubExperience-TheBankruptcyJazz/01-OmegaDubExperience-Resonance.mp3",
+   "item": "siro614OmegaDubExperience-TheBankruptcyJazz",
+   "release": "[Siro614] Omega Dub Experience - The Bankruptcy Jazz",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/siro614OmegaDubExperience-TheBankruptcyJazz/A-Cover.jpg"
+  },
+  {
+   "title": "Urban Atmospheres",
+   "artist": "Omega Dub Experience",
+   "dur": 469,
+   "url": "https://archive.org/download/siro614OmegaDubExperience-TheBankruptcyJazz/02-OmegaDubExperience-UrbanAtmospheres.mp3",
+   "item": "siro614OmegaDubExperience-TheBankruptcyJazz",
+   "release": "[Siro614] Omega Dub Experience - The Bankruptcy Jazz",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/siro614OmegaDubExperience-TheBankruptcyJazz/A-Cover.jpg"
+  },
+  {
+   "title": "Sound Of The Waterfall",
+   "artist": "Omega Dub Experience",
+   "dur": 272,
+   "url": "https://archive.org/download/siro614OmegaDubExperience-TheBankruptcyJazz/03-OmegaDubExperience-SoundOfTheWaterfall.mp3",
+   "item": "siro614OmegaDubExperience-TheBankruptcyJazz",
+   "release": "[Siro614] Omega Dub Experience - The Bankruptcy Jazz",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/siro614OmegaDubExperience-TheBankruptcyJazz/A-Cover.jpg"
+  },
+  {
+   "title": "Illusions",
+   "artist": "Omega Dub Experience",
+   "dur": 523,
+   "url": "https://archive.org/download/siro614OmegaDubExperience-TheBankruptcyJazz/04-OmegaDubExperience-Illusions.mp3",
+   "item": "siro614OmegaDubExperience-TheBankruptcyJazz",
+   "release": "[Siro614] Omega Dub Experience - The Bankruptcy Jazz",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/siro614OmegaDubExperience-TheBankruptcyJazz/A-Cover.jpg"
+  },
+  {
+   "title": "Snowflowers",
+   "artist": "Omega Dub Experience",
+   "dur": 492,
+   "url": "https://archive.org/download/siro614OmegaDubExperience-TheBankruptcyJazz/05-OmegaDubExperience-Snowflowers.mp3",
+   "item": "siro614OmegaDubExperience-TheBankruptcyJazz",
+   "release": "[Siro614] Omega Dub Experience - The Bankruptcy Jazz",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/siro614OmegaDubExperience-TheBankruptcyJazz/A-Cover.jpg"
+  },
+  {
+   "title": "Antarctica",
+   "artist": "Omega Dub Experience",
+   "dur": 313,
+   "url": "https://archive.org/download/siro614OmegaDubExperience-TheBankruptcyJazz/06-OmegaDubExperience-Antarctica.mp3",
+   "item": "siro614OmegaDubExperience-TheBankruptcyJazz",
+   "release": "[Siro614] Omega Dub Experience - The Bankruptcy Jazz",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/siro614OmegaDubExperience-TheBankruptcyJazz/A-Cover.jpg"
+  },
+  {
+   "title": "Blue Moon",
+   "artist": "Omega Dub Experience",
+   "dur": 338,
+   "url": "https://archive.org/download/siro614OmegaDubExperience-TheBankruptcyJazz/07-OmegaDubExperience-BlueMoon.mp3",
+   "item": "siro614OmegaDubExperience-TheBankruptcyJazz",
+   "release": "[Siro614] Omega Dub Experience - The Bankruptcy Jazz",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/siro614OmegaDubExperience-TheBankruptcyJazz/A-Cover.jpg"
+  },
+  {
+   "title": "Waiting For The Rain",
+   "artist": "Omega Dub Experience",
+   "dur": 362,
+   "url": "https://archive.org/download/siro614OmegaDubExperience-TheBankruptcyJazz/08-OmegaDubExperience-WaitingForTheRain.mp3",
+   "item": "siro614OmegaDubExperience-TheBankruptcyJazz",
+   "release": "[Siro614] Omega Dub Experience - The Bankruptcy Jazz",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/siro614OmegaDubExperience-TheBankruptcyJazz/A-Cover.jpg"
+  },
+  {
+   "title": "Rainforests",
+   "artist": "Omega Dub Experience",
+   "dur": 458,
+   "url": "https://archive.org/download/siro503OmegaDubExperience-LonelyWatersE.p/03-OmegaDubExperience-Rainforests.mp3",
+   "item": "siro503OmegaDubExperience-LonelyWatersE.p",
+   "release": "[Siro503] Omega Dub Experience - Lonely Waters E.P.",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/siro503OmegaDubExperience-LonelyWatersE.p/ArtworkA.jpg"
+  },
+  {
+   "title": "Lonely Waters",
+   "artist": "Omega Dub Experience",
+   "dur": 837,
+   "url": "https://archive.org/download/siro503OmegaDubExperience-LonelyWatersE.p/04-OmegaDubExperience-LonelyWaters.mp3",
+   "item": "siro503OmegaDubExperience-LonelyWatersE.p",
+   "release": "[Siro503] Omega Dub Experience - Lonely Waters E.P.",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/siro503OmegaDubExperience-LonelyWatersE.p/ArtworkA.jpg"
+  },
+  {
+   "title": "Wastelands",
+   "artist": "Omega Dub Experience",
+   "dur": 372,
+   "url": "https://archive.org/download/siro693OmegaDubExperience-VictoryOverTheSun/02-OmegaDubExperience-Wastelands.mp3",
+   "item": "siro693OmegaDubExperience-VictoryOverTheSun",
+   "release": "[Siro693] Omega Dub Experience - Victory Over The Sun",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/4.0/",
+   "art": "https://archive.org/download/siro693OmegaDubExperience-VictoryOverTheSun/A-Cover.jpg"
+  },
+  {
+   "title": "Views From Outer Space",
+   "artist": "Omega Dub Experience",
+   "dur": 430,
+   "url": "https://archive.org/download/siro693OmegaDubExperience-VictoryOverTheSun/03-OmegaDubExperience-ViewsFromOuterSpace.mp3",
+   "item": "siro693OmegaDubExperience-VictoryOverTheSun",
+   "release": "[Siro693] Omega Dub Experience - Victory Over The Sun",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/4.0/",
+   "art": "https://archive.org/download/siro693OmegaDubExperience-VictoryOverTheSun/A-Cover.jpg"
+  },
+  {
+   "title": "Manifest",
+   "artist": "Omega Dub Experience",
+   "dur": 288,
+   "url": "https://archive.org/download/siro693OmegaDubExperience-VictoryOverTheSun/04-OmegaDubExperience-Manifest.mp3",
+   "item": "siro693OmegaDubExperience-VictoryOverTheSun",
+   "release": "[Siro693] Omega Dub Experience - Victory Over The Sun",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/4.0/",
+   "art": "https://archive.org/download/siro693OmegaDubExperience-VictoryOverTheSun/A-Cover.jpg"
+  },
+  {
+   "title": "Meteoroid",
+   "artist": "Omega Dub Experience",
+   "dur": 316,
+   "url": "https://archive.org/download/siro693OmegaDubExperience-VictoryOverTheSun/05-OmegaDubExperience-Meteoroid.mp3",
+   "item": "siro693OmegaDubExperience-VictoryOverTheSun",
+   "release": "[Siro693] Omega Dub Experience - Victory Over The Sun",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/4.0/",
+   "art": "https://archive.org/download/siro693OmegaDubExperience-VictoryOverTheSun/A-Cover.jpg"
+  },
+  {
+   "title": "Victory Over The Sun",
+   "artist": "Omega Dub Experience",
+   "dur": 484,
+   "url": "https://archive.org/download/siro693OmegaDubExperience-VictoryOverTheSun/06-OmegaDubExperience-VictoryOverTheSun.mp3",
+   "item": "siro693OmegaDubExperience-VictoryOverTheSun",
+   "release": "[Siro693] Omega Dub Experience - Victory Over The Sun",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/4.0/",
+   "art": "https://archive.org/download/siro693OmegaDubExperience-VictoryOverTheSun/A-Cover.jpg"
+  },
+  {
+   "title": "Cosmic Dust",
+   "artist": "Omega Dub Experience",
+   "dur": 296,
+   "url": "https://archive.org/download/siro693OmegaDubExperience-VictoryOverTheSun/07-OmegaDubExperience-CosmicDust.mp3",
+   "item": "siro693OmegaDubExperience-VictoryOverTheSun",
+   "release": "[Siro693] Omega Dub Experience - Victory Over The Sun",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/4.0/",
+   "art": "https://archive.org/download/siro693OmegaDubExperience-VictoryOverTheSun/A-Cover.jpg"
+  },
+  {
+   "title": "Forgotten Landscapes",
+   "artist": "Omega Dub Experience",
+   "dur": 347,
+   "url": "https://archive.org/download/siro693OmegaDubExperience-VictoryOverTheSun/08-OmegaDubExperience-ForgottenLandscapes.mp3",
+   "item": "siro693OmegaDubExperience-VictoryOverTheSun",
+   "release": "[Siro693] Omega Dub Experience - Victory Over The Sun",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/4.0/",
+   "art": "https://archive.org/download/siro693OmegaDubExperience-VictoryOverTheSun/A-Cover.jpg"
+  },
+  {
+   "title": "Extinguished Sun",
+   "artist": "Omega Dub Experience",
+   "dur": 221,
+   "url": "https://archive.org/download/siro693OmegaDubExperience-VictoryOverTheSun/09-OmegaDubExperience-ExtinguishedSun.mp3",
+   "item": "siro693OmegaDubExperience-VictoryOverTheSun",
+   "release": "[Siro693] Omega Dub Experience - Victory Over The Sun",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/4.0/",
+   "art": "https://archive.org/download/siro693OmegaDubExperience-VictoryOverTheSun/A-Cover.jpg"
+  },
+  {
+   "title": "A Mood Of Anxiety",
+   "artist": "D-Jet",
+   "dur": 475,
+   "url": "https://archive.org/download/troorg004/troorg004_DJet__1_A_Mood_Of_Anxiety.mp3",
+   "item": "troorg004",
+   "release": "D-Jet - Apart The First EP [TROORG#004]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/2.0/",
+   "art": "https://archive.org/download/troorg004/troorg004cover_front.jpg"
+  },
+  {
+   "title": "B-Jet",
+   "artist": "D-Jet",
+   "dur": 291,
+   "url": "https://archive.org/download/troorg004/troorg004_DJet__2_BJet.mp3",
+   "item": "troorg004",
+   "release": "D-Jet - Apart The First EP [TROORG#004]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/2.0/",
+   "art": "https://archive.org/download/troorg004/troorg004cover_front.jpg"
+  },
+  {
+   "title": "Storm Warning",
+   "artist": "D-Jet",
+   "dur": 360,
+   "url": "https://archive.org/download/troorg004/troorg004_DJet__3_Storm_Warning.mp3",
+   "item": "troorg004",
+   "release": "D-Jet - Apart The First EP [TROORG#004]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/2.0/",
+   "art": "https://archive.org/download/troorg004/troorg004cover_front.jpg"
+  },
+  {
+   "title": "Lunar Dust",
+   "artist": "D-Jet",
+   "dur": 297,
+   "url": "https://archive.org/download/troorg004/troorg004_DJet__4_Lunar_Dust.mp3",
+   "item": "troorg004",
+   "release": "D-Jet - Apart The First EP [TROORG#004]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/2.0/",
+   "art": "https://archive.org/download/troorg004/troorg004cover_front.jpg"
+  },
+  {
+   "title": "Neoinfection",
+   "artist": "D-Jet",
+   "dur": 320,
+   "url": "https://archive.org/download/troorg004/troorg004_DJet__5_Neoinfection.mp3",
+   "item": "troorg004",
+   "release": "D-Jet - Apart The First EP [TROORG#004]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/2.0/",
+   "art": "https://archive.org/download/troorg004/troorg004cover_front.jpg"
+  },
+  {
+   "title": "Woozy Flux",
+   "artist": "D-Jet",
+   "dur": 439,
+   "url": "https://archive.org/download/troorg004/troorg004_DJet__6_Woozy_Flux.mp3",
+   "item": "troorg004",
+   "release": "D-Jet - Apart The First EP [TROORG#004]",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/2.0/",
+   "art": "https://archive.org/download/troorg004/troorg004cover_front.jpg"
+  },
+  {
+   "title": "01. Illumina",
+   "artist": "Evo Evolver",
+   "dur": 309,
+   "url": "https://archive.org/download/qd-4271EvoEvolver-DystopianDream/qd-4271_01-Evo_Evolver-Illumina.mp3",
+   "item": "qd-4271EvoEvolver-DystopianDream",
+   "release": "[qd-4271] Evo Evolver - Dystopian Dream",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/qd-4271EvoEvolver-DystopianDream/qd-4271_cover01.jpg"
+  },
+  {
+   "title": "02. Closer",
+   "artist": "Evo Evolver",
+   "dur": 385,
+   "url": "https://archive.org/download/qd-4271EvoEvolver-DystopianDream/qd-4271_02-Evo_Evolver-Closer.mp3",
+   "item": "qd-4271EvoEvolver-DystopianDream",
+   "release": "[qd-4271] Evo Evolver - Dystopian Dream",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/qd-4271EvoEvolver-DystopianDream/qd-4271_cover01.jpg"
+  },
+  {
+   "title": "03. Dystopian Dream",
+   "artist": "Evo Evolver",
+   "dur": 384,
+   "url": "https://archive.org/download/qd-4271EvoEvolver-DystopianDream/qd-4271_03-Evo_Evolver-Dystopian_Dream.mp3",
+   "item": "qd-4271EvoEvolver-DystopianDream",
+   "release": "[qd-4271] Evo Evolver - Dystopian Dream",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/qd-4271EvoEvolver-DystopianDream/qd-4271_cover01.jpg"
+  },
+  {
+   "title": "04. Children of the Mist",
+   "artist": "Evo Evolver",
+   "dur": 328,
+   "url": "https://archive.org/download/qd-4271EvoEvolver-DystopianDream/qd-4271_04-Evo_Evolver-Children_of_the_Mist.mp3",
+   "item": "qd-4271EvoEvolver-DystopianDream",
+   "release": "[qd-4271] Evo Evolver - Dystopian Dream",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+   "art": "https://archive.org/download/qd-4271EvoEvolver-DystopianDream/qd-4271_cover01.jpg"
+  },
+  {
+   "title": "Entrance",
+   "artist": "TURQUOISEDEATH",
+   "dur": 175,
+   "url": "https://archive.org/download/turquoisedeath-kaleidoscope/TURQUOISEDEATH%20-%20Kaleidoscope%20-%2001%20Entrance.mp3",
+   "item": "turquoisedeath-kaleidoscope",
+   "release": "Kaleidoscope",
+   "lic": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "art": "https://archive.org/download/turquoisedeath-kaleidoscope/cover.jpg",
+   "apple": "https://music.apple.com/us/album/entrance/1767347213"
+  },
+  {
+   "title": "Mirage",
+   "artist": "TURQUOISEDEATH",
+   "dur": 205,
+   "url": "https://archive.org/download/turquoisedeath-kaleidoscope/TURQUOISEDEATH%20-%20Kaleidoscope%20-%2003%20Mirage.mp3",
+   "item": "turquoisedeath-kaleidoscope",
+   "release": "Kaleidoscope",
+   "lic": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "art": "https://archive.org/download/turquoisedeath-kaleidoscope/cover.jpg",
+   "apple": "https://music.apple.com/us/album/mirage/1767347213"
+  },
+  {
+   "title": "Hold Tight",
+   "artist": "TURQUOISEDEATH",
+   "dur": 260,
+   "url": "https://archive.org/download/turquoisedeath-kaleidoscope/TURQUOISEDEATH%20-%20Kaleidoscope%20-%2005%20Hold%20Tight.mp3",
+   "item": "turquoisedeath-kaleidoscope",
+   "release": "Kaleidoscope",
+   "lic": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "art": "https://archive.org/download/turquoisedeath-kaleidoscope/cover.jpg",
+   "apple": "https://music.apple.com/us/album/hold-tight/1767347213"
+  },
+  {
+   "title": "Lullaby",
+   "artist": "TURQUOISEDEATH",
+   "dur": 257,
+   "url": "https://archive.org/download/turquoisedeath-kaleidoscope/TURQUOISEDEATH%20-%20Kaleidoscope%20-%2006%20Lullaby.mp3",
+   "item": "turquoisedeath-kaleidoscope",
+   "release": "Kaleidoscope",
+   "lic": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "art": "https://archive.org/download/turquoisedeath-kaleidoscope/cover.jpg",
+   "apple": "https://music.apple.com/us/album/lullaby/1767347213"
+  },
+  {
+   "title": "Leviathan Sanctuary",
+   "artist": "TURQUOISEDEATH",
+   "dur": 366,
+   "url": "https://archive.org/download/turquoisedeath-kaleidoscope/TURQUOISEDEATH%20-%20Kaleidoscope%20-%2008%20Leviathan%20Sanctuary.mp3",
+   "item": "turquoisedeath-kaleidoscope",
+   "release": "Kaleidoscope",
+   "lic": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "art": "https://archive.org/download/turquoisedeath-kaleidoscope/cover.jpg",
+   "apple": "https://music.apple.com/us/album/leviathan-sanctuary/1767347213"
+  },
+  {
+   "title": "Underneath",
+   "artist": "TURQUOISEDEATH",
+   "dur": 600,
+   "url": "https://archive.org/download/turquoisedeath-kaleidoscope/TURQUOISEDEATH%20-%20Kaleidoscope%20-%2010%20Underneath.mp3",
+   "item": "turquoisedeath-kaleidoscope",
+   "release": "Kaleidoscope",
+   "lic": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "art": "https://archive.org/download/turquoisedeath-kaleidoscope/cover.jpg",
+   "apple": "https://music.apple.com/us/album/underneath/1767347213"
+  },
+  {
+   "title": "quur",
+   "artist": "transient stellar",
+   "dur": 434,
+   "url": "https://archive.org/download/transient-stellar-rkodr/transient%20stellar%20-%20rkodr%20-%2001%20quur.mp3",
+   "item": "transient-stellar-rkodr",
+   "release": "Rkodr",
+   "lic": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "art": "https://archive.org/download/transient-stellar-rkodr/cover.jpg"
+  },
+  {
+   "title": "dkdr",
+   "artist": "transient stellar",
+   "dur": 410,
+   "url": "https://archive.org/download/transient-stellar-rkodr/transient%20stellar%20-%20rkodr%20-%2003%20dkdr.mp3",
+   "item": "transient-stellar-rkodr",
+   "release": "Rkodr",
+   "lic": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "art": "https://archive.org/download/transient-stellar-rkodr/cover.jpg"
+  },
+  {
+   "title": "vlrn",
+   "artist": "transient stellar",
+   "dur": 444,
+   "url": "https://archive.org/download/transient-stellar-rkodr/transient%20stellar%20-%20rkodr%20-%2006%20vlrn.mp3",
+   "item": "transient-stellar-rkodr",
+   "release": "Rkodr",
+   "lic": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "art": "https://archive.org/download/transient-stellar-rkodr/cover.jpg"
+  },
+  {
+   "title": "наивность",
+   "artist": "смерть в летнюю полночь",
+   "dur": 562,
+   "url": "https://archive.org/download/SCL181/smert_v_letnjuju_polnoch_-_01_-_naivnost.mp3",
+   "item": "SCL181",
+   "release": "[SCL181] смерть в летнюю полночь — непредсказуемость",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/4.0/",
+   "art": "https://archive.org/download/SCL181/cover.jpg"
+  },
+  {
+   "title": "марта влажные глаза",
+   "artist": "смерть в летнюю полночь",
+   "dur": 615,
+   "url": "https://archive.org/download/SCL181/smert_v_letnjuju_polnoch_-_03_-_marta_vlazhnye_glaza.mp3",
+   "item": "SCL181",
+   "release": "[SCL181] смерть в летнюю полночь — непредсказуемость",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/4.0/",
+   "art": "https://archive.org/download/SCL181/cover.jpg"
+  },
+  {
+   "title": "Яна",
+   "artist": "смерть в летнюю полночь",
+   "dur": 519,
+   "url": "https://archive.org/download/SCL181/smert_v_letnjuju_polnoch_-_05_-_Jana.mp3",
+   "item": "SCL181",
+   "release": "[SCL181] смерть в летнюю полночь — непредсказуемость",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/4.0/",
+   "art": "https://archive.org/download/SCL181/cover.jpg"
+  },
+  {
+   "title": "королеве звёздных бурь",
+   "artist": "смерть в летнюю полночь",
+   "dur": 525,
+   "url": "https://archive.org/download/SCL181/smert_v_letnjuju_polnoch_-_06_-_koroleve_zvezdnyh_bur.mp3",
+   "item": "SCL181",
+   "release": "[SCL181] смерть в летнюю полночь — непредсказуемость",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/4.0/",
+   "art": "https://archive.org/download/SCL181/cover.jpg"
+  },
+  {
+   "title": "последний вздох",
+   "artist": "смерть в летнюю полночь",
+   "dur": 438,
+   "url": "https://archive.org/download/SCL181/smert_v_letnjuju_polnoch_-_08_-_poslednij_vzdoh.mp3",
+   "item": "SCL181",
+   "release": "[SCL181] смерть в летнюю полночь — непредсказуемость",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/4.0/",
+   "art": "https://archive.org/download/SCL181/cover.jpg"
+  },
+  {
+   "title": "Discrip",
+   "artist": "VERTICAL67",
+   "dur": 272,
+   "url": "https://archive.org/download/acp027_vertical67_-_reflect/01_Discrip.mp3",
+   "item": "acp027_vertical67_-_reflect",
+   "release": "acp027 vertical67 - reflect",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/acp027_vertical67_-_reflect/reflect_front.jpg"
+  },
+  {
+   "title": "Blue",
+   "artist": "VERTICAL67",
+   "dur": 157,
+   "url": "https://archive.org/download/acp027_vertical67_-_reflect/05_Blue.mp3",
+   "item": "acp027_vertical67_-_reflect",
+   "release": "acp027 vertical67 - reflect",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/acp027_vertical67_-_reflect/reflect_front.jpg"
+  },
+  {
+   "title": "Alujerk Reloc",
+   "artist": "VERTICAL67",
+   "dur": 234,
+   "url": "https://archive.org/download/acp027_vertical67_-_reflect/09_Alujerk_Reloc.mp3",
+   "item": "acp027_vertical67_-_reflect",
+   "release": "acp027 vertical67 - reflect",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/acp027_vertical67_-_reflect/reflect_front.jpg"
+  },
+  {
+   "title": "Cside View",
+   "artist": "VERTICAL67",
+   "dur": 200,
+   "url": "https://archive.org/download/acp027_vertical67_-_reflect/14_Cside_View.mp3",
+   "item": "acp027_vertical67_-_reflect",
+   "release": "acp027 vertical67 - reflect",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/acp027_vertical67_-_reflect/reflect_front.jpg"
+  },
+  {
+   "title": "Velvet Skies",
+   "artist": "VERTICAL67",
+   "dur": 277,
+   "url": "https://archive.org/download/acp027_vertical67_-_reflect/18_Velvet_Skies.mp3",
+   "item": "acp027_vertical67_-_reflect",
+   "release": "acp027 vertical67 - reflect",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/acp027_vertical67_-_reflect/reflect_front.jpg"
+  },
+  {
+   "title": "Дом Улитки. Прогулка с Мишелем Гондри и Пьером Ришаром",
+   "artist": "Мутафория Лили",
+   "dur": 183,
+   "url": "https://archive.org/download/SCL-TM004/01_-_Mutaforija_Lili_-_Dom_Ulitki_Progulka_s_Mishelem_Gondri_i_Perom_Risharom.mp3",
+   "item": "SCL-TM004",
+   "release": "[SCL-TM004] VA — The Light Side Of The Blue",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/4.0/",
+   "art": "https://archive.org/download/SCL-TM004/cover_01_front.jpg"
+  },
+  {
+   "title": "Feel The Sorrow (Of Tomorrow)",
+   "artist": "Pk Jazz Collective",
+   "dur": 269,
+   "url": "https://archive.org/download/SCL-TM004/02_-_Pk_Jazz%20Collective_-_Feel_The_Sorrow_Of%20Tomorrow.mp3",
+   "item": "SCL-TM004",
+   "release": "[SCL-TM004] VA — The Light Side Of The Blue",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/4.0/",
+   "art": "https://archive.org/download/SCL-TM004/cover_01_front.jpg",
+   "apple": "https://music.apple.com/us/album/feel-the-sorrow-of-tomorrow/963233521"
+  },
+  {
+   "title": "Far Away",
+   "artist": "Lost Radiance",
+   "dur": 643,
+   "url": "https://archive.org/download/SCL-TM004/03_-_Los%D0%B5_Radiance%20-%20Far%20Away.mp3",
+   "item": "SCL-TM004",
+   "release": "[SCL-TM004] VA — The Light Side Of The Blue",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/4.0/",
+   "art": "https://archive.org/download/SCL-TM004/cover_01_front.jpg",
+   "apple": "https://music.apple.com/us/album/far-away/956673468"
+  },
+  {
+   "title": "Take Me Into The Space (Hank Hobson Edit)",
+   "artist": "Sexyalien",
+   "dur": 224,
+   "url": "https://archive.org/download/SCL-TM004/04_-_Sexyalien_-_Take_Me_Into_The_Space_Hank_Hobson_Edit.mp3",
+   "item": "SCL-TM004",
+   "release": "[SCL-TM004] VA — The Light Side Of The Blue",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/4.0/",
+   "art": "https://archive.org/download/SCL-TM004/cover_01_front.jpg",
+   "apple": "https://music.apple.com/us/album/take-me-into-the-space-hank-hobson-edit/956673468"
+  },
+  {
+   "title": "Respawn",
+   "artist": "Hobotek",
+   "dur": 297,
+   "url": "https://archive.org/download/SCL-TM004/05_-_Hobotek_-_Respawn.mp3",
+   "item": "SCL-TM004",
+   "release": "[SCL-TM004] VA — The Light Side Of The Blue",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/4.0/",
+   "art": "https://archive.org/download/SCL-TM004/cover_01_front.jpg",
+   "apple": "https://music.apple.com/us/album/respawn/956673468"
+  },
+  {
+   "title": "J-Rhodes",
+   "artist": "Sobrio",
+   "dur": 372,
+   "url": "https://archive.org/download/SCL-TM004/06_-_Sobrio_-_J-Rhodes.mp3",
+   "item": "SCL-TM004",
+   "release": "[SCL-TM004] VA — The Light Side Of The Blue",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/4.0/",
+   "art": "https://archive.org/download/SCL-TM004/cover_01_front.jpg",
+   "apple": "https://music.apple.com/us/album/j-rhodes/956673468"
+  },
+  {
+   "title": "Australian Wasteland",
+   "artist": "Eva Shlegel",
+   "dur": 444,
+   "url": "https://archive.org/download/SCL-TM004/07_-_Eva_Shlegel_-_Australian_Wasteland.mp3",
+   "item": "SCL-TM004",
+   "release": "[SCL-TM004] VA — The Light Side Of The Blue",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/4.0/",
+   "art": "https://archive.org/download/SCL-TM004/cover_01_front.jpg",
+   "apple": "https://music.apple.com/us/album/australian-wasteland/956673468"
+  },
+  {
+   "title": "Sparrows (lost-radio Reshape)",
+   "artist": "SandSpace",
+   "dur": 345,
+   "url": "https://archive.org/download/SCL-TM004/08_-_Sandspace_-_Sparrows_lost-radio_Reshape.mp3",
+   "item": "SCL-TM004",
+   "release": "[SCL-TM004] VA — The Light Side Of The Blue",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/4.0/",
+   "art": "https://archive.org/download/SCL-TM004/cover_01_front.jpg",
+   "apple": "https://music.apple.com/us/album/sparrows-lost-radio-reshape/956673468"
+  },
+  {
+   "title": "This Generation Is Dead",
+   "artist": "D-lity feat. Amaranth",
+   "dur": 185,
+   "url": "https://archive.org/download/SCL-TM004/09_-_D-lity_feat_%20Amaranth_-_This_Generation_Is_Dead.mp3",
+   "item": "SCL-TM004",
+   "release": "[SCL-TM004] VA — The Light Side Of The Blue",
+   "lic": "http://creativecommons.org/licenses/by-nc-sa/4.0/",
+   "art": "https://archive.org/download/SCL-TM004/cover_01_front.jpg",
+   "apple": "https://music.apple.com/us/album/this-generation-is-dead/956673468"
+  },
+  {
+   "title": "Sonic Movement",
+   "artist": "Wantai",
+   "dur": 235,
+   "url": "https://archive.org/download/rfr003/rfr003-a1-wantai_-_sonic_movement.mp3",
+   "item": "rfr003",
+   "release": "[RFR003] Wantai - Sonic Movement EP",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/2.5/",
+   "art": "https://archive.org/download/rfr003/rfr003-a1-wantai_-_sonic_movement.png"
+  },
+  {
+   "title": "Sonic Movement 2",
+   "artist": "Wantai",
+   "dur": 237,
+   "url": "https://archive.org/download/rfr003/rfr003-b1-wantai_-_sonic_movement_2.mp3",
+   "item": "rfr003",
+   "release": "[RFR003] Wantai - Sonic Movement EP",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/2.5/",
+   "art": "https://archive.org/download/rfr003/rfr003-a1-wantai_-_sonic_movement.png"
+  },
+  {
+   "title": "Summer Rain",
+   "artist": "Wantai",
+   "dur": 262,
+   "url": "https://archive.org/download/rfr003/rfr003-b2-wantai_-_summer_rain.mp3",
+   "item": "rfr003",
+   "release": "[RFR003] Wantai - Sonic Movement EP",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/2.5/",
+   "art": "https://archive.org/download/rfr003/rfr003-a1-wantai_-_sonic_movement.png"
+  },
+  {
+   "title": "Old Feelings",
+   "artist": "Beckett",
+   "dur": 361,
+   "url": "https://archive.org/download/xgn031_-_beckett/a-beckett_-_old_feelings.mp3",
+   "item": "xgn031_-_beckett",
+   "release": "[xgn031] Beckett",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/2.5/",
+   "art": "https://archive.org/download/xgn031_-_beckett/xgn031-beckett-hi-res.jpg"
+  },
+  {
+   "title": "Life By The Sea",
+   "artist": "Beckett",
+   "dur": 355,
+   "url": "https://archive.org/download/xgn031_-_beckett/b-beckett_-_life_by_the_sea.mp3",
+   "item": "xgn031_-_beckett",
+   "release": "[xgn031] Beckett",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/2.5/",
+   "art": "https://archive.org/download/xgn031_-_beckett/xgn031-beckett-hi-res.jpg"
+  },
+  {
+   "title": "4 Now",
+   "artist": "Ricky Force",
+   "dur": 347,
+   "url": "https://archive.org/download/xgn030_-_ricky_force_-_the_aerial_ep/a1-ricky_force_-_4_now.mp3",
+   "item": "xgn030_-_ricky_force_-_the_aerial_ep",
+   "release": "[xgn030] Ricky Force - The Aerial EP",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/2.5/",
+   "art": "https://archive.org/download/xgn030_-_ricky_force_-_the_aerial_ep/xgn030.jpg"
+  },
+  {
+   "title": "Make Ya Move",
+   "artist": "Ricky Force",
+   "dur": 402,
+   "url": "https://archive.org/download/xgn030_-_ricky_force_-_the_aerial_ep/a2-ricky_force_-_make_ya_move.mp3",
+   "item": "xgn030_-_ricky_force_-_the_aerial_ep",
+   "release": "[xgn030] Ricky Force - The Aerial EP",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/2.5/",
+   "art": "https://archive.org/download/xgn030_-_ricky_force_-_the_aerial_ep/xgn030.jpg"
+  },
+  {
+   "title": "Tougher",
+   "artist": "Ricky Force",
+   "dur": 325,
+   "url": "https://archive.org/download/xgn030_-_ricky_force_-_the_aerial_ep/b1-ricky_force_-_tougher.mp3",
+   "item": "xgn030_-_ricky_force_-_the_aerial_ep",
+   "release": "[xgn030] Ricky Force - The Aerial EP",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/2.5/",
+   "art": "https://archive.org/download/xgn030_-_ricky_force_-_the_aerial_ep/xgn030.jpg"
+  },
+  {
+   "title": "Dublin Crew",
+   "artist": "Ricky Force",
+   "dur": 355,
+   "url": "https://archive.org/download/xgn030_-_ricky_force_-_the_aerial_ep/b2-ricky_force_-_dublin_crew.mp3",
+   "item": "xgn030_-_ricky_force_-_the_aerial_ep",
+   "release": "[xgn030] Ricky Force - The Aerial EP",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/2.5/",
+   "art": "https://archive.org/download/xgn030_-_ricky_force_-_the_aerial_ep/xgn030.jpg"
+  },
+  {
+   "title": "Pasajes de la tarde",
+   "artist": "linga",
+   "dur": 489,
+   "url": "https://archive.org/download/tkep002/tkep002-a-linga-pasajes_de_la_tarde.mp3",
+   "item": "tkep002",
+   "release": "TKEP002 | Pasajes de la tarde EP",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/2.5/",
+   "art": "https://archive.org/download/tkep002/tkep002-a-linga-pasajes_de_la_tarde.png"
+  },
+  {
+   "title": "Aftertouch (Rifhes rmx)",
+   "artist": "substance",
+   "dur": 322,
+   "url": "https://archive.org/download/tkep002/tkep002-b-substance-aftertouch--rifhes_rmx.mp3",
+   "item": "tkep002",
+   "release": "TKEP002 | Pasajes de la tarde EP",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/2.5/",
+   "art": "https://archive.org/download/tkep002/tkep002-a-linga-pasajes_de_la_tarde.png"
+  },
+  {
+   "title": "There are days",
+   "artist": "cubicle",
+   "dur": 486,
+   "url": "https://archive.org/download/tkep010/tkep010-a-cubicle-there_are_days.mp3",
+   "item": "tkep010",
+   "release": "TKEP010 - There are days EP",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/tkep010/tkep010-a-cubicle-there_are_days.png"
+  },
+  {
+   "title": "Living death (Isaac Maya rmx)",
+   "artist": "bandulu dub",
+   "dur": 281,
+   "url": "https://archive.org/download/tkep010/tkep010-b-bandulu_dub-living_death-isaac_maya_rmx.mp3",
+   "item": "tkep010",
+   "release": "TKEP010 - There are days EP",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/tkep010/tkep010-a-cubicle-there_are_days.png"
+  },
+  {
+   "title": "In Your Eyes",
+   "artist": "Smooth Operator",
+   "dur": 446,
+   "url": "https://archive.org/download/tkep022/tkep022-a-smooth_operartor-in_your_eyes.mp3",
+   "item": "tkep022",
+   "release": "TKEP022: In your eyes",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/tkep022/tkep022-a-smooth_operartor-in_your_eyes.png"
+  },
+  {
+   "title": "Ontoi",
+   "artist": "Smooth Operator",
+   "dur": 394,
+   "url": "https://archive.org/download/tkep022/tkep022-b-smooth_operator-ontoi.mp3",
+   "item": "tkep022",
+   "release": "TKEP022: In your eyes",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/tkep022/tkep022-a-smooth_operartor-in_your_eyes.png"
+  },
+  {
+   "title": "jangala",
+   "artist": "fosforo",
+   "dur": 450,
+   "url": "https://archive.org/download/Lav03_fosforo-jangala/Lav03_fosforo-jangala.mp3",
+   "item": "Lav03_fosforo-jangala",
+   "release": "fosforo - jangala [Lav03]",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/2.0/",
+   "art": "https://archive.org/download/Lav03_fosforo-jangala/Lav03_fosforo-jangala.png"
+  },
+  {
+   "title": "Dream I",
+   "artist": "The A.W.",
+   "dur": 271,
+   "url": "https://archive.org/download/MNMN217/01.%20I.mp3",
+   "item": "MNMN217",
+   "release": "the A.W. - [micro.Dreams] (2013) [MNMN217]",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/MNMN217/cover.jpg"
+  },
+  {
+   "title": "Dream II",
+   "artist": "The A.W.",
+   "dur": 205,
+   "url": "https://archive.org/download/MNMN217/02.%20II.mp3",
+   "item": "MNMN217",
+   "release": "the A.W. - [micro.Dreams] (2013) [MNMN217]",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/MNMN217/cover.jpg"
+  },
+  {
+   "title": "Dream III",
+   "artist": "The A.W.",
+   "dur": 226,
+   "url": "https://archive.org/download/MNMN217/03.%20III.mp3",
+   "item": "MNMN217",
+   "release": "the A.W. - [micro.Dreams] (2013) [MNMN217]",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/MNMN217/cover.jpg"
+  },
+  {
+   "title": "Dream IV",
+   "artist": "The A.W.",
+   "dur": 310,
+   "url": "https://archive.org/download/MNMN217/04.%20IV.mp3",
+   "item": "MNMN217",
+   "release": "the A.W. - [micro.Dreams] (2013) [MNMN217]",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/MNMN217/cover.jpg"
+  },
+  {
+   "title": "V [under the night sky]",
+   "artist": "the A.W.",
+   "dur": 205,
+   "url": "https://archive.org/download/MNMN306/01.%20V%20%5Bunder%20the%20night%20sky%5D.mp3",
+   "item": "MNMN306",
+   "release": "the A.W. - micro.Dreams II (2015) [MNMN306]",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/MNMN306/cover.jpg"
+  },
+  {
+   "title": "VI [help me to fly away] feat. Detector Unit",
+   "artist": "the A.W.",
+   "dur": 194,
+   "url": "https://archive.org/download/MNMN306/02.%20VI%20%5Bhelp%20me%20to%20fly%20away%5D%20feat.%20Detector%20Unit.mp3",
+   "item": "MNMN306",
+   "release": "the A.W. - micro.Dreams II (2015) [MNMN306]",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/MNMN306/cover.jpg"
+  },
+  {
+   "title": "Dream VII",
+   "artist": "the A.W.",
+   "dur": 245,
+   "url": "https://archive.org/download/MNMN306/03.%20VII.mp3",
+   "item": "MNMN306",
+   "release": "the A.W. - micro.Dreams II (2015) [MNMN306]",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/MNMN306/cover.jpg"
+  },
+  {
+   "title": "Under The Moon (42-minute session)",
+   "artist": "Rainforest",
+   "dur": 2542,
+   "url": "https://archive.org/download/tkset011/TKSET011-Rainforest-Under_the_moon.mp3",
+   "item": "tkset011",
+   "release": "TKSET 011 Rainforest Under The Moon",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/tkset011/TKSET011-Rainforest-Under_the_moon.jpg"
+  },
+  {
+   "title": "1-02 Fracture Désordre",
+   "artist": "Mayhem Perception",
+   "dur": 368,
+   "url": "https://archive.org/download/s27-043WeAreOne-Section27Netlabel/1-02FractureDsordre.mp3",
+   "item": "s27-043WeAreOne-Section27Netlabel",
+   "release": "[S27-043] We Are One - Section 27 Netlabel",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/s27-043WeAreOne-Section27Netlabel/s27-043Cover.jpg"
+  },
+  {
+   "title": "1-15 District",
+   "artist": "The Suffering",
+   "dur": 292,
+   "url": "https://archive.org/download/s27-043WeAreOne-Section27Netlabel/1-15District.mp3",
+   "item": "s27-043WeAreOne-Section27Netlabel",
+   "release": "[S27-043] We Are One - Section 27 Netlabel",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/s27-043WeAreOne-Section27Netlabel/s27-043Cover.jpg"
+  },
+  {
+   "title": "3-06 Rand 6",
+   "artist": "Vektordrum",
+   "dur": 273,
+   "url": "https://archive.org/download/s27-043WeAreOne-Section27Netlabel/3-06Rand6.mp3",
+   "item": "s27-043WeAreOne-Section27Netlabel",
+   "release": "[S27-043] We Are One - Section 27 Netlabel",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/s27-043WeAreOne-Section27Netlabel/s27-043Cover.jpg"
+  },
+  {
+   "title": "3-08 Raymond Scott",
+   "artist": "junior85",
+   "dur": 199,
+   "url": "https://archive.org/download/s27-043WeAreOne-Section27Netlabel/3-08RaymondScott.mp3",
+   "item": "s27-043WeAreOne-Section27Netlabel",
+   "release": "[S27-043] We Are One - Section 27 Netlabel",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/s27-043WeAreOne-Section27Netlabel/s27-043Cover.jpg"
+  },
+  {
+   "title": "1-11 D'espoir!",
+   "artist": "Vektordrum",
+   "dur": 467,
+   "url": "https://archive.org/download/s27-027Sectioned/1-11Despoir.mp3",
+   "item": "s27-027Sectioned",
+   "release": "[S27-027] Sectioned",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/s27-027Sectioned/1-01WeTheDamaged.png"
+  },
+  {
+   "title": "2-09 Nothing",
+   "artist": "The Oxy_Gens",
+   "dur": 441,
+   "url": "https://archive.org/download/s27-027Sectioned/2-09Nothing.mp3",
+   "item": "s27-027Sectioned",
+   "release": "[S27-027] Sectioned",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/s27-027Sectioned/1-01WeTheDamaged.png"
+  },
+  {
+   "title": "1-13 10 Tonnes Darker",
+   "artist": "Ventolyn & Becotyde",
+   "dur": 286,
+   "url": "https://archive.org/download/s27-027Sectioned/1-1310TonnesDarker.mp3",
+   "item": "s27-027Sectioned",
+   "release": "[S27-027] Sectioned",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/s27-027Sectioned/1-01WeTheDamaged.png"
+  },
+  {
+   "title": "2-13 Sobre Mesa",
+   "artist": "Mösh",
+   "dur": 264,
+   "url": "https://archive.org/download/s27-027Sectioned/2-13SobreMesa.mp3",
+   "item": "s27-027Sectioned",
+   "release": "[S27-027] Sectioned",
+   "lic": "http://creativecommons.org/licenses/by-nc-nd/3.0/",
+   "art": "https://archive.org/download/s27-027Sectioned/1-01WeTheDamaged.png"
+  }
+ ]
+}

@@ -26,7 +26,7 @@ Then open `http://localhost:8000/index.html` (or `/about/index.html`, `/projects
   - `projects/retail-dashboard/` — multi-brand ops dashboard demo write-up.
   - `projects/311/` — The Grievance Atlas, NYC 311 complaint map (static JSON under `data/`, live Socrata fetch).
   - `projects/vigil/` — The Vigil, live worldwide crisis map (USGS/EONET/WHO live feeds + baked GDACS snapshot under `data/`).
-  - `projects/radio/` — scootr.fm, 24/7 clock-synced pirate radio (playlist under `data/`, streams from archive.org + Mod Archive; homepage on-air ticker reads its `data/playlist.json`).
+  - `projects/radio/` — scootr.fm, 24/7 clock-synced pirate radio (atmospheric jungle/DnB; every slot is a real CC-licensed recording streamed from archive.org — no synthesized/tracker tracks). `data/playlist.json` is generated: edit the `CRATE` list in `tools/build_playlist.py` and re-run it (it verifies licenses, durations, CORS and Apple Music links). The homepage on-air ticker reads the same JSON.
 - `elysium/index.html`, `signal/index.html` — standalone creative/experimental pages, linked from the homepage nav but not part of the "Projects" listing.
 
 Each top-level section lives in its own directory with its own `index.html`; there is no shared layout, template, or component system — new pages are built by copying an existing page and editing in place.
@@ -45,5 +45,5 @@ When editing the visual style (colors, effects, fonts), check whether the change
 
 ## Content notes
 
-- The About page intentionally redacts the current employer name (shown as `[REDACTED]` in the Service Record) — this is deliberate, not a placeholder to fill in. Do not "fix" it by naming the employer unless explicitly asked.
+- The About page names the current employer (Luften) in the Service Record and links a downloadable resume PDF (`about/Scott_Morris_Resume.pdf`) — when Scott shares an updated resume, replace that file and keep the filename.
 - Large binary assets (`.mp4` video backgrounds, `.mp3` sound effect) are committed directly to the repo root and referenced by relative path from `index.html`.
