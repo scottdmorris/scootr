@@ -18,6 +18,8 @@ Dates are commit dates.
   creative pieces; dashboard blurb mentions the new views.
 
 ### Removed
+- **Homepage:** Elysium nav link hidden until the page is ready (the page itself is
+  unchanged at `/elysium/`).
 - **Projects:** Lead Intelligence System page (`projects/leads/`) — the tool was
   scrapped.
 
