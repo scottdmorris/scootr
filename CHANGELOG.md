@@ -4,6 +4,19 @@ Notable changes to scootr's laboratory, newest first. The site was rebuilt from
 scratch on 2026-05-20; the 2020–2023 history in `git log` is the earlier site.
 Dates are commit dates.
 
+## 2026-11-06
+
+### Added
+- **Every page:** link-preview card image (`og.png`) plus Open Graph and Twitter card
+  tags on the pages that were missing them.
+- **About:** results listed under each role, a Freelance entry, and the Resume
+  download replaced with the current one-page resume.
+- **Homepage:** name and role shown under the title.
+
+### Changed
+- **Projects:** professional work (ops dashboard, lead intelligence, 311 atlas) now
+  listed before the creative pieces; dashboard blurb mentions the new views.
+
 ## 2026-11-05
 
 ### Added
