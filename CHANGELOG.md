@@ -14,6 +14,9 @@ Dates are commit dates.
 - **Homepage:** name and role shown under the title.
 
 ### Changed
+- **About:** corrected the Luften results to match tracked data (4 live Lovable sites,
+  SEO across 5 sites tracked in Semrush) and added the route planner and van GPS
+  tracking; resume download updated to match.
 - **Projects:** professional work (ops dashboard, 311 atlas) now listed before the
   creative pieces; dashboard blurb mentions the new views.
 
