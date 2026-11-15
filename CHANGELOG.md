@@ -11,6 +11,9 @@ Dates are commit dates.
   time) and rolls over to the next year once the day ends. The "on air" tag now sits
   next to scootr.fm in the nav, with the current track on hover. The "ai-integrated
   engineer" wording is gone from the tagline and the homepage description.
+- **About and link previews:** "AI-integrated" wording replaced with "Software engineer" in
+  the About tagline and descriptions, and the shared preview card (`og.png`) was
+  redrawn to match.
 
 ## 2026-11-06
 
