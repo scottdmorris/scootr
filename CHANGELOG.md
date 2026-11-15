@@ -4,6 +4,14 @@ Notable changes to scootr's laboratory, newest first. The site was rebuilt from
 scratch on 2026-05-20; the 2020–2023 history in `git log` is the earlier site.
 Dates are commit dates.
 
+## 2026-11-15
+
+### Changed
+- **Homepage:** the countdown now runs to Dec 31 (days:hours:minutes:seconds, New York
+  time) and rolls over to the next year once the day ends. The "on air" tag now sits
+  next to scootr.fm in the nav, with the current track on hover. The "ai-integrated
+  engineer" wording is gone from the tagline and the homepage description.
+
 ## 2026-11-06
 
 ### Added
