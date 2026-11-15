@@ -15,6 +15,10 @@ Dates are commit dates.
   the About tagline and descriptions, and the shared preview card (`og.png`) was
   redrawn to match.
 
+### Fixed
+- **Racial bias project:** the "Source & Notebook" link pointed to a GitHub user that
+  does not exist; it now opens the real repository.
+
 ## 2026-11-06
 
 ### Added
