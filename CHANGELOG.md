@@ -15,6 +15,10 @@ Dates are commit dates.
   the About tagline and descriptions, and the shared preview card (`og.png`) was
   redrawn to match.
 
+- **About:** capabilities list refreshed to match the resume (GraphQL, Lovable, pytest,
+  Cloudflare Workers, GitHub Actions, Jobber and Quartix APIs, Apps Script, Semrush).
+- **311 atlas and Vigil:** "view source on github" links added.
+
 ### Fixed
 - **Racial bias project:** the "Source & Notebook" link pointed to a GitHub user that
   does not exist; it now opens the real repository.
