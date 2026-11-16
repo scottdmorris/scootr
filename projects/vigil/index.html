@@ -390,6 +390,8 @@
     #zoomer { left: 1.3rem; bottom: calc(8.6rem + env(safe-area-inset-bottom)); }
     #note { display: none; }
   }
+  .srclink { display:block; text-align:center; margin:0 0 1.2rem; font-family:var(--mono); font-size:10px; letter-spacing:0.25em; text-transform:uppercase; color:var(--dimmer); text-decoration:none; transition:color 0.3s; }
+  .srclink:hover { color:var(--off-white); }
 </style>
 </head>
 <body>
@@ -478,6 +480,7 @@
     <p>Known blind spots: heat waves and cold snaps (no public feed tracks them well, though they kill more people than most of what is shown), day-to-day conflict violence (event data lags weeks and needs licensing; the register carries the standing crises instead), and small earthquakes outside the US, where the global seismic network's floor is roughly magnitude 4. Every feed sees the world unevenly &mdash; finding the gaps was half the work.</p>
   </div>
   <p id="foot">live feeds &middot; usgs &middot; nasa &middot; gdacs &middot; who &middot; un ocha &middot; the vigil</p>
+  <a class="srclink" href="https://github.com/scottdmorris/scootr/blob/main/projects/vigil/index.html" target="_blank" rel="noopener">view source on github &rarr;</a>
   <a id="back" href="../index.html">&larr; scootr's laboratory</a>
 </div>
 
