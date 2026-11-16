@@ -20,6 +20,8 @@ Dates are commit dates.
 - **311 atlas and Vigil:** "view source on github" links added.
 
 ### Fixed
+- **Ops dashboard demo (phones):** the brand tabs wrapped off-screen and made the page scroll
+  sideways; they now wrap onto a second row.
 - **Racial bias project:** the "Source & Notebook" link pointed to a GitHub user that
   does not exist; it now opens the real repository.
 
