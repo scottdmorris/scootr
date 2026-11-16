@@ -6,6 +6,10 @@ Dates are commit dates.
 
 ## 2026-11-15
 
+### Added
+- **Ops dashboard demo:** three case studies (sync speed-up, revenue audit, route
+  planning) in the "About this build" panel, using only verified figures.
+
 ### Changed
 - **Homepage:** the countdown now runs to Dec 31 (days:hours:minutes:seconds, New York
   time) and rolls over to the next year once the day ends. The "on air" tag now sits
