@@ -358,10 +358,16 @@
   .build-stats div { background: var(--panel); padding: 0.8rem 1rem; }
   .build-stats b { display: block; font-family: 'JetBrains Mono', monospace; font-size: 1.05rem; color: var(--text); }
   .build-stats span { font-size: 11px; color: var(--dim); }
+  .cases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; margin-top: 1.2rem; }
+  .case { background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; padding: 0.9rem 1rem; font-size: 12px; color: var(--dim); line-height: 1.55; }
+  .case h4 { margin: 0 0 0.5rem; font-size: 13px; color: var(--text); }
+  .case p { margin: 0 0 0.5rem; }
+  .case b { color: var(--text); }
   @media (max-width: 760px) {
     .ov-grid { grid-template-columns: 1fr; }
     .build-stats { grid-template-columns: repeat(2, 1fr); }
     .arch-arrow { display: none; }
+    .cases { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -1013,6 +1019,27 @@
           <div><b>30 min &rarr; 40 s</b><span>field-service sync, after fixing an API bottleneck</span></div>
           <div><b>5 managers</b><span>replaced manual reporting</span></div>
           <div><b>13</b><span>scheduled pipelines</span></div>
+        </div>
+        <div class="section-label" style="margin-top:1.4rem;">Case studies from the real build</div>
+        <div class="cases">
+          <div class="case">
+            <h4>A 30-minute sync, cut to 40 seconds</h4>
+            <p><b>Problem.</b> The daily field-service sync took about 30 minutes, too slow to watch jobs as they finished.</p>
+            <p><b>What I did.</b> Found the API bottleneck, fixed it, then built a GraphQL tool that rolled a new checklist across 469 active jobs in one run.</p>
+            <p><b>Result.</b> About 40 seconds per sync, so same-day technician monitoring became practical.</p>
+          </div>
+          <div class="case">
+            <h4>Revenue numbers nobody trusted</h4>
+            <p><b>Problem.</b> Managers compiled reports by hand and the revenue totals didn't match.</p>
+            <p><b>What I did.</b> Audited the pipelines and fixed 5 bugs, including double-counted refunds and a roughly 2x overstatement of collected revenue. Added a 119-test pytest suite that runs in CI.</p>
+            <p><b>Result.</b> One tested source of revenue that 5 managers use instead of manual reports.</p>
+          </div>
+          <div class="case">
+            <h4>Planning technician routes</h4>
+            <p><b>Problem.</b> Monthly routes for 4 drivers were built by hand.</p>
+            <p><b>What I did.</b> Built a route planner with AI-assisted optimization, plus live van tracking through a GPS API.</p>
+            <p><b>Result.</b> Stops per route rose from 7.3 to 8.3 (+14%), and about 430 stops a month now fit in 14 working days instead of 20.</p>
+          </div>
         </div>
         <p class="ov-note">The production dashboard is private because it holds employer data. This demo is rebuilt from scratch with fictional brands and generated numbers, and nothing on this page comes from the real system. <a href="https://github.com/scottdmorris/scootr/blob/main/projects/retail-dashboard/index.html" style="color:var(--accent);">View the demo source on GitHub &rarr;</a></p>
       </div>
