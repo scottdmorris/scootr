@@ -19,6 +19,10 @@ Dates are commit dates.
   Cloudflare Workers, GitHub Actions, Jobber and Quartix APIs, Apps Script, Semrush).
 - **311 atlas and Vigil:** "view source on github" links added.
 
+### Changed
+- **Homepage:** background video re-encoded from 3.8 MB to 1.2 MB (same look) and an unused
+  duplicate copy removed, so the page loads faster on phones.
+
 ### Fixed
 - **Ops dashboard demo (phones):** the brand tabs wrapped off-screen and made the page scroll
   sideways; they now wrap onto a second row.
